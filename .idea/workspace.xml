@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0aa775af-fdf5-43de-8543-6d22a3fd5a86" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/hackathon/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/HackathonApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/SuccessController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/config/SwaggerConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/config/WebConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/domain/BaseTimeEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/exception/BaseException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/exception/UserException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/response/ApiBody.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/response/ApiHeader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/response/ApiResponseCustom.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/common/response/ResponseCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/member/domain/Member.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/member/domain/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/member/domain/SocialProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/member/dto/request/MemberRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/member/dto/response/MemberResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/member/repository/MemberRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/member/service/MemberService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/member/service/impl/MemberServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/common/CustomEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/controller/LoginController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/dto/AppleLoginRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/dto/TokenDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/handler/CustomAccessDeniedHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/jwt/CustomAuthenticationEntryPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/jwt/JwtAuthenticationFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/jwt/JwtProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/java/badukegg/hackathon/hackathon/oauth/service/AuthService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hackathon/src/test/java/badukegg/hackathon/hackathon/HackathonApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2lW0pJaCfhQcnsR8JEd3r7L0yJS" />
+  <component name="ProjectViewState">
+    <option name="foldersAlwaysOnTop" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "ignore_missing_gitignore": "true",
+    "last_opened_file_path": "/Users/yerong/study/SERVER-WEDLE/build.gradle",
+    "nodejs_package_manager_path": "npm",
+    "spring.configuration.checksum": "5fe0c71431cba38bbe8b9c702e227c54",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="WedleApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="wedle.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="yerong.wedle.WedleApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="0aa775af-fdf5-43de-8543-6d22a3fd5a86" name="변경" comment="" />
+      <created>1725280707701</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1725280707701</updated>
+      <workItem from="1725280708808" duration="74000" />
+      <workItem from="1725280787402" duration="136000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
