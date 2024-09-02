@@ -17,11 +17,11 @@ public class Star extends BaseTimeEntity {
     @Column(name = "star_id")
     private Long starId;
 
-    @ManyToOne(fetch = LAZY, cascade =  ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = LAZY, cascade =  ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "university_id")
     private University university;
 }

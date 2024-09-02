@@ -16,6 +16,7 @@ public class University {
     @Column(name = "university_id")
     private Long universityId;
 
+    @Column(nullable = false)
     private String name;
     private String region;
     private String logo;
