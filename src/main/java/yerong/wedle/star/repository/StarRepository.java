@@ -7,6 +7,8 @@ import yerong.wedle.star.domain.Star;
 
 public interface StarRepository extends JpaRepository<Star, Long> {
 
+    Long countByUniversityId(Long universityId);
+
     @Modifying
     @Query(value = "INSERT INTO star(member_id, university_id, createdAt) VALUES (:memberId, :universityId, now())", nativeQuery = true)
     int mStar(Long memberId, Long universityId);
