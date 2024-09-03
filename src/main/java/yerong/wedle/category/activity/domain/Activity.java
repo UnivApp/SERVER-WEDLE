@@ -1,12 +1,17 @@
 package yerong.wedle.category.activity.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import yerong.wedle.university.domain.University;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.*;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = PROTECTED)
 public class Activity {
 
     @Id

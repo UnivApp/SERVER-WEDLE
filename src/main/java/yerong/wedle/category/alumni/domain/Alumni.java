@@ -1,11 +1,16 @@
 package yerong.wedle.category.alumni.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import yerong.wedle.university.domain.University;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
+@Getter
+@NoArgsConstructor(access = PROTECTED)
 @Entity
 public class Alumni {
 
