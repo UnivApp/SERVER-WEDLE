@@ -1,11 +1,16 @@
 package yerong.wedle.category.ranking.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import yerong.wedle.university.domain.University;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
+@Getter
+@NoArgsConstructor(access = PROTECTED)
 @Entity
 public class Ranking {
 

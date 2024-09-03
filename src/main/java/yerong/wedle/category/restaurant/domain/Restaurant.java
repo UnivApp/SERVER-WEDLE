@@ -1,13 +1,16 @@
 package yerong.wedle.category.restaurant.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import yerong.wedle.university.domain.University;
-
-import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
+@NoArgsConstructor(access = PROTECTED)
+@Getter
 @Entity
 public class Restaurant {
 
