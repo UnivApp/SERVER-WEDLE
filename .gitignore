@@ -40,5 +40,5 @@ out/
 # Ignore all lock files
 *.lock
 
-application-oauth.yml
+src/main/resources/application-oauth.yml
 
