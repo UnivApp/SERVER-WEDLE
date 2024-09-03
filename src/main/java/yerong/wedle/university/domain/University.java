@@ -18,6 +18,7 @@ public class University {
 
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String region;
     private String logo;
 }

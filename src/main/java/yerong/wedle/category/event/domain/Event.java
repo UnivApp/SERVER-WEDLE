@@ -5,6 +5,7 @@ import yerong.wedle.university.domain.University;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -15,12 +16,20 @@ public class Event {
     @Column(name = "event_id")
     private Long eventId;
 
+    @Column(nullable = false)
     private String name;
     private String description;
-    private LocalDateTime date;
+
+    @Column(nullable = false)
+    private LocalDateTime startDate;
+
+    @Column(nullable = false)
+    private LocalDateTime endDate;
+
+    @Column(nullable = false)
     private String location;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "university_id")
     private University university;
 }

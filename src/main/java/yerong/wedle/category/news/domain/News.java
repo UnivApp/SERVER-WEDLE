@@ -15,8 +15,10 @@ public class News {
     @Column(name = "news_id")
     private Long newsId;
 
+    @Column(nullable = false)
     private String title;
-    private LocalDateTime publishDate;
+    private String source;
+    @Column(nullable = false)
     private String link;
 
     @ManyToOne
