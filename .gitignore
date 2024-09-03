@@ -40,3 +40,5 @@ out/
 # Ignore all lock files
 *.lock
 
+application-oauth.yml
+
