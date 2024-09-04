@@ -7,6 +7,7 @@ import yerong.wedle.category.ranking.domain.Ranking;
 import yerong.wedle.category.ranking.dto.RankingResponse;
 import yerong.wedle.category.ranking.repository.RankingRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class RankingService {
     @Transactional
     public List<RankingResponse> getRankingsByUniversityName(String universityName) {
         University university = universityRepository.findByName(universityName)
-                .orElseThrow(() -> new IllegalArgumentException("대학교를 찾을 수 없습니다."));
+                .orElseThrow(UniversityNotFoundException::new);
         List<Ranking> rankings = rankingRepository.findByUniversity(university);
         return rankings.stream()
                 .map(this::convertToDto)

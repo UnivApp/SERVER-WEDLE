@@ -13,7 +13,16 @@ public enum ResponseCode {
 
     // OAuth
     INVALID_REFRESH_TOKEN("400", "유효하지 않은 Refresh Token입니다."),
-    OAUTH_ERROR("500", "OAuth 처리 중 오류가 발생했습니다.");
+    OAUTH_ERROR("500", "OAuth 처리 중 오류가 발생했습니다."),
+
+    // Banner
+    BANNER_NOT_FOUND("404", "배너를 찾을 수 없습니다."),
+
+    // University
+    UNIVERSITY_NOT_FOUND("404", "대학교를 찾을 수 없습니다."),
+
+    // Entrance Score
+    ENTRANCE_SCORE_NOT_FOUND("404", "입결 이미지 정보를 찾을 수 없습니다.");
 
     private final String code;
     private final String message;

@@ -7,6 +7,7 @@ import yerong.wedle.category.alumni.domain.Alumni;
 import yerong.wedle.category.alumni.dto.AlumniResponse;
 import yerong.wedle.category.alumni.repository.AlumniRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class AlumniService {
     @Transactional
     public List<AlumniResponse> getAlumniByUniversityName(String universityName) {
         University university = universityRepository.findByName(universityName)
-                .orElseThrow(() -> new IllegalArgumentException("대학교를 찾을 수 없습니다."));
+                .orElseThrow(UniversityNotFoundException::new);
         List<Alumni> alumni = alumniRepository.findByUniversity(university);
         return alumni.stream()
                 .map(this::convertToDto)

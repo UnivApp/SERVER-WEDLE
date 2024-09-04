@@ -7,6 +7,7 @@ import yerong.wedle.category.news.domain.News;
 import yerong.wedle.category.news.dto.NewsResponse;
 import yerong.wedle.category.news.repository.NewsRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class NewsService {
     @Transactional
     public List<NewsResponse> getNewsByUniversityName(String universityName) {
         University university = universityRepository.findByName(universityName)
-                .orElseThrow(() -> new IllegalArgumentException("대학교를 찾을 수 없습니다."));
+                .orElseThrow(UniversityNotFoundException::new);
         List<News> news = newsRepository.findByUniversity(university);
         return news.stream()
                 .map(this::convertToDto)

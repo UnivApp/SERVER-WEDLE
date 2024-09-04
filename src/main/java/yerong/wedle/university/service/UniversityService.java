@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.star.repository.StarRepository;
 import yerong.wedle.university.domain.University;
 import yerong.wedle.university.dto.UniversityResponse;
+import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
@@ -21,6 +22,11 @@ public class UniversityService {
     @Transactional
     public List<UniversityResponse> searchUniversity(String keyward) {
         List<University> universities = universityRepository.findByNameContainingOrLocationContaining(keyward, keyward);
+
+        if (universities.isEmpty()) {
+            throw new UniversityNotFoundException();
+        }
+
         return universities.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -28,7 +34,7 @@ public class UniversityService {
 
     @Transactional
     public UniversityResponse getUniversityById(Long universityId) {
-        University university = universityRepository.findById(universityId).orElseThrow(() -> new IllegalArgumentException("대학교를 찾을 수 없습니다."));
+        University university = universityRepository.findById(universityId).orElseThrow(UniversityNotFoundException::new);
         return convertToDto(university);
     }
 
