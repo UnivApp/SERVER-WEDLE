@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 
 /workspace.xml
-dbnavigator.xml
+/dbnavigator.xml
 
 ### STS ###
 .apt_generated
@@ -45,3 +45,5 @@ out/
 
 src/main/resources/application-oauth.yml
 
+!/.idea/workspace.xml
+!/.idea/workspace.xml
