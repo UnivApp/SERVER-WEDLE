@@ -7,6 +7,7 @@ import yerong.wedle.category.rent.domain.Rent;
 import yerong.wedle.category.rent.dto.RentResponse;
 import yerong.wedle.category.rent.repository.RentRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class RentService {
     @Transactional
     public List<RentResponse> getRentsByUniversityName(String universityName) {
         University university = universityRepository.findByName(universityName)
-                .orElseThrow(() -> new IllegalArgumentException("대학교를 찾을 수 없습니다."));
+                .orElseThrow(UniversityNotFoundException::new);
         List<Rent> rents = rentRepository.findByUniversity(university);
         return rents.stream()
                 .map(this::convertToDto)

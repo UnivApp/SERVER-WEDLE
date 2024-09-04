@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.member.domain.Member;
+import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.star.domain.Star;
 import yerong.wedle.star.repository.StarRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 @RequiredArgsConstructor
@@ -20,9 +22,11 @@ public class StarService {
 
     @Transactional
     public void addStar(Long memberId, String universityName) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
 
-        University university = universityRepository.findByName(universityName).orElseThrow(() -> new IllegalArgumentException("대학을 찾을 수 없습니다."));
+        University university = universityRepository.findByName(universityName)
+                .orElseThrow(UniversityNotFoundException::new);
 
         boolean alreadyStarred = starRepository.existsByMemberAndUniversity(member, university);
         if(!alreadyStarred) {
@@ -36,9 +40,11 @@ public class StarService {
 
     @Transactional
     public void removeStar(Long memberId, String universityName) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
 
-        University university = universityRepository.findByName(universityName).orElseThrow(() -> new IllegalArgumentException("대학을 찾을 수 없습니다."));
+        University university = universityRepository.findByName(universityName)
+                .orElseThrow(UniversityNotFoundException::new);
 
         starRepository.deleteByMemberAndUniversity(member, university);
     }

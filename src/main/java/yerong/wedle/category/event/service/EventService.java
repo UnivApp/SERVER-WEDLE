@@ -7,6 +7,7 @@ import yerong.wedle.category.event.domain.Event;
 import yerong.wedle.category.event.dto.EventResponse;
 import yerong.wedle.category.event.repository.EventRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class EventService {
     @Transactional
     public List<EventResponse> getEventsByUniversityName(String universityName) {
         University university = universityRepository.findByName(universityName)
-                .orElseThrow(() -> new IllegalArgumentException("대학교를 찾을 수 없습니다."));
+                .orElseThrow(UniversityNotFoundException::new);
         List<Event> events = eventRepository.findByUniversity(university);
         return events.stream()
                 .map(this::convertToDto)

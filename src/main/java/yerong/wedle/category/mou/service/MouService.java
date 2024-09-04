@@ -7,6 +7,7 @@ import yerong.wedle.category.mou.domain.Mou;
 import yerong.wedle.category.mou.dto.MouResponse;
 import yerong.wedle.category.mou.repository.MouRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class MouService {
     @Transactional
     public List<MouResponse> getMousByUniversityName(String universityName) {
         University university = universityRepository.findByName(universityName)
-                .orElseThrow(() -> new IllegalArgumentException("대학교를 찾을 수 없습니다."));
+                .orElseThrow(UniversityNotFoundException::new);
         List<Mou> mous = mouRepository.findByUniversity(university);
         return mous.stream()
                 .map(this::convertToDto)

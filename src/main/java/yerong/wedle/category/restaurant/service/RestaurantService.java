@@ -7,6 +7,7 @@ import yerong.wedle.category.restaurant.domain.Restaurant;
 import yerong.wedle.category.restaurant.dto.RestaurantResponse;
 import yerong.wedle.category.restaurant.repository.RestaurantRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class RestaurantService {
     @Transactional
     public List<RestaurantResponse> getRestaurantsByUniversityName(String universityName) {
         University university = universityRepository.findByName(universityName)
-                .orElseThrow(() -> new IllegalArgumentException("대학교를 찾을 수 없습니다."));
+                .orElseThrow(UniversityNotFoundException::new);
         List<Restaurant> restaurants = restaurantRepository.findByUniversity(university);
         return restaurants.stream()
                 .map(this::convertToDto)

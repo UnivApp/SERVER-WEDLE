@@ -43,5 +43,5 @@ out/
 
 src/main/resources/application-oauth.yml
 
-!/.idea/workspace.xml
-!/.idea/dbnavigator.xml
+# Ignore all XML files
+*.xml

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.banner.domain.Banner;
 import yerong.wedle.banner.dto.BannerResponse;
+import yerong.wedle.banner.exception.BannerNotFoundException;
 import yerong.wedle.banner.repository.BannerRepository;
 
 import java.util.List;
@@ -19,6 +20,11 @@ public class BannerService {
     @Transactional(readOnly = true)
     public List<BannerResponse> getAllBanners() {
         List<Banner> banners = bannerRepository.findAll();
+
+        if (banners.isEmpty()) {
+            throw new BannerNotFoundException();
+        }
+
         return banners.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
