@@ -1,11 +1,17 @@
 package yerong.wedle.member.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 import yerong.wedle.common.domain.BaseTimeEntity;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.*;
 
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
+@Builder
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -19,4 +25,6 @@ public class Member extends BaseTimeEntity {
     private String email;
     private String socialId;
 
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 }
