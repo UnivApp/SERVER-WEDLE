@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.star.repository.StarRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.dto.UniversityAllResponse;
 import yerong.wedle.university.dto.UniversityResponse;
 import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
@@ -20,7 +21,7 @@ public class UniversityService {
     private final StarRepository starRepository;
 
     @Transactional
-    public List<UniversityResponse> searchUniversity(String keyward) {
+    public List<UniversityResponse> searchUniversitiesSummary(String keyward) {
         List<University> universities = universityRepository.findByNameContainingOrLocationContaining(keyward, keyward);
 
         if (universities.isEmpty()) {
@@ -28,30 +29,64 @@ public class UniversityService {
         }
 
         return universities.stream()
-                .map(this::convertToDto)
+                .map(this::convertToSummaryDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public UniversityResponse getUniversityById(Long universityId) {
+    public UniversityResponse getUniversitySummaryById(Long universityId) {
         University university = universityRepository.findById(universityId).orElseThrow(UniversityNotFoundException::new);
-        return convertToDto(university);
+        return convertToSummaryDto(university);
     }
-
     @Transactional
-    public List<UniversityResponse> getAllUniversities() {
+    public UniversityAllResponse getUniversityDetailsById(Long universityId) {
+        University university = universityRepository.findById(universityId).orElseThrow(UniversityNotFoundException::new);
+        return convertToDetailDto(university);
+    }
+    @Transactional
+    public List<UniversityResponse> getAllUniversitiesSummary() {
         List<University> universities = universityRepository.findAll();
         return universities.stream()
-                .map(this::convertToDto)
+                .map(this::convertToSummaryDto)
                 .collect(Collectors.toList());
     }
-    private UniversityResponse convertToDto(University university) {
+
+    @Transactional
+    public List<UniversityAllResponse> getAllUniversitiesDetails() {
+        List<University> universities = universityRepository.findAll();
+        return universities.stream()
+                .map(this::convertToDetailDto)
+                .collect(Collectors.toList());
+    }
+    private UniversityResponse convertToSummaryDto(University university) {
         Long starNum = starRepository.countByUniversityId(university.getUniversityId());  // 관심 설정된 횟수 계산
+        String nameWithCampus = formatNameWithCampus(university.getName(), university.getCampus());
+
         return new UniversityResponse(
-                university.getName(),
-                university.getLocation(),
+                nameWithCampus,
                 university.getLogo(),
                 starNum
         );
+    }
+    private UniversityAllResponse convertToDetailDto(University university) {
+        Long starNum = starRepository.countByUniversityId(university.getUniversityId());  // 관심 설정된 횟수 계산
+        String nameWithCampus = formatNameWithCampus(university.getName(), university.getCampus());
+
+        return new UniversityAllResponse(
+                nameWithCampus,
+                university.getLocation(),
+                university.getType(),
+                university.getLogo(),
+                university.getPhoneNumber(),
+                university.getWebsite(),
+                starNum
+        );
+    }
+
+    private String formatNameWithCampus(String name, String campus) {
+        if (campus != null && !campus.isEmpty()) {
+            return name + " (" + campus + ")";
+        }
+        return name;
     }
 }
