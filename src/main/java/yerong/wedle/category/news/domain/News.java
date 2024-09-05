@@ -20,7 +20,6 @@ public class News {
 
     @Column(nullable = false)
     private String title;
-    private String source;
     @Column(nullable = false)
     private String link;
 

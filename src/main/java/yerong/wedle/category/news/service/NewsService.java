@@ -33,7 +33,6 @@ public class NewsService {
     private NewsResponse convertToDto(News news) {
         return new NewsResponse(
                 news.getTitle(),
-                news.getSource(),
                 news.getLink()
         );
     }
