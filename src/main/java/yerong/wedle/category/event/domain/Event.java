@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import yerong.wedle.university.domain.University;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -23,7 +24,10 @@ public class Event {
 
     @Column(nullable = false)
     private String name;
-    private String description;
+
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
+
 
     @Column(nullable = false)
     private LocalDateTime startDate;
@@ -31,10 +35,13 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime endDate;
 
-    @Column(nullable = false)
-    private String location;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "university_id")
     private University university;
+
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private EventDetails eventDetails;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EventImage> photos;
 }
