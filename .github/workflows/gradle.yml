@@ -52,7 +52,7 @@ jobs:
         run: |
           aws deploy create-deployment \
             --application-name wedle \
-            --deployment-group-name wedle \
+            --deployment-group-name wedle-group \
             --deployment-config-name CodeDeployDefault.OneAtATime \
             --description "Deploying from GitHub Actions" \
             --file-exists-behavior OVERWRITE \
