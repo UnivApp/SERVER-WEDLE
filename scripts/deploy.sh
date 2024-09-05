@@ -9,7 +9,7 @@ CURRENT_PID=$(pgrep -f ${REPOSITORY}.*.jar)
 echo "현재 구동 중인 애플리케이션 pid: $CURRENT_PID"
 
 if [ -z "$CURRENT_PID" ]; then
-  ehco "> 현재 구동 중인 애플리케이션이 없으므로 종료하지 않습니다."
+  echo "> 현재 구동 중인 애플리케이션이 없으므로 종료하지 않습니다."
 else
   echo "> kill -15 $CURRENT_PID"
   kill -15 $CURRENT_PID
@@ -29,5 +29,5 @@ chmod +x $JAR_NAME
 echo "> $JAR_NAME 실행"
 
 nohup java -jar \
-  -Dspring.config.location=classpath:/application.yml,classpath:application-oauth.yml \
+  -Dspring.config.location=classpath:/application.yml,classpath:/home/ubuntu/app/step1/application-oauth.yml \
   $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
