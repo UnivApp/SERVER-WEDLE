@@ -1,5 +1,6 @@
 package yerong.wedle.category.ranking.dto;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,7 @@ import yerong.wedle.category.ranking.domain.RankingType;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RankingResponse {
-    private RankingType rankingType;
-    private Integer rank;
-    private String reputation;
-    private String source;
-}
+    private String rankingType;
+    private String worldRank;
+    private String asiaRank;
+    private String domesticRank;}

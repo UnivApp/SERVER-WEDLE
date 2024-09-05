@@ -32,10 +32,10 @@ public class RankingService {
 
     private RankingResponse convertToDto(Ranking ranking) {
         return new RankingResponse(
-                ranking.getRankingType(),
-                ranking.getRank(),
-                ranking.getReputation(),
-                ranking.getSource()
+                ranking.getRankingType().getDisplayName(),
+                ranking.getWorldRank(),
+                ranking.getAsiaRank(),
+                ranking.getDomesticRank()
         );
     }
 }

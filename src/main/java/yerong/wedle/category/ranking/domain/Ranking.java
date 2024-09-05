@@ -22,9 +22,14 @@ public class Ranking {
     @Enumerated(EnumType.STRING)
     private RankingType rankingType;
 
-    private Integer rank;
-    private String reputation;
-    private String source;
+    @Column(name = "world_rank")
+    private String worldRank;
+
+    @Column(name = "asia_rank")
+    private String asiaRank;
+
+    @Column(name = "domestic_rank")
+    private String domesticRank;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "university_id")
