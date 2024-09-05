@@ -21,8 +21,17 @@ public class Alumni {
 
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private String degree;
+    @Column(nullable = false)
+    private String department;
     private String achievements;
-    private String description;
+
+    private String imageUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AlumniCategory alumniCategory;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "university_id")
