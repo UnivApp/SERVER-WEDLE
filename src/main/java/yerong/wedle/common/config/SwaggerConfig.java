@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 
 @Configuration
-//@OpenAPIDefinition(servers = {@Server(url="http://localhost:8080.com")})
 public class SwaggerConfig {
 
 

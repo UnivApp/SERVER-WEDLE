@@ -45,3 +45,5 @@ src/main/resources/application-oauth.yml
 
 # Ignore all XML files
 *.xml
+
+wedle.pem
