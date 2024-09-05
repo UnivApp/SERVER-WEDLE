@@ -1,6 +1,7 @@
 package yerong.wedle.star.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import yerong.wedle.star.service.StarService;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 @RequestMapping("/api/stars")
 public class StarApiController {
 
@@ -19,13 +21,14 @@ public class StarApiController {
 
     @PostMapping("/add")
     public ResponseEntity<Void> addStar(
-            @RequestParam String universityName,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
+            @RequestParam String universityName
             ) {
 
-        Long memberId = principalDetails.getMember().getMemberId();
+        log.info("========================");
+        log.info("universityName : " + universityName);
+        log.info("========================");
 
-        starService.addStar(memberId, universityName);
+        starService.addStar(universityName);
         return ResponseEntity.ok().build();
     }
 
