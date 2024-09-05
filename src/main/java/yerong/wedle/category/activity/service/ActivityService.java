@@ -30,10 +30,15 @@ public class ActivityService {
                 .collect(Collectors.toList());
     }
     private ActivityResponse convertToDto(Activity activity) {
+        List<String> imageUrls = activity.getImages().stream()
+                .map(image -> image.getImageUrl())
+                .collect(Collectors.toList());
+
         return new ActivityResponse(
                 activity.getName(),
                 activity.getDescription(),
-                activity.getLocation()
+                activity.getLocation(),
+                imageUrls
         );
     }
 }
