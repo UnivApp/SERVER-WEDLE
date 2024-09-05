@@ -32,8 +32,11 @@ public class AlumniService {
     private AlumniResponse convertToDto(Alumni alumni) {
         return new AlumniResponse(
                 alumni.getName(),
-                alumni.getDescription(),
-                alumni.getAchievements()
+                alumni.getDegree(),
+                alumni.getDepartment(),
+                alumni.getAchievements(),
+                alumni.getAlumniCategory(),
+                alumni.getImageUrl()
         );
     }
 }
