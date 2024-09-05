@@ -24,6 +24,7 @@ public class University {
     private String location;
     private String campus;
     private String type; //국립/사립
+    @Column(name = "phone_number")
     private String phoneNumber;
     private String website;
     private String logo;

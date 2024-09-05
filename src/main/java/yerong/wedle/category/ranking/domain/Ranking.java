@@ -20,7 +20,6 @@ public class Ranking {
     private Long rankingId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private RankingType rankingType;
 
     private Integer rank;

@@ -21,6 +21,9 @@ public enum ResponseCode {
     // University
     UNIVERSITY_NOT_FOUND("404", "대학교를 찾을 수 없습니다."),
 
+    // Star
+    STAR_NOT_FOUND("404", "즐겨찾기를 찾을 수 없습니다."),
+
     // Entrance Score
     ENTRANCE_SCORE_NOT_FOUND("404", "입결 이미지 정보를 찾을 수 없습니다.");
 

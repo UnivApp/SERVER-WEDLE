@@ -9,6 +9,7 @@ import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.OAuthProcessingException;
+import yerong.wedle.star.exception.StarNotFoundException;
 import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.entranceScore.exception.EntranceScoreNotFoundException;
 
@@ -91,6 +92,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
+    @ExceptionHandler(StarNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleStarNotFoundException(StarNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.STAR_NOT_FOUND.getCode(),
+                ResponseCode.STAR_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
     @ExceptionHandler(EntranceScoreNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleEntranceScoreNotFoundException(EntranceScoreNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(

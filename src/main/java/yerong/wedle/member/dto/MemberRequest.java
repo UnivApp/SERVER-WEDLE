@@ -1,14 +1,15 @@
 package yerong.wedle.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 @AllArgsConstructor
-@Getter
 @Builder
+@Data
+@NoArgsConstructor
 public class MemberRequest {
+
     private String socialId;
-    private String username;
+    private String name;
     private String email;
 }

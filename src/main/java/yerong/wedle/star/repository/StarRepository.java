@@ -8,6 +8,8 @@ import yerong.wedle.member.domain.Member;
 import yerong.wedle.star.domain.Star;
 import yerong.wedle.university.domain.University;
 
+import java.util.Optional;
+
 public interface StarRepository extends JpaRepository<Star, Long> {
     @Query("SELECT COUNT(s) FROM Star s WHERE s.university.universityId = :universityId")
     Long countByUniversityId(@Param("universityId") Long universityId);
@@ -23,4 +25,6 @@ public interface StarRepository extends JpaRepository<Star, Long> {
     boolean existsByMemberAndUniversity(Member member, University university);
 
     void deleteByMemberAndUniversity(Member member, University university);
+
+    Optional<Star> findByMemberAndUniversity(Member member, University university);
 }
