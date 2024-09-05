@@ -38,7 +38,7 @@ public class StarApiController {
 
         Long memberId = principalDetails.getMember().getMemberId();
 
-        starService.removeStar(memberId, universityName);
+        starService.removeStar(universityName);
         return ResponseEntity.ok().build();
     }
 }
