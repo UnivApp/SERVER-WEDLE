@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UniversityResponse {
 
-    private String name;
+    private String fullName;
     private String logo;
     private Long starNum;
 }

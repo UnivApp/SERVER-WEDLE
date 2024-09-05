@@ -60,22 +60,33 @@ public class UniversityService {
     }
     private UniversityResponse convertToSummaryDto(University university) {
         Long starNum = starRepository.countByUniversityId(university.getUniversityId());  // 관심 설정된 횟수 계산
+        String nameWithCampus = formatNameWithCampus(university.getName(), university.getCampus());
+
         return new UniversityResponse(
-                university.getName(),
+                nameWithCampus,
                 university.getLogo(),
                 starNum
         );
     }
     private UniversityAllResponse convertToDetailDto(University university) {
         Long starNum = starRepository.countByUniversityId(university.getUniversityId());  // 관심 설정된 횟수 계산
+        String nameWithCampus = formatNameWithCampus(university.getName(), university.getCampus());
+
         return new UniversityAllResponse(
-                university.getName(),
+                nameWithCampus,
                 university.getLocation(),
-                university.getCampus(),
                 university.getType(),
                 university.getLogo(),
                 university.getPhoneNumber(),
-                university.getWebsite()
+                university.getWebsite(),
+                starNum
         );
+    }
+
+    private String formatNameWithCampus(String name, String campus) {
+        if (campus != null && !campus.isEmpty()) {
+            return name + " (" + campus + ")";
+        }
+        return name;
     }
 }

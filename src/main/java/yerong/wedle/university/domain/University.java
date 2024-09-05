@@ -26,7 +26,6 @@ public class University {
     private String type; //국립/사립
     private String phoneNumber;
     private String website;
-    private Long starNum;
     private String logo;
 
 }

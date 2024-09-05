@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UniversityAllResponse {
 
-    private String name;
+    private String fullName;
     private String location;
-    private String campus;
     private String type; //국립/사립
     private String logo;
     private String phoneNumber;
     private String website;
+    private Long starNum;
 }
