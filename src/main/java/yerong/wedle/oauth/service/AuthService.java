@@ -31,18 +31,27 @@ public class AuthService {
     @Transactional
     public TokenResponse login(MemberRequest memberRequest){
 
+        log.info("member request : " + memberRequest.getName());
         Member member = memberRepository.findBySocialId(memberRequest.getSocialId()).orElse(null);
 
-        if(member == null){
+        if (member == null){
             member = Member.builder()
-                    .socialId(member.getSocialId())
-                    .email(member.getEmail())
+                    .socialId(memberRequest.getSocialId())
+                    .email(memberRequest.getEmail())
+                    .username(memberRequest.getName())
                     .role(Role.USER)
                     .build();
             memberRepository.save(member);
         }
+        log.info("success member create or search");
 
         TokenResponse tokenResponse = jwtProvider.generateTokenDto(memberRequest.getSocialId());
+
+        log.info("success token generate");
+        log.info("================");
+        log.info(tokenResponse.getRefreshToken());
+        log.info("================");
+
 
         Optional<RefreshToken> existingRefreshToken = refreshTokenRepository.findByMemberId(member.getMemberId());
         if (existingRefreshToken.isPresent()) {

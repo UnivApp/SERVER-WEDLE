@@ -1,12 +1,12 @@
 package yerong.wedle.oauth.controller;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import yerong.wedle.member.dto.MemberRequest;
@@ -26,14 +26,23 @@ public class LoginController {
     @PostMapping("/login/apple")
     public ResponseEntity<?> login(@RequestBody MemberRequest memberRequest) throws Exception {
         try {
+            log.info("============ start =============");
+            log.info("member request username : " + memberRequest.getName());
+            log.info("member request socialId : " + memberRequest.getSocialId());
+            log.info("member request email : " + memberRequest.getEmail());
+
             TokenResponse tokenResponse = authService.login(memberRequest);
 
+            log.info("============token response =============");
+            log.info(tokenResponse.toString());
             HttpHeaders headers = authService.setTokenHeaders(tokenResponse);
 
             AccessTokenResponse accessTokenResponse = AccessTokenResponse.builder()
                     .accessToken(tokenResponse.getAccessToken())
                     .accessTokenExpiresIn(tokenResponse.getAccessTokenExpiresIn())
                     .build();
+
+
             return ResponseEntity.ok().headers(headers).body(accessTokenResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그인 중 오류가 발생했습니다.");

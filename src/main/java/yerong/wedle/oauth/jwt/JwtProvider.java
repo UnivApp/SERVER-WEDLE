@@ -61,6 +61,7 @@ public class JwtProvider {
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .refreshToken(refreshToken)
                 .build();
     }
 
