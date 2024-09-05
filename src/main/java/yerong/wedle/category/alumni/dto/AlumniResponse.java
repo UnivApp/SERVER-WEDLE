@@ -14,6 +14,6 @@ public class AlumniResponse {
     private String degree;
     private String department;
     private String achievements;
-    private AlumniCategory alumniCategory;
+    private String alumniCategory;
     private String imageUrl;
 }

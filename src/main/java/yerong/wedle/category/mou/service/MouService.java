@@ -34,7 +34,9 @@ public class MouService {
         return new MouResponse(
                 mou.getPartnerInstitute(),
                 mou.getDescription(),
-                mou.getDate()
+                mou.getMouCategory().getDisplayName(),
+                mou.getAgreementDate(),
+                mou.getDepartment()
         );
     }
 }

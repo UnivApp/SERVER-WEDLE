@@ -21,7 +21,6 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final UniversityRepository universityRepository;
-    private final EventImageRepository eventImageRepository;
 
     @Transactional
     public List<EventResponse> getEventsByUniversityName(String universityName) {
@@ -35,7 +34,7 @@ public class EventService {
     private EventResponse convertToDto(Event event) {
         return new EventResponse(
                 event.getName(),
-                event.getEventType(),
+                event.getEventType().getDisplayName(),
                 event.getStartDate(),
                 event.getEndDate(),
                 event.getEventDetails() != null ? event.getEventDetails().getLineUp() : null,

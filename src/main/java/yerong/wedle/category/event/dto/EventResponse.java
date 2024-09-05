@@ -3,8 +3,6 @@ package yerong.wedle.category.event.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import yerong.wedle.category.event.domain.EventDetails;
-import yerong.wedle.category.event.domain.EventType;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -15,7 +13,7 @@ import java.util.Set;
 public class EventResponse {
 
     private String name;
-    private EventType eventType;
+    private String eventType;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String lineUp;
