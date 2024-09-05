@@ -10,6 +10,6 @@ public class MenuItemResponse {
     private String name;
     private String price;
     private String description;
-    private MenuCategory menuCategory;
+    private String menuCategory;
     private String imageUrl;
 }

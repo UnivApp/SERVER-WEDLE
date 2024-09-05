@@ -35,7 +35,7 @@ public class AlumniService {
                 alumni.getDegree(),
                 alumni.getDepartment(),
                 alumni.getAchievements(),
-                alumni.getAlumniCategory(),
+                alumni.getAlumniCategory().getDisplayName(),
                 alumni.getImageUrl()
         );
     }

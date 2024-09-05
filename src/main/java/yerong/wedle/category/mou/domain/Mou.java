@@ -25,8 +25,10 @@ public class Mou {
     private String partnerInstitute;
     private String description;
 
-    @Column(nullable = false)
-    private LocalDateTime date;
+    @Enumerated(EnumType.STRING)
+    private MouCategory mouCategory;
+    private String agreementDate;
+    private String department;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "university_id")
