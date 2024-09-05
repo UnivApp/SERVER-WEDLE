@@ -46,17 +46,17 @@ jobs:
         run: zip -r myapp.zip build/libs/*.jar appspec.yml scripts
 
       - name: Upload the ZIP file to S3
-        run: aws s3 cp myapp.zip s3://adhd-build/
+        run: aws s3 cp myapp.zip s3://wedle/
 
       - name: Deploy to CodeDeploy
         run: |
           aws deploy create-deployment \
-            --application-name adhd \
-            --deployment-group-name adhd-group \
+            --application-name wedle \
+            --deployment-group-name wedle \
             --deployment-config-name CodeDeployDefault.OneAtATime \
             --description "Deploying from GitHub Actions" \
             --file-exists-behavior OVERWRITE \
-            --s3-location bucket=adhd-build,key=myapp.zip,bundleType=zip
+            --s3-location bucket=wedle,key=myapp.zip,bundleType=zip
 
   dependency-submission:
     runs-on: ubuntu-latest
