@@ -51,7 +51,7 @@ jobs:
       - name: Deploy to CodeDeploy
         run: |
           aws deploy create-deployment \
-            --application-name wedle \
+            --application-name wedle-build \
             --deployment-group-name wedle-group \
             --deployment-config-name CodeDeployDefault.OneAtATime \
             --description "Deploying from GitHub Actions" \
