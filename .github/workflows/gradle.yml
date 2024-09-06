@@ -53,7 +53,7 @@ jobs:
           aws deploy create-deployment \
             --application-name wedle-build \
             --deployment-group-name wedle-group \
-            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
             --description "Deploying from GitHub Actions" \
             --file-exists-behavior OVERWRITE \
             --s3-location bucket=wedle,key=myapp.zip,bundleType=zip
