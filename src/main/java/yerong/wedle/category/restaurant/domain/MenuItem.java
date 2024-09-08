@@ -23,9 +23,6 @@ public class MenuItem {
     @Column(nullable = false)
     private String price;
 
-    @Column
-    private String imageUrl;
-
     @Column(length = 1000)
     private String description;
 
