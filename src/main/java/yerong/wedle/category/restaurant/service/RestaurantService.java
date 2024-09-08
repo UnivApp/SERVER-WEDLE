@@ -58,8 +58,7 @@ public class RestaurantService {
                 menuItem.getName(),
                 menuItem.getPrice(),
                 menuItem.getDescription(),
-                menuItem.getCategory().getDisplayName(),
-                menuItem.getImageUrl()
+                menuItem.getCategory().getDisplayName()
         );
     }
 
