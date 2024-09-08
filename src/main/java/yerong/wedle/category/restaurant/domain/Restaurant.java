@@ -24,20 +24,18 @@ public class Restaurant {
 
     @Column(nullable = false)
     private String name;
-    private String description;
 
     @Column(nullable = false)
     private String location;
 
-    private String url;
+    private String placeUrl;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "university_id")
     private University university;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MenuItem> menuItems = new ArrayList<>();
+    private List<Hashtag> hashtags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RestaurantPhoto> photos = new ArrayList<>();
+    private String imageUrl;
 }
