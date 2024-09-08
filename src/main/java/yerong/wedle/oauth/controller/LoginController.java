@@ -1,5 +1,9 @@
 package yerong.wedle.oauth.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +20,7 @@ import yerong.wedle.oauth.dto.TokenResponse;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.service.AuthService;
 
+@Tag(name = "Authentication API", description = "로그인 및 토큰 갱신 관련 API")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -23,25 +28,25 @@ public class LoginController {
 
     private final AuthService authService;
 
+    @Operation(
+            summary = "Apple 로그인",
+            description = "Apple 로그인 요청을 처리하고 액세스 토큰을 반환합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공, 액세스 토큰 반환"),
+            @ApiResponse(responseCode = "500", description = "로그인 중 서버 오류 발생")
+    })
     @PostMapping("/login/apple")
     public ResponseEntity<?> login(@RequestBody MemberRequest memberRequest) throws Exception {
         try {
-            log.info("============ start =============");
-            log.info("member request username : " + memberRequest.getName());
-            log.info("member request socialId : " + memberRequest.getSocialId());
-            log.info("member request email : " + memberRequest.getEmail());
-
             TokenResponse tokenResponse = authService.login(memberRequest);
 
-            log.info("============token response =============");
-            log.info(tokenResponse.toString());
             HttpHeaders headers = authService.setTokenHeaders(tokenResponse);
 
             AccessTokenResponse accessTokenResponse = AccessTokenResponse.builder()
                     .accessToken(tokenResponse.getAccessToken())
                     .accessTokenExpiresIn(tokenResponse.getAccessTokenExpiresIn())
                     .build();
-
 
             return ResponseEntity.ok().headers(headers).body(accessTokenResponse);
         } catch (Exception e) {
@@ -50,6 +55,16 @@ public class LoginController {
 
     }
 
+    @Operation(
+            summary = "액세스 토큰 갱신",
+            description = "유효한 리프레시 토큰을 사용하여 액세스 토큰을 갱신합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "토큰 갱신 성공"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 리프레시 토큰"),
+            @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "토큰 갱신 중 서버 오류 발생")
+    })
     @PostMapping("/login/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestHeader("RefreshToken") String refreshToken) {
         try {
