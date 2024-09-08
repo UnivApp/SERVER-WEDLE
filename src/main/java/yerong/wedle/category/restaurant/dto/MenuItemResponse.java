@@ -11,5 +11,4 @@ public class MenuItemResponse {
     private String price;
     private String description;
     private String menuCategory;
-    private String imageUrl;
 }
