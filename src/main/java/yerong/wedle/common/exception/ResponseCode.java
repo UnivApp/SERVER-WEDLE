@@ -14,7 +14,7 @@ public enum ResponseCode {
     // OAuth
     INVALID_REFRESH_TOKEN("400", "유효하지 않은 Refresh Token입니다."),
     INVALID_TOKEN("400", "유효하지 않은 Access Token입니다."),
-
+    INVALID_AUTHORIZATION_HEADER("400", "유효하지 않은 Authorization Header 입니다."),
     OAUTH_ERROR("500", "OAuth 처리 중 오류가 발생했습니다."),
 
     // Banner

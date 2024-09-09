@@ -3,15 +3,12 @@ package yerong.wedle.oauth.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 @Builder
 @Data
 @AllArgsConstructor
-public class TokenResponse {
-
-    private String accessToken;
-    private Long accessTokenExpiresIn;
+public class MemberLogoutResponse {
+    private String socialId;
     private String refreshToken;
-    private Long refreshTokenExpiresIn;
-
 }
