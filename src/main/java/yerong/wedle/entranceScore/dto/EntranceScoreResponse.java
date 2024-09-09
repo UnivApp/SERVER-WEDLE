@@ -8,7 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EntranceScoreResponse {
-
-    private String type;
-    private byte[] image;
+    private String imageUrl;
 }

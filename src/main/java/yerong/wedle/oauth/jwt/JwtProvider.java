@@ -1,5 +1,7 @@
 package yerong.wedle.oauth.jwt;
 
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -16,8 +18,10 @@ import yerong.wedle.common.exception.CustomException;
 import yerong.wedle.common.exception.ResponseCode;
 import yerong.wedle.member.domain.Role;
 import yerong.wedle.oauth.dto.TokenResponse;
+import yerong.wedle.oauth.exception.InvalidTokenException;
 
 import java.security.Key;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -44,6 +48,7 @@ public class JwtProvider {
 
         //Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
 
         String accessToken = Jwts.builder()
                 .setSubject(socialId)
@@ -54,7 +59,7 @@ public class JwtProvider {
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -62,6 +67,7 @@ public class JwtProvider {
                 .accessToken(accessToken)
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
                 .refreshToken(refreshToken)
+                .refreshTokenExpiresIn(refreshTokenExpiresIn.getTime())
                 .build();
     }
 
@@ -102,7 +108,7 @@ public class JwtProvider {
         }
         return false;
     }
-    private Claims parseClaims(String accessToken) {
+    public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -111,6 +117,13 @@ public class JwtProvider {
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
+        }
+    }
+    public JWT parseToken(String token) throws ParseException {
+        try {
+            return JWTParser.parse(token);
+        } catch (ParseException e) {
+            throw new InvalidTokenException();
         }
     }
 }

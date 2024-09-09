@@ -16,6 +16,7 @@ import yerong.wedle.oauth.handler.CustomAccessDeniedHandler;
 import yerong.wedle.oauth.jwt.CustomAuthenticationEntryPoint;
 import yerong.wedle.oauth.jwt.JwtAuthenticationFilter;
 import yerong.wedle.oauth.jwt.JwtProvider;
+import yerong.wedle.oauth.service.JwtBlacklistService;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final JwtBlacklistService jwtBlacklistService;
 
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception{
@@ -45,24 +47,27 @@ public class SecurityConfig {
                                         AntPathRequestMatcher.antMatcher("/v3/**"),
                                         AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
                                         AntPathRequestMatcher.antMatcher("/login/apple"),
-                                        AntPathRequestMatcher.antMatcher("/login/refresh")
+                                        AntPathRequestMatcher.antMatcher("/login/refresh"),
+                                        AntPathRequestMatcher.antMatcher("/login/status")
 
 
-                                ).permitAll()
+                                        ).permitAll()
                                 .requestMatchers(
                                         AntPathRequestMatcher.antMatcher(HttpMethod.OPTIONS)
                                 )
                                 .permitAll()
                                 .requestMatchers(
                                         AntPathRequestMatcher.antMatcher("/"),
-                                        AntPathRequestMatcher.antMatcher("/api/**")
+                                        AntPathRequestMatcher.antMatcher("/api/**"),
+                                        AntPathRequestMatcher.antMatcher("/member/logout"),
+                                        AntPathRequestMatcher.antMatcher("/member/delete")
                                 ).authenticated().anyRequest().permitAll()
                 )
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, jwtBlacklistService), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

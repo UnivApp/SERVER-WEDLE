@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yerong.wedle.banner.exception.BannerNotFoundException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.MemberDuplicateException;
+import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
 import yerong.wedle.oauth.exception.OAuthProcessingException;
@@ -80,7 +81,15 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
-
+    @ExceptionHandler(InvalidAuthorizationHeaderException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidAuthorizationHeaderException(InvalidAuthorizationHeaderException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.INVALID_AUTHORIZATION_HEADER.getCode(),
+                ResponseCode.INVALID_AUTHORIZATION_HEADER.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
     @ExceptionHandler(BannerNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleBannerNotFoundException(BannerNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
