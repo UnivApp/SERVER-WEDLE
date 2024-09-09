@@ -23,8 +23,8 @@ public class EntranceScoreController {
             summary = "입학 성적 이미지 조회", description = "입학 성적 이미지의 유형을 기반으로 해당 이미지를 조회합니다."
     )
     @GetMapping
-    public ResponseEntity<EntranceScoreResponse> getImageByType(@RequestParam String type) {
-        EntranceScoreResponse entranceScoreResponse = entranceScoreService.getImageByType(type);
+    public ResponseEntity<EntranceScoreResponse> getImage() {
+        EntranceScoreResponse entranceScoreResponse = entranceScoreService.getImage();
         return ResponseEntity.ok(entranceScoreResponse);
     }
 }

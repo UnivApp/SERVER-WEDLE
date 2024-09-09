@@ -19,9 +19,5 @@ public class EntranceScore {
     private Long entranceScoreId;
 
     @Column(nullable = false)
-    private String type;  // "preview" 또는 "full" 타입
-
-    @Lob
-    @Column(nullable = false)
-    private byte[] image;
+    private String image;
 }
