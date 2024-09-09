@@ -31,7 +31,6 @@ public class AuthService {
     @Transactional
     public TokenResponse login(MemberRequest memberRequest){
 
-        log.info("member request : " + memberRequest.getName());
         Member member = memberRepository.findBySocialId(memberRequest.getSocialId()).orElse(null);
 
         if (member == null){
@@ -43,15 +42,8 @@ public class AuthService {
                     .build();
             memberRepository.save(member);
         }
-        log.info("success member create or search");
 
         TokenResponse tokenResponse = jwtProvider.generateTokenDto(memberRequest.getSocialId());
-
-        log.info("success token generate");
-        log.info("================");
-        log.info(tokenResponse.getRefreshToken());
-        log.info("================");
-
 
         Optional<RefreshToken> existingRefreshToken = refreshTokenRepository.findByMemberId(member.getMemberId());
         if (existingRefreshToken.isPresent()) {
@@ -100,5 +92,13 @@ public class AuthService {
         headers.add("Authorization", tokenResponse.getAccessToken());
 
         return headers;
+    }
+
+    public boolean isLoggedIn(String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwtToken = token.substring(7);
+            return jwtProvider.validateToken(jwtToken);
+        }
+        return false;
     }
 }
