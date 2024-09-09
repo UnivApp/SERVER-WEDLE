@@ -8,6 +8,7 @@ import yerong.wedle.banner.exception.BannerNotFoundException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
+import yerong.wedle.oauth.exception.InvalidTokenException;
 import yerong.wedle.oauth.exception.OAuthProcessingException;
 import yerong.wedle.star.exception.StarNotFoundException;
 import yerong.wedle.university.exception.UniversityNotFoundException;
@@ -61,7 +62,15 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
-
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.INVALID_TOKEN.getCode(),
+                ResponseCode.INVALID_TOKEN.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
     @ExceptionHandler(OAuthProcessingException.class)
     public ResponseEntity<ErrorResponse> handleOAuthProcessingException(OAuthProcessingException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
