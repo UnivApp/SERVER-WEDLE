@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import yerong.wedle.member.dto.MemberRequest;
 import yerong.wedle.member.exception.MemberNotFoundException;
-import yerong.wedle.oauth.dto.AccessTokenResponse;
 import yerong.wedle.oauth.dto.TokenResponse;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.service.AuthService;
@@ -43,12 +42,7 @@ public class LoginController {
 
             HttpHeaders headers = authService.setTokenHeaders(tokenResponse);
 
-            AccessTokenResponse accessTokenResponse = AccessTokenResponse.builder()
-                    .accessToken(tokenResponse.getAccessToken())
-                    .accessTokenExpiresIn(tokenResponse.getAccessTokenExpiresIn())
-                    .build();
-
-            return ResponseEntity.ok().headers(headers).body(accessTokenResponse);
+            return ResponseEntity.ok().headers(headers).body(tokenResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그인 중 오류가 발생했습니다.");
         }
@@ -71,12 +65,7 @@ public class LoginController {
             TokenResponse tokenResponse = authService.refreshAccessToken(refreshToken);
             HttpHeaders headers = authService.setTokenHeaders(tokenResponse);
 
-            AccessTokenResponse accessTokenResponse = AccessTokenResponse.builder()
-                    .accessToken(tokenResponse.getAccessToken())
-                    .accessTokenExpiresIn(tokenResponse.getAccessTokenExpiresIn())
-                    .build();
-
-            return ResponseEntity.ok().headers(headers).body(accessTokenResponse);
+            return ResponseEntity.ok().headers(headers).body(tokenResponse);
         } catch (InvalidRefreshTokenException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 Refresh Token입니다.");
         } catch (MemberNotFoundException e) {
