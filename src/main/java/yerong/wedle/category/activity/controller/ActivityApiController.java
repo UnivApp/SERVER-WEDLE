@@ -21,11 +21,12 @@ public class ActivityApiController {
     private final ActivityService activityService;
 
     @Operation(
-            summary = "대학교 활동 조회", description = "대학교 이름을 이용해 해당 대학교의 활동 목록을 조회합니다."
+            summary = "대학교 활동 조회",
+            description = "대학교 ID를 이용해 해당 대학교의 활동 목록을 조회합니다."
     )
     @GetMapping
-    public ResponseEntity<List<ActivityResponse>> getActivitiesByUniversityName(@RequestParam String universityName) {
-        List<ActivityResponse> activities = activityService.getActivitiesByUniversityName(universityName);
+    public ResponseEntity<List<ActivityResponse>> getActivitiesByㅜ(@RequestParam Long universityId) {
+        List<ActivityResponse> activities = activityService.getActivitiesByUniversityId(universityId);
         return ResponseEntity.ok(activities);
     }
 }

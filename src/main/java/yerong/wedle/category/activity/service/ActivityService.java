@@ -21,8 +21,8 @@ public class ActivityService {
     private final UniversityRepository universityRepository;
 
     @Transactional
-    public List<ActivityResponse> getActivitiesByUniversityName(String universityName) {
-        University university = universityRepository.findByName(universityName)
+    public List<ActivityResponse> getActivitiesByUniversityId(Long universityId) {
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
         List<Activity> activities = activityRepository.findByUniversity(university);
         return activities.stream()

@@ -22,7 +22,6 @@ public class University {
     private String name;
     @Column(nullable = false)
     private String location;
-    private String campus;
     private String type; //국립/사립
     @Column(name = "phone_number")
     private String phoneNumber;

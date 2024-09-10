@@ -22,11 +22,12 @@ public class RentApiController {
     private final RentService rentService;
 
     @Operation(
-            summary = "대학교 주변 임대 정보 조회", description = "대학교 이름을 이용해 해당 대학교 주변의 임대 목록을 조회합니다."
+            summary = "대학교 주변 임대 정보 조회",
+            description = "대학교 ID를 이용해 해당 대학교 주변의 임대 목록을 조회합니다."
     )
     @GetMapping
-    public ResponseEntity<List<RentResponse>> getRentsByUniversityName(@RequestParam String universityName) {
-        List<RentResponse> rents = rentService.getRentsByUniversityName(universityName);
+    public ResponseEntity<List<RentResponse>> getRentsByUniversityId(@RequestParam Long universityId) {
+        List<RentResponse> rents = rentService.getRentsByUniversityId(universityId);
         return ResponseEntity.ok(rents);
     }
 }

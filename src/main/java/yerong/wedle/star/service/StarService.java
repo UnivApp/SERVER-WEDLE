@@ -31,12 +31,12 @@ public class StarService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void addStar(String universityName) {
+    public void addStar(Long universityId) {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        University university = universityRepository.findByName(universityName)
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
 
         boolean alreadyStarred = starRepository.existsByMemberAndUniversity(member, university);
@@ -50,12 +50,12 @@ public class StarService {
     }
 
     @Transactional
-    public void removeStar(String universityName) {
+    public void removeStar(Long universityId) {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        University university = universityRepository.findByName(universityName)
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
 
         Star star = starRepository.findByMemberAndUniversity(member, university)
@@ -80,7 +80,8 @@ public class StarService {
                     University university = star.getUniversity();
                     Long starNum = starRepository.countByUniversity(university);
                     return new UniversityResponse(
-                            formatNameWithCampus(university.getName(), university.getCampus()),
+                            university.getUniversityId(),
+                            university.getName(),
                             university.getLogo(),
                             starNum
                     );
@@ -93,11 +94,5 @@ public class StarService {
         if(!star.getMember().getSocialId().equals(socialId)){
             throw new CustomException(ResponseCode.FORBIDDEN);
         }
-    }
-    private String formatNameWithCampus(String name, String campus) {
-        if (campus != null && !campus.isEmpty()) {
-            return name + " (" + campus + ")";
-        }
-        return name;
     }
 }
