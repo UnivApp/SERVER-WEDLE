@@ -32,4 +32,6 @@ public interface StarRepository extends JpaRepository<Star, Long> {
     List<Star> findByMember(Member member);
 
     Long countByUniversity(University university);
+
+    boolean existsByUniversityIdAndMemberId(Long universityId, Long memberId);
 }

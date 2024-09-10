@@ -15,4 +15,5 @@ public class UniversityResponse {
     private String fullName;
     private String logo;
     private Long starNum;
+    boolean isStarred;
 }

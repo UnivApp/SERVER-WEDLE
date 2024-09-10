@@ -32,7 +32,7 @@ public class StarService {
 
     @Transactional
     public void addStar(Long universityId) {
-        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+        String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
@@ -51,7 +51,7 @@ public class StarService {
 
     @Transactional
     public void removeStar(Long universityId) {
-        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+        String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
@@ -69,7 +69,7 @@ public class StarService {
 
     @Transactional(readOnly = true)
     public List<UniversityResponse> getStarredUniversities() {
-        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+        String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
@@ -83,7 +83,8 @@ public class StarService {
                             university.getUniversityId(),
                             university.getName(),
                             university.getLogo(),
-                            starNum
+                            starNum,
+                            true
                     );
                 })
                 .collect(Collectors.toList());
@@ -94,5 +95,10 @@ public class StarService {
         if(!star.getMember().getSocialId().equals(socialId)){
             throw new CustomException(ResponseCode.FORBIDDEN);
         }
+    }
+    private String getCurrentUserId() {
+        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return socialId;
     }
 }
