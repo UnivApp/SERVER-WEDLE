@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,15 +35,23 @@ public class StarApiController {
     })
     @PostMapping("/add")
     public ResponseEntity<Void> addStar(@RequestParam String universityName) {
-
-        starService.addStar(universityName);
-        return ResponseEntity.ok().build();
+        try {
+            starService.addStar(universityName);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("즐겨찾기 추가 실패", e);
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
     @PostMapping("/remove")
     public ResponseEntity<Void> removeStar(@RequestParam String universityName) {
-
-        starService.removeStar(universityName);
-        return ResponseEntity.ok().build();
+        try {
+            starService.removeStar(universityName);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("즐겨찾기 제거 실패", e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
