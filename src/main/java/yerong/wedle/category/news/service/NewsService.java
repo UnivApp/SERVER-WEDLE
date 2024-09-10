@@ -21,8 +21,8 @@ public class NewsService {
     private final UniversityRepository universityRepository;
 
     @Transactional
-    public List<NewsResponse> getNewsByUniversityName(String universityName) {
-        University university = universityRepository.findByName(universityName)
+    public List<NewsResponse> getNewsByUniversityId(Long universityId) {
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
         List<News> news = newsRepository.findByUniversity(university);
         return news.stream()

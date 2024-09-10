@@ -21,14 +21,15 @@ public class RentService {
     private final UniversityRepository universityRepository;
 
     @Transactional
-    public List<RentResponse> getRentsByUniversityName(String universityName) {
-        University university = universityRepository.findByName(universityName)
+    public List<RentResponse> getRentsByUniversityId(Long universityId) {
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
         List<Rent> rents = rentRepository.findByUniversity(university);
         return rents.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
+
 
     private RentResponse convertToDto(Rent rent) {
         return new RentResponse(

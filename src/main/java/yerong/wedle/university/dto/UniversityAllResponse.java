@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class UniversityAllResponse {
-
+    private Long universityId;
     private String fullName;
     private String location;
     private String type; //국립/사립

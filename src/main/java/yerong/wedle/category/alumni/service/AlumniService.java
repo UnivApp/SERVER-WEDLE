@@ -21,8 +21,8 @@ public class AlumniService {
     private final UniversityRepository universityRepository;
 
     @Transactional
-    public List<AlumniResponse> getAlumniByUniversityName(String universityName) {
-        University university = universityRepository.findByName(universityName)
+    public List<AlumniResponse> getAlumniByUniversityId(Long universityId) {
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
         List<Alumni> alumni = alumniRepository.findByUniversity(university);
         return alumni.stream()

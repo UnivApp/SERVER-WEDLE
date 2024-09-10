@@ -22,8 +22,8 @@ public class RestaurantService {
     private final UniversityRepository universityRepository;
 
     @Transactional
-    public List<RestaurantResponse> getRestaurantsByUniversityName(String universityName) {
-        University university = universityRepository.findByName(universityName)
+    public List<RestaurantResponse> getRestaurantsByUniversityId(Long universityId) {
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
         List<Restaurant> restaurants = restaurantRepository.findByUniversity(university);
         return restaurants.stream()
