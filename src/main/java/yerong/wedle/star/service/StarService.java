@@ -14,8 +14,12 @@ import yerong.wedle.star.domain.Star;
 import yerong.wedle.star.exception.StarNotFoundException;
 import yerong.wedle.star.repository.StarRepository;
 import yerong.wedle.university.domain.University;
+import yerong.wedle.university.dto.UniversityResponse;
 import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -61,11 +65,39 @@ public class StarService {
 
         starRepository.delete(star);
     }
+
+
+    @Transactional(readOnly = true)
+    public List<UniversityResponse> getStarredUniversities() {
+        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findBySocialId(socialId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        List<Star> stars = starRepository.findByMember(member);
+
+        return stars.stream()
+                .map(star -> {
+                    University university = star.getUniversity();
+                    Long starNum = starRepository.countByUniversity(university);
+                    return new UniversityResponse(
+                            formatNameWithCampus(university.getName(), university.getCampus()),
+                            university.getLogo(),
+                            starNum
+                    );
+                })
+                .collect(Collectors.toList());
+    }
     private static void authorizePostMember(Star star) {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if(star.getMember().getSocialId().equals(socialId)){
+        if(!star.getMember().getSocialId().equals(socialId)){
             throw new CustomException(ResponseCode.FORBIDDEN);
         }
+    }
+    private String formatNameWithCampus(String name, String campus) {
+        if (campus != null && !campus.isEmpty()) {
+            return name + " (" + campus + ")";
+        }
+        return name;
     }
 }
