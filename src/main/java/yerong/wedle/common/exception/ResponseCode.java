@@ -23,6 +23,9 @@ public enum ResponseCode {
     // University
     UNIVERSITY_NOT_FOUND("404", "대학교를 찾을 수 없습니다."),
 
+    //Restaurant
+    RESTAURANT_NOT_FOUND("404", "맛집을 찾을 수 없습니다."),
+
     // Star
     STAR_NOT_FOUND("404", "즐겨찾기를 찾을 수 없습니다."),
 

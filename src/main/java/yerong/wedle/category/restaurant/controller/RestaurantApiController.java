@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import yerong.wedle.category.restaurant.dto.RestaurantResponse;
+import yerong.wedle.category.restaurant.dto.TopRestaurantResponse;
 import yerong.wedle.category.restaurant.service.RestaurantService;
 
 import java.util.List;
@@ -29,5 +30,15 @@ public class RestaurantApiController {
     public ResponseEntity<List<RestaurantResponse>> getRestaurantsByUniversityId(@RequestParam Long universityId) {
         List<RestaurantResponse> restaurantResponses = restaurantService.getRestaurantsByUniversityId(universityId);
         return ResponseEntity.ok(restaurantResponses);
+    }
+
+    @Operation(
+            summary = "학교별 1위 맛집 조회",
+            description = "모든 학교별 1위 맛집을 조회합니다."
+    )
+    @GetMapping("/top")
+    public ResponseEntity<List<TopRestaurantResponse>> getTopRestaurants() {
+        List<TopRestaurantResponse> topRestaurants = restaurantService.getTopRestaurants();
+        return ResponseEntity.ok(topRestaurants);
     }
 }
