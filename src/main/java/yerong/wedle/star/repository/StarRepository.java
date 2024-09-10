@@ -25,7 +25,6 @@ public interface StarRepository extends JpaRepository<Star, Long> {
 
     boolean existsByMemberAndUniversity(Member member, University university);
 
-    void deleteByMemberAndUniversity(Member member, University university);
 
     Optional<Star> findByMemberAndUniversity(Member member, University university);
 
@@ -33,5 +32,4 @@ public interface StarRepository extends JpaRepository<Star, Long> {
 
     Long countByUniversity(University university);
 
-    boolean existsByUniversityIdAndMemberId(Long universityId, Long memberId);
 }
