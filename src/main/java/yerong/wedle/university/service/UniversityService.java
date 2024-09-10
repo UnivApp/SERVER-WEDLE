@@ -1,8 +1,12 @@
 package yerong.wedle.university.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yerong.wedle.member.domain.Member;
+import yerong.wedle.member.exception.MemberNotFoundException;
+import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.star.repository.StarRepository;
 import yerong.wedle.university.domain.University;
 import yerong.wedle.university.dto.UniversityAllResponse;
@@ -19,7 +23,7 @@ public class UniversityService {
 
     private final UniversityRepository universityRepository;
     private final StarRepository starRepository;
-
+    private final MemberRepository memberRepository;
     @Transactional
     public List<UniversityResponse> searchUniversitiesSummary(String keyward) {
         List<University> universities = universityRepository.findByNameContainingOrLocationContaining(keyward, keyward);
@@ -59,13 +63,20 @@ public class UniversityService {
                 .collect(Collectors.toList());
     }
     private UniversityResponse convertToSummaryDto(University university) {
-        Long starNum = starRepository.countByUniversityId(university.getUniversityId());  // 관심 설정된 횟수 계산
+        Long starNum = starRepository.countByUniversityId(university.getUniversityId());
+        String socialId = getCurrentUserId();
+
+        Member member = memberRepository.findBySocialId(socialId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        boolean isStarred = starRepository.existsByUniversityIdAndMemberId(university.getUniversityId(), member.getMemberId());
 
         return new UniversityResponse(
                 university.getUniversityId(),
                 university.getName(),
                 university.getLogo(),
-                starNum
+                starNum,
+                isStarred
         );
     }
     private UniversityAllResponse convertToDetailDto(University university) {
@@ -81,5 +92,10 @@ public class UniversityService {
                 university.getWebsite(),
                 starNum
         );
+    }
+    private String getCurrentUserId() {
+        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return socialId;
     }
 }
