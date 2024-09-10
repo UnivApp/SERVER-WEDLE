@@ -30,6 +30,9 @@ public class Restaurant {
 
     private String placeUrl;
 
+    @Column(nullable = false)
+    private int ranking;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "university_id")
     private University university;
