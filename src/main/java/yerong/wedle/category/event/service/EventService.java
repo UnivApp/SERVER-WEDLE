@@ -23,8 +23,8 @@ public class EventService {
     private final UniversityRepository universityRepository;
 
     @Transactional
-    public List<EventResponse> getEventsByUniversityName(String universityName) {
-        University university = universityRepository.findByName(universityName)
+    public List<EventResponse> getEventsByUniversityId(Long universityId) {
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
         List<Event> events = eventRepository.findByUniversity(university);
         return events.stream()

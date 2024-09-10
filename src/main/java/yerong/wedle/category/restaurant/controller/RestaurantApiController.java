@@ -22,11 +22,12 @@ public class RestaurantApiController {
     private final RestaurantService restaurantService;
 
     @Operation(
-            summary = "대학교 주변 식당 조회", description = "대학교 이름을 이용해 해당 대학교 주변의 식당 목록을 조회합니다."
+            summary = "대학교 주변 식당 조회",
+            description = "대학교 ID를 이용해 해당 대학교 주변의 식당 목록을 조회합니다."
     )
     @GetMapping
-    public ResponseEntity<List<RestaurantResponse>> getRestaurantsByUniversityName(@RequestParam String universityName) {
-        List<RestaurantResponse> restaurantResponses = restaurantService.getRestaurantsByUniversityName(universityName);
+    public ResponseEntity<List<RestaurantResponse>> getRestaurantsByUniversityId(@RequestParam Long universityId) {
+        List<RestaurantResponse> restaurantResponses = restaurantService.getRestaurantsByUniversityId(universityId);
         return ResponseEntity.ok(restaurantResponses);
     }
 }

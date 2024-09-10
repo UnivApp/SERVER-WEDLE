@@ -60,20 +60,20 @@ public class UniversityService {
     }
     private UniversityResponse convertToSummaryDto(University university) {
         Long starNum = starRepository.countByUniversityId(university.getUniversityId());  // 관심 설정된 횟수 계산
-        String nameWithCampus = formatNameWithCampus(university.getName(), university.getCampus());
 
         return new UniversityResponse(
-                nameWithCampus,
+                university.getUniversityId(),
+                university.getName(),
                 university.getLogo(),
                 starNum
         );
     }
     private UniversityAllResponse convertToDetailDto(University university) {
         Long starNum = starRepository.countByUniversityId(university.getUniversityId());  // 관심 설정된 횟수 계산
-        String nameWithCampus = formatNameWithCampus(university.getName(), university.getCampus());
 
         return new UniversityAllResponse(
-                nameWithCampus,
+                university.getUniversityId(),
+                university.getName(),
                 university.getLocation(),
                 university.getType(),
                 university.getLogo(),
@@ -81,12 +81,5 @@ public class UniversityService {
                 university.getWebsite(),
                 starNum
         );
-    }
-
-    private String formatNameWithCampus(String name, String campus) {
-        if (campus != null && !campus.isEmpty()) {
-            return name + " (" + campus + ")";
-        }
-        return name;
     }
 }

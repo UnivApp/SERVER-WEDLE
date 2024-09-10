@@ -22,11 +22,12 @@ public class MouApiController {
     private final MouService mouService;
 
     @Operation(
-            summary = "대학교 MOU 조회", description = "대학교 이름을 이용해 해당 대학교와 체결된 MOU 목록을 조회합니다."
+            summary = "대학교 MOU 조회",
+            description = "대학교 ID를 이용해 해당 대학교와 체결된 MOU 목록을 조회합니다."
     )
     @GetMapping
-    public ResponseEntity<List<MouResponse>> getMousByUniversityName(@RequestParam String universityName) {
-        List<MouResponse> mous = mouService.getMousByUniversityName(universityName);
+    public ResponseEntity<List<MouResponse>> getMousByUniversityId(@RequestParam Long universityId) {
+        List<MouResponse> mous = mouService.getMousByUniversityId(universityId);
         return ResponseEntity.ok(mous);
     }
 }

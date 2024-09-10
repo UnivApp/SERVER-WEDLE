@@ -21,11 +21,12 @@ public class EventApiController {
     private final EventService eventService;
 
     @Operation(
-            summary = "대학교 이벤트 조회", description = "대학교 이름을 이용해 해당 대학교에서 진행된 이벤트 목록을 조회합니다."
+            summary = "대학교 이벤트 조회",
+            description = "대학교 ID를 이용해 해당 대학교에서 진행된 이벤트 목록을 조회합니다."
     )
     @GetMapping
-    public ResponseEntity<List<EventResponse>> getEventsByUniversityName(@RequestParam String universityName) {
-        List<EventResponse> events = eventService.getEventsByUniversityName(universityName);
+    public ResponseEntity<List<EventResponse>> getEventsByUniversityId(@RequestParam Long universityId) {
+        List<EventResponse> events = eventService.getEventsByUniversityId(universityId);
         return ResponseEntity.ok(events);
     }
 }

@@ -21,8 +21,8 @@ public class RankingService {
     private final UniversityRepository universityRepository;
 
     @Transactional
-    public List<RankingResponse> getRankingsByUniversityName(String universityName) {
-        University university = universityRepository.findByName(universityName)
+    public List<RankingResponse> getRankingsByUniversityId(Long universityId) {
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
         List<Ranking> rankings = rankingRepository.findByUniversity(university);
         return rankings.stream()

@@ -20,16 +20,16 @@ public class MouService {
     private final MouRepository mouRepository;
     private final UniversityRepository universityRepository;
 
+
     @Transactional
-    public List<MouResponse> getMousByUniversityName(String universityName) {
-        University university = universityRepository.findByName(universityName)
+    public List<MouResponse> getMousByUniversityId(Long universityId) {
+        University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
         List<Mou> mous = mouRepository.findByUniversity(university);
         return mous.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-
     private MouResponse convertToDto(Mou mou) {
         return new MouResponse(
                 mou.getPartnerInstitute(),

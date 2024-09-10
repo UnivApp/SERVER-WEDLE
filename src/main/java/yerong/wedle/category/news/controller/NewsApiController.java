@@ -22,11 +22,12 @@ public class NewsApiController {
     private final NewsService newsService;
 
     @Operation(
-            summary = "대학교 뉴스 조회", description = "대학교 이름을 이용해 해당 대학교의 최신 뉴스 목록을 조회합니다."
+            summary = "대학교 뉴스 조회",
+            description = "대학교 ID를 이용해 해당 대학교의 최신 뉴스 목록을 조회합니다."
     )
     @GetMapping
-    public ResponseEntity<List<NewsResponse>> getMousByUniversityName(@RequestParam String universityName) {
-        List<NewsResponse> news = newsService.getNewsByUniversityName(universityName);
+    public ResponseEntity<List<NewsResponse>> getNewsByUniversityId(@RequestParam Long universityId) {
+        List<NewsResponse> news = newsService.getNewsByUniversityId(universityId);
         return ResponseEntity.ok(news);
     }
 }
