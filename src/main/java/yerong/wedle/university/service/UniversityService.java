@@ -69,7 +69,7 @@ public class UniversityService {
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        boolean isStarred = starRepository.existsByUniversityIdAndMemberId(university.getUniversityId(), member.getMemberId());
+        boolean isStarred = starRepository.existsByMemberAndUniversity(member, university);
 
         return new UniversityResponse(
                 university.getUniversityId(),
