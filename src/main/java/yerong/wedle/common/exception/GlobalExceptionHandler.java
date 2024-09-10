@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yerong.wedle.banner.exception.BannerNotFoundException;
+import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
@@ -109,6 +110,16 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(RestaurantNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.RESTAURANT_NOT_FOUND.getCode(),
+                ResponseCode.RESTAURANT_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
 
     @ExceptionHandler(StarNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleStarNotFoundException(StarNotFoundException ex) {
