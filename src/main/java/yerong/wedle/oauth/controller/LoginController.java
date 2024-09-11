@@ -1,6 +1,9 @@
 package yerong.wedle.oauth.controller;
 
+import com.nimbusds.oauth2.sdk.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import yerong.wedle.common.exception.ErrorResponse;
 import yerong.wedle.common.exception.ResponseCode;
 import yerong.wedle.member.dto.MemberRequest;
 import yerong.wedle.member.exception.MemberNotFoundException;
@@ -24,6 +28,7 @@ import yerong.wedle.oauth.service.AuthService;
 import yerong.wedle.oauth.service.JwtBlacklistService;
 
 import java.security.Principal;
+import java.util.Map;
 
 @Tag(name = "Authentication API", description = "로그인 및 토큰 갱신 관련 API")
 @RestController
@@ -121,10 +126,14 @@ public class LoginController {
             description = "현재 유효한 액세스 토큰과 리프레시 토큰을 블랙리스트에 등록하여 로그아웃 처리합니다."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
-            @ApiResponse(responseCode = "400", description = "요청 헤더에서 유효하지 않은 액세스 토큰 또는 이미 블랙리스트에 등록된 토큰"),
-            @ApiResponse(responseCode = "404", description = "해당 Social ID로 회원을 찾을 수 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 로그아웃 실패")
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "400", description = "요청 헤더에서 유효하지 않은 액세스 토큰 또는 이미 블랙리스트에 등록된 토큰",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "해당 Social ID로 회원을 찾을 수 없음",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류로 인해 로그아웃 실패",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/member/logout")
     public ResponseEntity<?> logout(Principal principal, HttpServletRequest request) {
@@ -134,24 +143,24 @@ public class LoginController {
 
         if (accessToken == null) {
             log.warn("요청 헤더에서 액세스 토큰을 찾을 수 없음.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("요청 헤더에서 액세스 토큰을 찾을 수 없음.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "요청 헤더에서 액세스 토큰을 찾을 수 없음."));
         }
 
         if (jwtBlacklistService.isTokenBlacklisted(accessToken)) {
             log.warn("이미 블랙리스트에 있는 액세스 토큰입니다.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 블랙리스트에 있는 액세스 토큰입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "이미 블랙리스트에 있는 액세스 토큰입니다."));
         }
 
         if (!authService.isTokenValid(accessToken)) {
             log.warn("유효하지 않은 액세스 토큰: {}", accessToken);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 토큰입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "유효하지 않은 토큰입니다."));
         }
 
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
         MemberLogoutResponse memberLogoutResponse = authService.logout(socialId);
         if (memberLogoutResponse == null) {
             log.warn("Social Id {}로 회원을 찾을 수 없음", principal.getName());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Social Id로 회원을 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Social Id로 회원을 찾을 수 없습니다."));
         }
 
         try {
@@ -163,10 +172,10 @@ public class LoginController {
             }
             SecurityContextHolder.clearContext();
             log.info("로그아웃 성공");
-            return ResponseEntity.ok("로그아웃에 성공하였습니다.");
+            return ResponseEntity.ok(Map.of("message", "로그아웃에 성공하였습니다."));
         } catch (Exception e) {
             log.error("로그아웃 실패: 사용자 {}", principal.getName(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그아웃 실패하였습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "로그아웃 실패하였습니다."));
         }
     }
     @Operation(
