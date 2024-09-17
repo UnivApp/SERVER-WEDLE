@@ -9,5 +9,5 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface AdmissionRepository extends JpaRepository<Admission, Long> {
-    List<Admission> findAllByOrderByUniversityIdAsc();
+    List<Admission> findAllByOrderByUniversity_IdAsc();
 }
