@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yerong.wedle.banner.exception.BannerNotFoundException;
+import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
 import yerong.wedle.category.announcement.exception.AdmissionAnnouncementNotFoundException;
 import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
 import yerong.wedle.department.exception.DepartmentNotFoundException;
@@ -92,7 +93,7 @@ public class GlobalExceptionHandler {
                 ResponseCode.ADMISSION_ANNOUNCEMENT_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
     @ExceptionHandler(InvalidAuthorizationHeaderException.class)
     public ResponseEntity<ErrorResponse> handleInvalidAuthorizationHeaderException(InvalidAuthorizationHeaderException ex) {
@@ -112,7 +113,15 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
-
+    @ExceptionHandler(CalendarEventNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCalendarEventNotFoundException(CalendarEventNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.CALENDAR_EVENT_NOT_FOUND.getCode(),
+                ResponseCode.CALENDAR_EVENT_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
     @ExceptionHandler(UniversityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUniversityNotFoundException(UniversityNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
