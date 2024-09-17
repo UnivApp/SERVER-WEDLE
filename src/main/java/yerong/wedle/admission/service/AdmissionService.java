@@ -29,40 +29,46 @@ public class AdmissionService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public List<AdmissionResponse> getTop4EarlyAdmissions() {
-        return admissionRepository.findTop4ByAdmissionTypeOrderByRankAsc(AdmissionType.EARLY)
+    public List<AdmissionResponse> getAllAdmissionsSortedByUniversityId() {
+        return admissionRepository.findAllByOrderByUniversityIdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<AdmissionResponse> getTop4RegularAdmissions() {
-        return admissionRepository.findTop4ByAdmissionTypeOrderByRankAsc(AdmissionType.REGULAR)
+    public List<AdmissionResponse> getCompetitionRates() {
+        return admissionRepository.findAllByOrderByUniversityIdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<AdmissionResponse> getAllEarlyAdmissions() {
-        return admissionRepository.findByAdmissionTypeOrderByRankAsc(AdmissionType.EARLY)
+    public List<AdmissionResponse> getEmploymentRates() {
+        return admissionRepository.findAllByOrderByUniversityIdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
     }
 
-    // 전체 정시 조회
     @Transactional(readOnly = true)
-    public List<AdmissionResponse> getAllRegularAdmissions() {
-        return admissionRepository.findByAdmissionTypeOrderByRankAsc(AdmissionType.REGULAR)
+    public List<AdmissionResponse> getCompetitionAndEmploymentRates() {
+        return admissionRepository.findAllByOrderByUniversityIdAsc()
+                .stream()
+                .map(this::convertToAdmissionResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<AdmissionResponse> getCompetitionAndNumbers() {
+        return admissionRepository.findAllByOrderByUniversityIdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
     }
 
     private AdmissionResponse convertToAdmissionResponse(Admission admission) {
-
         String socialId = getCurrentUserId();
 
         Member member = memberRepository.findBySocialId(socialId)
@@ -85,7 +91,13 @@ public class AdmissionService {
 
     private String getCurrentUserId() {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
-
         return socialId;
+    }
+
+    private boolean isStarred(Admission admission) {
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
+        University university = universityRepository.findByName(admission.getUniversity().getName()).orElseThrow(UniversityNotFoundException::new);
+        return starRepository.existsByMemberAndUniversity(member, university);
     }
 }
