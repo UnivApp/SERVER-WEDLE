@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.category.announcement.domain.AdmissionAnnouncement;
+import yerong.wedle.category.announcement.domain.AnnouncementCategory;
 import yerong.wedle.category.announcement.dto.AdmissionAnnouncementResponse;
+import yerong.wedle.category.announcement.exception.AdmissionAnnouncementCategoryNotFoundException;
 import yerong.wedle.category.announcement.exception.AdmissionAnnouncementNotFoundException;
 import yerong.wedle.category.announcement.repository.AdmissionAnnouncementRepository;
 import yerong.wedle.university.domain.University;
@@ -12,6 +14,7 @@ import yerong.wedle.university.dto.UniversityResponse;
 import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,8 +35,12 @@ public class AdmissionAnnouncementService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-    public List<AdmissionAnnouncementResponse> getAnnouncementsByCategory(String category) {
-        return announcementRepository.findByCategory_CategoryName(category).stream()
+    public List<AdmissionAnnouncementResponse> getAnnouncementsByCategory(String categoryDisplayName) {
+        AnnouncementCategory category = Arrays.stream(AnnouncementCategory.values())
+                .filter(c -> c.getDisplayName().equals(categoryDisplayName))
+                .findFirst()
+                .orElseThrow(AdmissionAnnouncementCategoryNotFoundException::new);
+        return announcementRepository.findByCategory(category).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
