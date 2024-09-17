@@ -33,7 +33,10 @@ public enum ResponseCode {
     STAR_NOT_FOUND("404", "즐겨찾기를 찾을 수 없습니다."),
 
     // Admission
-    ADMISSION_NOT_FOUND("404", "입결 이미지 정보를 찾을 수 없습니다.");
+    ADMISSION_NOT_FOUND("404", "입결 이미지 정보를 찾을 수 없습니다."),
+
+    //TuitionFee
+    TUITION_FEE_NOT_FOUND("404", "등록금 정보를 찾을 수 없습니다.");
 
     private final String code;
     private final String message;

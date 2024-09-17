@@ -8,7 +8,6 @@ import yerong.wedle.department.domain.DepartmentType;
 import yerong.wedle.department.dto.DepartmentResponse;
 import yerong.wedle.department.repository.DepartmentRepository;
 import yerong.wedle.university.domain.University;
-import yerong.wedle.university.dto.UniversityAllResponse;
 import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
