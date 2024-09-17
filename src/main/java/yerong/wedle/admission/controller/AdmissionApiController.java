@@ -22,60 +22,59 @@ public class AdmissionApiController {
 
     private final AdmissionService admissionService;
 
-
     @Operation(
-            summary = "수시 입결 1~4위 조회",
-            description = "수시 입결에서 상위 1~4위 대학 정보를 순위 기준으로 조회합니다."
+            summary = "경쟁률만 조회",
+            description = "모든 대학의 경쟁률만 조회합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "수시 입결 1~4위 조회 성공"),
+            @ApiResponse(responseCode = "200", description = "경쟁률 조회 성공"),
             @ApiResponse(responseCode = "404", description = "입결 정보를 찾을 수 없습니다.")
     })
-    @GetMapping("/early/top4")
-    public ResponseEntity<List<AdmissionResponse>> getTop4EarlyAdmissions() {
-        List<AdmissionResponse> responses = admissionService.getTop4EarlyAdmissions();
+    @GetMapping("/competition-rates")
+    public ResponseEntity<List<AdmissionResponse>> getCompetitionRates() {
+        List<AdmissionResponse> responses = admissionService.getCompetitionRates();
         return ResponseEntity.ok(responses);
     }
 
     @Operation(
-            summary = "정시 입결 1~4위 조회",
-            description = "정시 입결에서 상위 1~4위 대학 정보를 순위 기준으로 조회합니다."
+            summary = "취업률만 조회",
+            description = "모든 대학의 취업률만 조회합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "정시 입결 1~4위 조회 성공"),
+            @ApiResponse(responseCode = "200", description = "취업률 조회 성공"),
             @ApiResponse(responseCode = "404", description = "입결 정보를 찾을 수 없습니다.")
     })
-    @GetMapping("/regular/top4")
-    public ResponseEntity<List<AdmissionResponse>> getTop4RegularAdmissions() {
-        List<AdmissionResponse> responses = admissionService.getTop4RegularAdmissions();
+    @GetMapping("/employment-rates")
+    public ResponseEntity<List<AdmissionResponse>> getEmploymentRates() {
+        List<AdmissionResponse> responses = admissionService.getEmploymentRates();
         return ResponseEntity.ok(responses);
     }
 
     @Operation(
-            summary = "수시 전체 입결 조회",
-            description = "수시 입결에 해당하는 모든 대학 정보를 순위 기준으로 조회합니다."
+            summary = "경쟁률 + 취업률 조회",
+            description = "모든 대학의 경쟁률과 취업률을 조회합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "수시 전체 입결 조회 성공"),
+            @ApiResponse(responseCode = "200", description = "경쟁률 및 취업률 조회 성공"),
             @ApiResponse(responseCode = "404", description = "입결 정보를 찾을 수 없습니다.")
     })
-    @GetMapping("/early/all")
-    public ResponseEntity<List<AdmissionResponse>> getAllEarlyAdmissions() {
-        List<AdmissionResponse> responses = admissionService.getAllEarlyAdmissions();
+    @GetMapping("/competition-employment-rates")
+    public ResponseEntity<List<AdmissionResponse>> getCompetitionAndEmploymentRates() {
+        List<AdmissionResponse> responses = admissionService.getCompetitionAndEmploymentRates();
         return ResponseEntity.ok(responses);
     }
 
     @Operation(
-            summary = "정시 전체 입결 조회",
-            description = "정시 입결에 해당하는 모든 대학 정보를 순위 기준으로 조회합니다."
+            summary = "경쟁률 + 모집자수 + 지원자수 조회",
+            description = "모든 대학의 경쟁률, 모집자수, 지원자수를 조회합니다."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "정시 전체 입결 조회 성공"),
+            @ApiResponse(responseCode = "200", description = "경쟁률, 모집자수, 지원자수 조회 성공"),
             @ApiResponse(responseCode = "404", description = "입결 정보를 찾을 수 없습니다.")
     })
-    @GetMapping("/regular/all")
-    public ResponseEntity<List<AdmissionResponse>> getAllRegularAdmissions() {
-        List<AdmissionResponse> responses = admissionService.getAllRegularAdmissions();
+    @GetMapping("/competition-numbers")
+    public ResponseEntity<List<AdmissionResponse>> getCompetitionAndNumbers() {
+        List<AdmissionResponse> responses = admissionService.getCompetitionAndNumbers();
         return ResponseEntity.ok(responses);
     }
 }
