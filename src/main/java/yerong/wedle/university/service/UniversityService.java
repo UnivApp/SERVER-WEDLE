@@ -90,6 +90,7 @@ public class UniversityService {
                 university.getLogo(),
                 university.getPhoneNumber(),
                 university.getWebsite(),
+                university.getAdmissionSite(),
                 starNum
         );
     }
