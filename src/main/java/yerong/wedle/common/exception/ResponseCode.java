@@ -32,6 +32,9 @@ public enum ResponseCode {
     // Star
     STAR_NOT_FOUND("404", "즐겨찾기를 찾을 수 없습니다."),
 
+    // Calender Event
+    CALENDAR_EVENT_NOT_FOUND("404", "일정을 찾을 수 없습니다."),
+
     // Admission
     ADMISSION_NOT_FOUND("404", "입결 이미지 정보를 찾을 수 없습니다."),
 
