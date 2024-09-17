@@ -75,10 +75,9 @@ public class AdmissionService {
                 admission.getUniversity().getName(),
                 admission.getUniversity().getLocation(),
                 admission.getAdmissionType().getDisplayName(),
-                admission.getRank(),
-                admission.getPercentile(),
-                isStarred
-
+                isStarred,
+                admission.getCompetitionRate(),
+                admission.getEmploymentRate()
         );
     }
 
