@@ -14,6 +14,7 @@ import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
 import yerong.wedle.oauth.exception.OAuthProcessingException;
 import yerong.wedle.star.exception.StarNotFoundException;
+import yerong.wedle.tuitionfee.exception.TuitionFeeNotFoundException;
 import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.admission.exception.AdmissionNotFoundException;
 
@@ -145,6 +146,15 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.DEPARTMENT_NOT_FOUND.getCode(),
                 ResponseCode.DEPARTMENT_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+    @ExceptionHandler(TuitionFeeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleDTuitionFeeNotFoundException(TuitionFeeNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.TUITION_FEE_NOT_FOUND.getCode(),
+                ResponseCode.TUITION_FEE_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
