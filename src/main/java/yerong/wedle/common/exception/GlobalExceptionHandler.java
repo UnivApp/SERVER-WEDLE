@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yerong.wedle.banner.exception.BannerNotFoundException;
 import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
+import yerong.wedle.department.exception.DepartmentNotFoundException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
@@ -139,7 +140,15 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
-
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleDepartmentNotFoundException(DepartmentNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.DEPARTMENT_NOT_FOUND.getCode(),
+                ResponseCode.DEPARTMENT_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         ErrorResponse errorResponse = new ErrorResponse(
