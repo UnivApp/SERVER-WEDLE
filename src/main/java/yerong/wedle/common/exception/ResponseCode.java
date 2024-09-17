@@ -26,6 +26,9 @@ public enum ResponseCode {
     //Restaurant
     RESTAURANT_NOT_FOUND("404", "맛집을 찾을 수 없습니다."),
 
+    //Department
+    DEPARTMENT_NOT_FOUND("404", "학과를 찾을 수 없습니다."),
+
     // Star
     STAR_NOT_FOUND("404", "즐겨찾기를 찾을 수 없습니다."),
 
