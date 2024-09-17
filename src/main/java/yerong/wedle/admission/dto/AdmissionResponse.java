@@ -14,4 +14,6 @@ public class AdmissionResponse {
     private boolean isFavorite;
     private double competitionRate;
     private double employmentRate;
+    private int recruitmentNumber;
+    private int applicantNumber;
 }

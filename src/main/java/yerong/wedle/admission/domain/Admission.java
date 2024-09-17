@@ -35,11 +35,19 @@ public class Admission {
     @Column(nullable = false)
     private double employmentRate;
 
+    @Column(nullable = false)
+    private int recruitmentNumber;
+
+    @Column(nullable = false)
+    private int applicantNumber;
+
     @Builder
-    public Admission(University university, AdmissionType admissionType, double competitionRate, double employmentRate) {
+    public Admission(University university, AdmissionType admissionType, double competitionRate, double employmentRate, int recruitmentNumber, int applicantNumber) {
         this.university = university;
         this.admissionType = admissionType;
         this.competitionRate = competitionRate;
         this.employmentRate = employmentRate;
+        this.recruitmentNumber = recruitmentNumber;
+        this.applicantNumber = applicantNumber;
     }
 }

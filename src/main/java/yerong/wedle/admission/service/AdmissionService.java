@@ -77,7 +77,9 @@ public class AdmissionService {
                 admission.getAdmissionType().getDisplayName(),
                 isStarred,
                 admission.getCompetitionRate(),
-                admission.getEmploymentRate()
+                admission.getEmploymentRate(),
+                admission.getRecruitmentNumber(),
+                admission.getApplicantNumber()
         );
     }
 
