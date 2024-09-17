@@ -29,7 +29,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getAllAdmissionsSortedByUniversityId() {
-        return admissionRepository.findAllByOrderByUniversity_IdAsc()
+        return admissionRepository.findAllByOrderByUniversity_UniversityIdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
@@ -37,7 +37,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getCompetitionRates() {
-        return admissionRepository.findAllByOrderByUniversity_IdAsc()
+        return admissionRepository.findAllByOrderByUniversity_UniversityIdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
@@ -45,7 +45,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getEmploymentRates() {
-        return admissionRepository.findAllByOrderByUniversity_IdAsc()
+        return admissionRepository.findAllByOrderByUniversity_UniversityIdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getCompetitionAndEmploymentRates() {
-        return admissionRepository.findAllByOrderByUniversity_IdAsc()
+        return admissionRepository.findAllByOrderByUniversity_UniversityIdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
@@ -61,7 +61,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getCompetitionAndNumbers() {
-        return admissionRepository.findAllByOrderByUniversity_IdAsc()
+        return admissionRepository.findAllByOrderByUniversity_UniversityIdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
@@ -91,12 +91,5 @@ public class AdmissionService {
     private String getCurrentUserId() {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
         return socialId;
-    }
-
-    private boolean isStarred(Admission admission) {
-        String socialId = getCurrentUserId();
-        Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
-        University university = universityRepository.findByName(admission.getUniversity().getName()).orElseThrow(UniversityNotFoundException::new);
-        return starRepository.existsByMemberAndUniversity(member, university);
     }
 }
