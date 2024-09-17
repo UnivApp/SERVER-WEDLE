@@ -29,7 +29,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getAllAdmissionsSortedByUniversityId() {
-        return admissionRepository.findAllByOrderByUniversityIdAsc()
+        return admissionRepository.findAllByOrderByUniversity_IdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
