@@ -26,6 +26,9 @@ public class University {
     @Column(name = "phone_number")
     private String phoneNumber;
     private String website;
+
+    @Column(name = "admission_site")
+    private String admissionSite;
     private String logo;
 
 }

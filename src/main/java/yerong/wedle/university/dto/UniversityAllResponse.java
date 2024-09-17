@@ -15,5 +15,6 @@ public class UniversityAllResponse {
     private String logo;
     private String phoneNumber;
     private String website;
+    private String admissionSite;
     private Long starNum;
 }
