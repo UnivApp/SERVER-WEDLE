@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +30,10 @@ public class DepartmentApiController {
             @ApiResponse(responseCode = "404", description = "학교를 찾을 수 없음")
     })
     @GetMapping("/by-type/{universityId}/{departmentType}")
-    public List<DepartmentResponse> getDepartmentNamesByType(
+    public ResponseEntity<List<DepartmentResponse>> getDepartmentNamesByType(
             @PathVariable Long universityId,
             @PathVariable DepartmentType departmentType) {
-        return departmentService.getDepartmentNamesByType(universityId, departmentType);
+        return ResponseEntity.ok().body(departmentService.getDepartmentNamesByType(universityId, departmentType));
     }
 
     @Operation(summary = "학교별 모든 학과 조회", description = "특정 학교의 모든 학과 정보를 조회합니다.")
@@ -41,8 +42,8 @@ public class DepartmentApiController {
             @ApiResponse(responseCode = "404", description = "학교를 찾을 수 없음")
     })
     @GetMapping("/all/{universityId}")
-    public List<DepartmentResponse> getAllDepartmentNames(
+    public ResponseEntity<List<DepartmentResponse>> getAllDepartmentNames(
             @PathVariable Long universityId) {
-        return departmentService.getAllDepartmentNames(universityId);
+        return ResponseEntity.ok().body(departmentService.getAllDepartmentNames(universityId));
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yerong.wedle.banner.exception.BannerNotFoundException;
+import yerong.wedle.category.announcement.exception.AdmissionAnnouncementNotFoundException;
 import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
 import yerong.wedle.department.exception.DepartmentNotFoundException;
 import yerong.wedle.member.exception.MemberNotFoundException;
@@ -80,6 +81,15 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.OAUTH_ERROR.getCode(),
                 ResponseCode.OAUTH_ERROR.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+    @ExceptionHandler(AdmissionAnnouncementNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAdmissionAnnouncementNotFoundException(AdmissionAnnouncementNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.ADMISSION_ANNOUNCEMENT_NOT_FOUND.getCode(),
+                ResponseCode.ADMISSION_ANNOUNCEMENT_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
