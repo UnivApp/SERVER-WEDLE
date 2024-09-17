@@ -5,7 +5,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.admission.domain.Admission;
-import yerong.wedle.admission.domain.AdmissionType;
 import yerong.wedle.admission.dto.AdmissionResponse;
 import yerong.wedle.admission.repository.AdmissionRepository;
 import yerong.wedle.member.domain.Member;
@@ -38,7 +37,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getCompetitionRates() {
-        return admissionRepository.findAllByOrderByUniversityIdAsc()
+        return admissionRepository.findAllByOrderByUniversity_IdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
@@ -46,7 +45,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getEmploymentRates() {
-        return admissionRepository.findAllByOrderByUniversityIdAsc()
+        return admissionRepository.findAllByOrderByUniversity_IdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
@@ -54,7 +53,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getCompetitionAndEmploymentRates() {
-        return admissionRepository.findAllByOrderByUniversityIdAsc()
+        return admissionRepository.findAllByOrderByUniversity_IdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
@@ -62,7 +61,7 @@ public class AdmissionService {
 
     @Transactional(readOnly = true)
     public List<AdmissionResponse> getCompetitionAndNumbers() {
-        return admissionRepository.findAllByOrderByUniversityIdAsc()
+        return admissionRepository.findAllByOrderByUniversity_IdAsc()
                 .stream()
                 .map(this::convertToAdmissionResponse)
                 .collect(Collectors.toList());
