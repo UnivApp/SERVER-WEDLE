@@ -11,8 +11,7 @@ public class AdmissionResponse {
     private String universityName;
     private String universityLocation;
     private String admissionType;
-    private int rank;
-    private double percentile;
     private boolean isFavorite;
-
+    private double competitionRate;
+    private double employmentRate;
 }

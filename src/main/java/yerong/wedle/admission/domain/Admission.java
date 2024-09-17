@@ -17,8 +17,8 @@ public class Admission {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "entrance_score_id")
-    private Long entranceScoreId;
+    @Column(name = "admission_id")
+    private Long admissionId;
 
 
     @ManyToOne(fetch = LAZY)
@@ -30,16 +30,16 @@ public class Admission {
     private AdmissionType admissionType;
 
     @Column(nullable = false)
-    private int rank;
+    private double competitionRate;
 
     @Column(nullable = false)
-    private double percentile;
+    private double employmentRate;
 
     @Builder
-    public Admission(University university, AdmissionType admissionType, int rank, double percentile, boolean isFavorite) {
+    public Admission(University university, AdmissionType admissionType, double competitionRate, double employmentRate) {
         this.university = university;
         this.admissionType = admissionType;
-        this.rank = rank;
-        this.percentile = percentile;
+        this.competitionRate = competitionRate;
+        this.employmentRate = employmentRate;
     }
 }
