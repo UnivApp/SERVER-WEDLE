@@ -5,6 +5,9 @@ spring:
     store-type: jdbc
   profiles:
     include: oauth
+  datasource:
+    hikari:
+      maximum-pool-size: 20
 logging:
   level:
     org.hibernate.SQL: debug
