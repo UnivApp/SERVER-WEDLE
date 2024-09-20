@@ -35,6 +35,8 @@ public class Activity {
     @JoinColumn(name = "university_id")
     private University university;
 
+    private String source;
+
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ActivityImage> images = new ArrayList<>();
 }
