@@ -28,6 +28,8 @@ public class Activity {
     @Column(length = 1000)
     private String description;
 
+    private String tip;
+
     @Column(nullable = false)
     private String location;
 
