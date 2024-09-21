@@ -37,6 +37,7 @@ public class ActivityService {
         return new ActivityResponse(
                 activity.getName(),
                 activity.getDescription(),
+                activity.getTip(),
                 activity.getLocation(),
                 imageUrls
         );
