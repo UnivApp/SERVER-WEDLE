@@ -13,6 +13,7 @@ public class ActivityResponse {
 
     private String name;
     private String description;
+    private String tip;
     private String location;
     private List<String> imageUrls;
 }
