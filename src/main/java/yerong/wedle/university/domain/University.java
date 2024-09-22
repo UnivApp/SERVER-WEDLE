@@ -1,11 +1,12 @@
 package yerong.wedle.university.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
+import yerong.wedle.category.activity.domain.ActivityUniversity;
 import yerong.wedle.common.domain.BaseTimeEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -31,4 +32,6 @@ public class University {
     private String admissionSite;
     private String logo;
 
+    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ActivityUniversity> activities = new ArrayList<>();
 }

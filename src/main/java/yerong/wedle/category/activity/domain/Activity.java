@@ -33,12 +33,10 @@ public class Activity {
     @Column(nullable = false)
     private String location;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "university_id")
-    private University university;
-
-    private String source;
 
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ActivityImage> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ActivityUniversity> universities = new ArrayList<>();
 }

@@ -20,8 +20,14 @@ public class ActivityImage {
 
     @Column(nullable = false)
     private String imageUrl;
-
+    private String source;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "activity_id")
     private Activity activity;
+
+    public ActivityImage(String imageUrl, String source, Activity activity) {
+        this.imageUrl = imageUrl;
+        this.source = source;
+        this.activity = activity;
+    }
 }
