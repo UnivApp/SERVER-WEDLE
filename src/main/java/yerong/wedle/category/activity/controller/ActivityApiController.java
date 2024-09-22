@@ -29,4 +29,8 @@ public class ActivityApiController {
         List<ActivityResponse> activities = activityService.getActivitiesByUniversityId(universityId);
         return ResponseEntity.ok(activities);
     }
+    @GetMapping("/top-place")
+    public List<ActivityResponse> getActivitiesByIds() {
+        return activityService.getActivitiesByIds();
+    }
 }

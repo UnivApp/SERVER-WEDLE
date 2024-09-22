@@ -7,5 +7,6 @@ import yerong.wedle.university.domain.University;
 import java.util.List;
 
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
-    List<Activity> findByUniversity(University university);
+    List<Activity> findByUniversities_University(University university);
+    List<Activity> findByActivityIdIn(List<Long> activityIds);
 }
