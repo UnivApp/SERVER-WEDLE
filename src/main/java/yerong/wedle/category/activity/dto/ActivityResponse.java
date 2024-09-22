@@ -15,5 +15,5 @@ public class ActivityResponse {
     private String description;
     private String tip;
     private String location;
-    private List<String> imageUrls;
+    private List<ActivityImageResponse> images; // 이미지 URL과 출처를 함께 반환
 }
