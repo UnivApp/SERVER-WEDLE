@@ -14,7 +14,7 @@ public class Hashtag {
     @Column(name = "hashtag_id")
     private Long hashtagId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
