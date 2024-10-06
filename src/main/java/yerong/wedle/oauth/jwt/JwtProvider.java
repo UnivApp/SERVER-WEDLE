@@ -35,9 +35,9 @@ public class JwtProvider {
     private final Key key;
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
-    @Value("{jwt.access_token_expire_time}")
+    @Value("${jwt.access_token_expire_time}")
     private long accessTokenExpireTime;
-    @Value("{jwt.refresh_token_expire_time}")
+    @Value("${jwt.refresh_token_expire_time}")
     private long refreshTokenExpireTime;
 
     public JwtProvider(@Value("${jwt.secret_key}") String secretKey){
