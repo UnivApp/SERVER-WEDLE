@@ -35,8 +35,10 @@ public class JwtProvider {
     private final Key key;
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; //access 30분
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14; //refresh 7일
+    @Value("{jwt.access_token_expire_time}")
+    private long accessTokenExpireTime;
+    @Value("{jwt.refresh_token_expire_time}")
+    private long refreshTokenExpireTime;
 
     public JwtProvider(@Value("${jwt.secret_key}") String secretKey){
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -47,8 +49,8 @@ public class JwtProvider {
         long now = (new Date()).getTime();
 
         //Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
+        Date accessTokenExpiresIn = new Date(now + accessTokenExpireTime);
+        Date refreshTokenExpiresIn = new Date(now + refreshTokenExpireTime);
 
         String accessToken = Jwts.builder()
                 .setSubject(socialId)
