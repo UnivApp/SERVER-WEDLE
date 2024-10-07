@@ -24,7 +24,7 @@ public class Ranking {
     @Enumerated(EnumType.STRING)
     private RankingType rankingType;
 
-    private int rank;
+    private int rankNum;
 
     @Column(name = "year")
     private int year;

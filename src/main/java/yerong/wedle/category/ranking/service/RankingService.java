@@ -48,7 +48,7 @@ public class RankingService {
         return new UniversityRankingResponse(
                 ranking.getUniversityName(),
                 ranking.getLogo(),
-                ranking.getRank()
+                ranking.getRankNum()
         );
 
     }
