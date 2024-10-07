@@ -1,14 +1,16 @@
 package yerong.wedle.category.ranking.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.category.ranking.domain.Ranking;
+import yerong.wedle.category.ranking.domain.RankingType;
 import yerong.wedle.category.ranking.dto.RankingResponse;
+import yerong.wedle.category.ranking.dto.UniversityRankingResponse;
 import yerong.wedle.category.ranking.repository.RankingRepository;
-import yerong.wedle.university.domain.University;
-import yerong.wedle.university.exception.UniversityNotFoundException;
-import yerong.wedle.university.repository.UniversityRepository;
+import yerong.wedle.member.repository.MemberRepository;
+import yerong.wedle.star.repository.StarRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,24 +20,36 @@ import java.util.stream.Collectors;
 public class RankingService {
 
     private final RankingRepository rankingRepository;
-    private final UniversityRepository universityRepository;
-
     @Transactional
-    public List<RankingResponse> getRankingsByUniversityId(Long universityId) {
-        University university = universityRepository.findById(universityId)
-                .orElseThrow(UniversityNotFoundException::new);
-        List<Ranking> rankings = rankingRepository.findByUniversity(university);
+    public List<RankingResponse> getRankings() {
+        List<Ranking> rankings = rankingRepository.findAll();
         return rankings.stream()
-                .map(this::convertToDto)
+                .collect(Collectors.groupingBy(Ranking::getRankingType))
+                .entrySet().stream()
+                .map(entry->{
+                    RankingType rankingType = entry.getKey();
+                    List<Ranking> rankingList = entry.getValue();
+
+                    List<UniversityRankingResponse> universityRankingResponses = rankingList.stream()
+                            .map(this::convertToUniversityRankingResponse)
+                            .collect(Collectors.toList());
+
+                    return new RankingResponse(
+                            rankingType.getDisplayName(),
+                            rankingType.getFullName(),
+                            rankingType.getDescription(),
+                            universityRankingResponses
+                    );
+                })
                 .collect(Collectors.toList());
     }
 
-    private RankingResponse convertToDto(Ranking ranking) {
-        return new RankingResponse(
-                ranking.getRankingType().getDisplayName(),
-                ranking.getWorldRank(),
-                ranking.getAsiaRank(),
-                ranking.getDomesticRank()
+    private UniversityRankingResponse convertToUniversityRankingResponse(Ranking ranking) {
+        return new UniversityRankingResponse(
+                ranking.getUniversityName(),
+                ranking.getLogo(),
+                ranking.getRank()
         );
+
     }
 }
