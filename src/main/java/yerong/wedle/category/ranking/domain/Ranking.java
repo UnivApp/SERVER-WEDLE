@@ -14,6 +14,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Entity
+@Table(name = "ranking")
 public class Ranking {
 
     @Id
@@ -26,8 +27,8 @@ public class Ranking {
 
     private int rankNum;
 
-    @Column(name = "year")
-    private int year;
+    @Column(name = "ranking_year")
+    private int rankingYear;
 
     private String universityName;
     private String logo;
