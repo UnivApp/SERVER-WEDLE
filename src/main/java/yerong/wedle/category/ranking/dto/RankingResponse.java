@@ -20,5 +20,4 @@ public class RankingResponse {
     private int year;
     private String category;
     List<UniversityRankingResponse> universityRankingResponses;
-
 }
