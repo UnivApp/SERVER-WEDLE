@@ -184,8 +184,9 @@ public class LoginController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원탈퇴 성공"),
-            @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
-            @ApiResponse(responseCode = "500", description = "회원탈퇴 중 서버 오류 발생")
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 토큰"),
+            @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생")
     })
     @DeleteMapping("/member/delete")
     public ResponseEntity<?> deleteMember() {
@@ -193,7 +194,12 @@ public class LoginController {
             authService.deleteMember();
             SecurityContextHolder.clearContext();
             return ResponseEntity.ok().body("회원탈퇴가 완료되었습니다.");
+        } catch (InvalidTokenException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+        } catch (MemberNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 회원 정보를 찾을 수 없습니다.");
         } catch (Exception e) {
+            log.error("회원탈퇴 중 오류 발생", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원탈퇴 중 오류가 발생했습니다.");
         }
     }
