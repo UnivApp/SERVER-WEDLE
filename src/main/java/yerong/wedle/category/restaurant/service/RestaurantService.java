@@ -69,9 +69,15 @@ public class RestaurantService {
             return null;
         }
 
+        // 순위가 1인 식당만 찾기
         Restaurant topRestaurant = restaurants.stream()
-                .max(Comparator.comparing(Restaurant::getRanking))
-                .orElseThrow(RestaurantNotFoundException::new);
+                .filter(restaurant -> restaurant.getRanking() == 1)
+                .findFirst()
+                .orElse(null); // 없으면 null 반환
+
+        if (topRestaurant == null) {
+            return null; // 순위가 1인 식당이 없으면 null 반환
+        }
 
         return convertToTopDto(topRestaurant, university.getName());
     }
