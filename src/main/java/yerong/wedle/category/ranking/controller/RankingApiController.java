@@ -26,8 +26,8 @@ public class RankingApiController {
             summary = "대학교 랭킹 정보 조회", description = "대학교 ID를 이용해 해당 대학교의 랭킹 목록을 조회합니다."
     )
     @GetMapping
-    public ResponseEntity<List<RankingResponse>> getRankingsByUniversityId(@RequestParam Long universityId) {
-        List<RankingResponse> rankings = rankingService.getRankingsByUniversityId(universityId);
+    public ResponseEntity<List<RankingResponse>> getRankings() {
+        List<RankingResponse> rankings = rankingService.getAllRankings();
         return ResponseEntity.ok(rankings);
     }
 }

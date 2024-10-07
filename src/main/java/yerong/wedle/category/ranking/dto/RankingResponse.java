@@ -17,6 +17,8 @@ public class RankingResponse {
     private String displayName;
     private String fullName;
     private String description;
+    private int year;
+    private String category;
     List<UniversityRankingResponse> universityRankingResponses;
 
 }

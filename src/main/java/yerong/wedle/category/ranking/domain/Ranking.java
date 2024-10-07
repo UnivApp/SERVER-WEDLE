@@ -14,6 +14,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Entity
+@Table(name = "ranking")
 public class Ranking {
 
     @Id
@@ -24,11 +25,14 @@ public class Ranking {
     @Enumerated(EnumType.STRING)
     private RankingType rankingType;
 
-    private int rank;
+    private int rankNum;
 
-    @Column(name = "year")
-    private int year;
+    @Column(name = "ranking_year")
+    private int rankingYear;
 
     private String universityName;
     private String logo;
+
+    @Enumerated(EnumType.STRING)
+    private RankingCategory rankingCategory;
 }
