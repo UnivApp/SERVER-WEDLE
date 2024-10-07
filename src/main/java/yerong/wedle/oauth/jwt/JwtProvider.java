@@ -51,27 +51,30 @@ public class JwtProvider {
     public TokenResponse generateTokenDto(String socialId){
         long now = System.currentTimeMillis();
 
-        LocalDateTime accessTokenExpiresIn = LocalDateTime.ofInstant(Instant.ofEpochMilli(now + accessTokenExpireTime), ZoneId.systemDefault());
-        LocalDateTime refreshTokenExpiresIn = LocalDateTime.ofInstant(Instant.ofEpochMilli(now + refreshTokenExpireTime), ZoneId.systemDefault());
+        Date accessTokenExpiration = new Date(now + accessTokenExpireTime);
+        Date refreshTokenExpiration = new Date(now + refreshTokenExpireTime);
 
         String accessToken = Jwts.builder()
                 .setSubject(socialId)
                 .claim(AUTHORITIES_KEY, Role.USER.getKey())
-                .setExpiration(Date.from(accessTokenExpiresIn.atZone(ZoneId.systemDefault()).toInstant())) // Date로 변환
+                .setExpiration(accessTokenExpiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
+        log.info("Access Token Expiration Time: " + accessTokenExpiration);
+        log.info("Refresh Token Expiration Time: " + refreshTokenExpiration);
+
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(Date.from(refreshTokenExpiresIn.atZone(ZoneId.systemDefault()).toInstant())) // Date로 변환
+                .setExpiration(refreshTokenExpiration) // Date로 변환
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         return TokenResponse.builder()
                 .accessToken(accessToken)
-                .accessTokenExpiresIn(accessTokenExpiresIn)
+                .accessTokenExpiresIn(accessTokenExpireTime)
                 .refreshToken(refreshToken)
-                .refreshTokenExpiresIn(refreshTokenExpiresIn)
+                .refreshTokenExpiresIn(refreshTokenExpireTime)
                 .build();
     }
 
