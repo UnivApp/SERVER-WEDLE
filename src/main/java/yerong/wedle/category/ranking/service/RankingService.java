@@ -27,12 +27,13 @@ public class RankingService {
     }
 
     private RankingResponse convertToRankingResponse(Ranking ranking) {
-        // 대학 랭킹 응답 생성
+
         UniversityRankingResponse universityRankingResponse = new UniversityRankingResponse(
                 ranking.getUniversityName(),
                 ranking.getLogo(),
                 ranking.getRankNum()
         );
+
 
         return new RankingResponse(
                 ranking.getRankingType().getDisplayName(),
