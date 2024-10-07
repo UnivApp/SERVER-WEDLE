@@ -49,10 +49,9 @@ public class JwtProvider {
     }
 
     public TokenResponse generateTokenDto(String socialId){
-        long now = System.currentTimeMillis();
-
-        Date accessTokenExpiration = new Date(now + accessTokenExpireTime);
-        Date refreshTokenExpiration = new Date(now + refreshTokenExpireTime);
+        Date now = new Date();
+        Date accessTokenExpiration = new Date(now.getTime() + accessTokenExpireTime);
+        Date refreshTokenExpiration = new Date(now.getTime() + refreshTokenExpireTime);
 
         String accessToken = Jwts.builder()
                 .setSubject(socialId)
@@ -66,7 +65,7 @@ public class JwtProvider {
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(refreshTokenExpiration) // Date로 변환
+                .setExpiration(refreshTokenExpiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
