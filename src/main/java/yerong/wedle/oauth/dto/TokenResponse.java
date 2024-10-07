@@ -13,8 +13,9 @@ import java.util.Date;
 public class TokenResponse {
 
     private String accessToken;
-    private LocalDateTime accessTokenExpiresIn;
+    private long accessTokenExpiresIn;
+
     private String refreshToken;
-    private LocalDateTime refreshTokenExpiresIn;
+    private long refreshTokenExpiresIn;
 
 }
