@@ -4,13 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.category.ranking.domain.Ranking;
-import yerong.wedle.category.ranking.domain.RankingCategory;
-import yerong.wedle.category.ranking.domain.RankingType;
 import yerong.wedle.category.ranking.dto.RankingResponse;
 import yerong.wedle.category.ranking.dto.UniversityRankingResponse;
 import yerong.wedle.category.ranking.repository.RankingRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,62 +17,30 @@ public class RankingService {
 
     private final RankingRepository rankingRepository;
 
-    @Transactional
-    public List<RankingResponse> getRankings() {
+    @Transactional(readOnly = true)
+    public List<RankingResponse> getAllRankings() {
         List<Ranking> rankings = rankingRepository.findAll();
 
-        List<RankingResponse> rankingResponses = new ArrayList<>();
-
-        List<Ranking> cwtsRankings = rankings.stream()
-                .filter(ranking -> ranking.getRankingType() == RankingType.CWTS)
-                .collect(Collectors.toList());
-
-        var cwtsGroupedByCategory = cwtsRankings.stream()
-                .collect(Collectors.groupingBy(Ranking::getRankingCategory));
-
-        rankingResponses.addAll(rankings.stream()
-                .filter(ranking -> ranking.getRankingType() != RankingType.CWTS) // CWTS 제외
+        return rankings.stream()
                 .map(this::convertToRankingResponse)
-                .collect(Collectors.toList()));
-
-        for (RankingCategory category : RankingCategory.values()) {
-            List<UniversityRankingResponse> universityRankingResponses = cwtsGroupedByCategory.getOrDefault(category, List.of()).stream()
-                    .map(this::convertToUniversityRankingResponse)
-                    .collect(Collectors.toList());
-
-            if (!universityRankingResponses.isEmpty()) {
-                rankingResponses.add(new RankingResponse(
-                        RankingType.CWTS.getDisplayName(),
-                        RankingType.CWTS.getFullName(),
-                        RankingType.CWTS.getDescription(),
-                        universityRankingResponses
-                ));
-            }
-        }
-
-        return rankingResponses;
+                .collect(Collectors.toList());
     }
 
     private RankingResponse convertToRankingResponse(Ranking ranking) {
+        // 대학 랭킹 응답 생성
+        UniversityRankingResponse universityRankingResponse = new UniversityRankingResponse(
+                ranking.getUniversityName(),
+                ranking.getLogo(),
+                ranking.getRankNum()
+        );
+
         return new RankingResponse(
                 ranking.getRankingType().getDisplayName(),
                 ranking.getRankingType().getFullName(),
                 ranking.getRankingType().getDescription(),
-                List.of(new UniversityRankingResponse(
-                        ranking.getUniversityName(),
-                        ranking.getLogo(),
-                        ranking.getRankingCategory().getValue(),
-                        ranking.getRankNum()
-                ))
-        );
-    }
-
-    private UniversityRankingResponse convertToUniversityRankingResponse(Ranking ranking) {
-        return new UniversityRankingResponse(
-                ranking.getUniversityName(),
-                ranking.getLogo(),
-                ranking.getRankingCategory().getValue(),
-                ranking.getRankNum()
+                ranking.getRankingYear(),
+                ranking.getRankingCategory() != null ? ranking.getRankingCategory().name() : null,
+                List.of(universityRankingResponse)
         );
     }
 }
