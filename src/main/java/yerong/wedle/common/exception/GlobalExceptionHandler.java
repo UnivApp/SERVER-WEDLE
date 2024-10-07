@@ -8,6 +8,7 @@ import yerong.wedle.banner.exception.BannerNotFoundException;
 import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
 import yerong.wedle.category.announcement.exception.AdmissionAnnouncementCategoryNotFoundException;
 import yerong.wedle.category.announcement.exception.AdmissionAnnouncementNotFoundException;
+import yerong.wedle.category.news.exception.NewsNotFoundException;
 import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
 import yerong.wedle.department.exception.DepartmentNotFoundException;
 import yerong.wedle.member.exception.MemberNotFoundException;
@@ -101,6 +102,15 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.ADMISSION_ANNOUNCEMENT_CATEGORY_NOT_FOUND.getCode(),
                 ResponseCode.ADMISSION_ANNOUNCEMENT_CATEGORY_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+    @ExceptionHandler(NewsNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNewsNotFoundException(NewsNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.NEWS_NOT_FOUND.getCode(),
+                ResponseCode.NEWS_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);

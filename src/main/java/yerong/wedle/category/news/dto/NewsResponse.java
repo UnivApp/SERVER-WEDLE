@@ -4,11 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsResponse {
 
+    private Long newsId;
     private String title;
     private String link;
+    private LocalDate publishedDate;
+    private Integer admissionYear;
+    private String source;
 }
