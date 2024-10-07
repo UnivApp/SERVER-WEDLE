@@ -11,6 +11,5 @@ public class UniversityRankingResponse {
 
     private String universityName;
     private String logo;
-    private String category;
     private int rank;
 }

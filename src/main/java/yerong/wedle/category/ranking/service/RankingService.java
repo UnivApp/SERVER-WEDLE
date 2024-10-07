@@ -48,6 +48,7 @@ public class RankingService {
                         RankingType.CWTS.getDisplayName(),
                         RankingType.CWTS.getFullName(),
                         RankingType.CWTS.getDescription(),
+                        category.getValue(),
                         universityRankingResponses
                 ));
             }
@@ -61,10 +62,10 @@ public class RankingService {
                 ranking.getRankingType().getDisplayName(),
                 ranking.getRankingType().getFullName(),
                 ranking.getRankingType().getDescription(),
+                null,
                 List.of(new UniversityRankingResponse(
                         ranking.getUniversityName(),
                         ranking.getLogo(),
-                        ranking.getRankingCategory().getValue(),
                         ranking.getRankNum()
                 ))
         );
@@ -74,7 +75,6 @@ public class RankingService {
         return new UniversityRankingResponse(
                 ranking.getUniversityName(),
                 ranking.getLogo(),
-                ranking.getRankingCategory().getValue(),
                 ranking.getRankNum()
         );
     }
