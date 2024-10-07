@@ -58,18 +58,24 @@ public class RestaurantService {
 
         return universities.stream()
                 .map(this::findTopRestaurantForUniversity)
+                .filter(topRestaurant -> topRestaurant != null) // null 체크하여 결과에서 제외
                 .collect(Collectors.toList());
     }
 
     private TopRestaurantResponse findTopRestaurantForUniversity(University university) {
         List<Restaurant> restaurants = restaurantRepository.findByUniversity(university);
 
+        if (restaurants.isEmpty()) {
+            return null;
+        }
+
         Restaurant topRestaurant = restaurants.stream()
                 .max(Comparator.comparing(Restaurant::getRanking))
-                .orElseThrow(null);
+                .orElseThrow(RestaurantNotFoundException::new);
 
         return convertToTopDto(topRestaurant, university.getName());
     }
+
     private TopRestaurantResponse convertToTopDto(Restaurant restaurant, String universityName) {
         List<String> hashtags = restaurant.getHashtags().stream()
                 .map(Hashtag::getName)
