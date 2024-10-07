@@ -22,6 +22,9 @@ import yerong.wedle.oauth.exception.InvalidTokenException;
 
 import java.security.Key;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -46,30 +49,29 @@ public class JwtProvider {
     }
 
     public TokenResponse generateTokenDto(String socialId){
-        long now = (new Date()).getTime();
+        long now = System.currentTimeMillis();
 
-        //Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + accessTokenExpireTime);
-        Date refreshTokenExpiresIn = new Date(now + refreshTokenExpireTime);
+        LocalDateTime accessTokenExpiresIn = LocalDateTime.ofInstant(Instant.ofEpochMilli(now + accessTokenExpireTime), ZoneId.systemDefault());
+        LocalDateTime refreshTokenExpiresIn = LocalDateTime.ofInstant(Instant.ofEpochMilli(now + refreshTokenExpireTime), ZoneId.systemDefault());
 
         String accessToken = Jwts.builder()
                 .setSubject(socialId)
                 .claim(AUTHORITIES_KEY, Role.USER.getKey())
-                .setExpiration(accessTokenExpiresIn)
+                .setExpiration(Date.from(accessTokenExpiresIn.atZone(ZoneId.systemDefault()).toInstant())) // Date로 변환
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(refreshTokenExpiresIn)
+                .setExpiration(Date.from(refreshTokenExpiresIn.atZone(ZoneId.systemDefault()).toInstant())) // Date로 변환
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         return TokenResponse.builder()
                 .accessToken(accessToken)
-                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .accessTokenExpiresIn(accessTokenExpiresIn)
                 .refreshToken(refreshToken)
-                .refreshTokenExpiresIn(refreshTokenExpiresIn.getTime())
+                .refreshTokenExpiresIn(refreshTokenExpiresIn)
                 .build();
     }
 
