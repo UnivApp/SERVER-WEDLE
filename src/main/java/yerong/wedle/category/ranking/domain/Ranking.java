@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yerong.wedle.university.domain.University;
 
+import java.util.List;
+
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -22,16 +24,11 @@ public class Ranking {
     @Enumerated(EnumType.STRING)
     private RankingType rankingType;
 
-    @Column(name = "world_rank")
-    private String worldRank;
+    private int rank;
 
-    @Column(name = "asia_rank")
-    private String asiaRank;
+    @Column(name = "year")
+    private int year;
 
-    @Column(name = "domestic_rank")
-    private String domesticRank;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "university_id")
-    private University university;
+    private String universityName;
+    private String logo;
 }

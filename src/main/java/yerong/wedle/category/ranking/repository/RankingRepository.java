@@ -7,5 +7,5 @@ import yerong.wedle.university.domain.University;
 import java.util.List;
 
 public interface RankingRepository extends JpaRepository<Ranking, Long> {
-    List<Ranking> findByUniversity(University university);
+    List<Ranking> findAll();
 }
