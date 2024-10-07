@@ -41,6 +41,9 @@ public enum ResponseCode {
     //TuitionFee
     TUITION_FEE_NOT_FOUND("404", "등록금 정보를 찾을 수 없습니다."),
 
+    //News
+    NEWS_NOT_FOUND("404", "기사 정보를 찾을 수 없습니다."),
+
     //Admission Announcement
     ADMISSION_ANNOUNCEMENT_NOT_FOUND("404", "대학 연계 행사 정보를 찾을 수 없습니다."),
     ADMISSION_ANNOUNCEMENT_CATEGORY_NOT_FOUND("404", "대학 연계 행사 카테고리 정보를 찾을 수 없습니다.");

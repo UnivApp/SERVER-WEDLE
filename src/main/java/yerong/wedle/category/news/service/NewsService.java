@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.category.news.domain.News;
 import yerong.wedle.category.news.dto.NewsResponse;
+import yerong.wedle.category.news.exception.NewsNotFoundException;
 import yerong.wedle.category.news.repository.NewsRepository;
 import yerong.wedle.university.domain.University;
 import yerong.wedle.university.exception.UniversityNotFoundException;
@@ -18,22 +19,30 @@ import java.util.stream.Collectors;
 public class NewsService {
 
     private final NewsRepository newsRepository;
-    private final UniversityRepository universityRepository;
 
-    @Transactional
-    public List<NewsResponse> getNewsByUniversityId(Long universityId) {
-        University university = universityRepository.findById(universityId)
-                .orElseThrow(UniversityNotFoundException::new);
-        List<News> news = newsRepository.findByUniversity(university);
-        return news.stream()
+    @Transactional(readOnly = true)
+    public NewsResponse getNewsByNewsId(Long newsId) {
+        News news = newsRepository.findById(newsId).orElseThrow(NewsNotFoundException::new);
+        return convertToDto(news);
+    }
+
+    @Transactional(readOnly = true)
+    public List<NewsResponse> getNews() {
+        List<News> newsList = newsRepository.findAll();
+
+        return newsList.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     private NewsResponse convertToDto(News news) {
         return new NewsResponse(
+                news.getNewsId(),
                 news.getTitle(),
-                news.getLink()
+                news.getLink(),
+                news.getPublishedDate(),
+                news.getAdmissionYear(),
+                news.getSource()
         );
     }
 }
