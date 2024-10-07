@@ -66,7 +66,7 @@ public class RestaurantService {
 
         Restaurant topRestaurant = restaurants.stream()
                 .max(Comparator.comparing(Restaurant::getRanking))
-                .orElseThrow(RestaurantNotFoundException::new);
+                .orElseThrow(null);
 
         return convertToTopDto(topRestaurant, university.getName());
     }
