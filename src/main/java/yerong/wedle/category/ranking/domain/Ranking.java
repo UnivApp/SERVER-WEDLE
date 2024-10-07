@@ -31,4 +31,7 @@ public class Ranking {
 
     private String universityName;
     private String logo;
+
+    @Enumerated(EnumType.STRING)
+    private RankingCategory rankingCategory;
 }
