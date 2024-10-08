@@ -8,7 +8,7 @@ import yerong.wedle.university.domain.University;
 import java.util.List;
 import java.util.Optional;
 
-public interface EmploymentRateRepository extends JpaRepository<CompetitionRate, Long> {
+public interface EmploymentRateRepository extends JpaRepository<EmploymentRate, Long> {
     List<EmploymentRate> findByUniversity(University university);
 
     Optional<EmploymentRate> findTopByUniversityOrderByEmploymentYearDesc(University university);
