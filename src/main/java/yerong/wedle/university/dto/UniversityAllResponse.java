@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yerong.wedle.competitionRate.dto.CompetitionRateResponse;
+import yerong.wedle.department.dto.DepartmentResponse;
 import yerong.wedle.employmentRate.dto.EmploymentRateResponse;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class UniversityAllResponse {
     private String website;
     private String admissionSite;
     private Long starNum;
+    private List<DepartmentResponse> departmentResponses;
     private List<CompetitionRateResponse> competitionRateResponses;
     private List<EmploymentRateResponse> employmentRateResponses;
 

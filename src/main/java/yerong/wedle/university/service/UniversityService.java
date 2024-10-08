@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.competitionRate.domain.CompetitionRate;
 import yerong.wedle.competitionRate.dto.CompetitionRateResponse;
 import yerong.wedle.competitionRate.repository.CompetitionRateRepository;
+import yerong.wedle.department.domain.Department;
+import yerong.wedle.department.dto.DepartmentResponse;
+import yerong.wedle.department.repository.DepartmentRepository;
 import yerong.wedle.employmentRate.domain.EmploymentRate;
 import yerong.wedle.employmentRate.dto.EmploymentRateResponse;
 import yerong.wedle.employmentRate.repository.EmploymentRateRepository;
@@ -33,7 +36,7 @@ public class UniversityService {
     private final MemberRepository memberRepository;
     private final EmploymentRateRepository employmentRateRepository;
     private final CompetitionRateRepository competitionRateRepository;
-
+    private final DepartmentRepository departmentRepository;
     @Transactional
     public List<UniversityResponse> searchUniversitiesSummary(String keyward) {
         List<University> universities = universityRepository.findByNameContainingOrLocationContaining(keyward, keyward);
@@ -94,6 +97,7 @@ public class UniversityService {
 
         List<CompetitionRate> competitionRates = competitionRateRepository.findByUniversity(university);
         List<EmploymentRate> employmentRates = employmentRateRepository.findByUniversity(university); // EmploymentRate 데이터를 가져옵니다.
+        List<Department> departments = departmentRepository.findByUniversity(university);
 
         List<CompetitionRateResponse> competitionRateResponses = competitionRates.stream()
                 .map(rate -> new CompetitionRateResponse(rate.getEarlyAdmissionRate(), rate.getRegularAdmissionRate(), rate.getCompetitionYear()))
@@ -101,6 +105,10 @@ public class UniversityService {
 
         List<EmploymentRateResponse> employmentRateResponses = employmentRates.stream()
                 .map(rate -> new EmploymentRateResponse(rate.getEmploymentRate(), rate.getEmploymentYear()))
+                .collect(Collectors.toList());
+
+        List<DepartmentResponse> departmentResponses = departments.stream()
+                .map(department -> new DepartmentResponse(department.getName(), department.getDepartmentType().getDisplayName()))
                 .collect(Collectors.toList());
 
         return new UniversityAllResponse(
@@ -113,6 +121,7 @@ public class UniversityService {
                 university.getWebsite(),
                 university.getAdmissionSite(),
                 starNum,
+                departmentResponses,
                 competitionRateResponses,
                 employmentRateResponses
         );
