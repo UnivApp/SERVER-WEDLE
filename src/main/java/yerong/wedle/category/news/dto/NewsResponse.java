@@ -15,6 +15,6 @@ public class NewsResponse {
     private String title;
     private String link;
     private LocalDate publishedDate;
-    private Integer admissionYear;
+    private String admissionYear;
     private String source;
 }

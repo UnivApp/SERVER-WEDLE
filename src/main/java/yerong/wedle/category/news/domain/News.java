@@ -27,6 +27,6 @@ public class News {
 
     @Column(nullable = false)
     private LocalDate publishedDate;
-    private Integer admissionYear;
+    private String admissionYear;
     private String source;
 }

@@ -4,6 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yerong.wedle.competitionRate.domain.CompetitionRate;
+import yerong.wedle.competitionRate.dto.CompetitionRateResponse;
+import yerong.wedle.competitionRate.repository.CompetitionRateRepository;
+import yerong.wedle.employmentRate.domain.EmploymentRate;
+import yerong.wedle.employmentRate.dto.EmploymentRateResponse;
+import yerong.wedle.employmentRate.repository.EmploymentRateRepository;
+import yerong.wedle.employmentRate.service.EmploymentRateService;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
@@ -24,6 +31,9 @@ public class UniversityService {
     private final UniversityRepository universityRepository;
     private final StarRepository starRepository;
     private final MemberRepository memberRepository;
+    private final EmploymentRateRepository employmentRateRepository;
+    private final CompetitionRateRepository competitionRateRepository;
+
     @Transactional
     public List<UniversityResponse> searchUniversitiesSummary(String keyward) {
         List<University> universities = universityRepository.findByNameContainingOrLocationContaining(keyward, keyward);
@@ -82,6 +92,17 @@ public class UniversityService {
     private UniversityAllResponse convertToDetailDto(University university) {
         Long starNum = starRepository.countByUniversityId(university.getUniversityId());  // 관심 설정된 횟수 계산
 
+        List<CompetitionRate> competitionRates = competitionRateRepository.findByUniversity(university);
+        List<EmploymentRate> employmentRates = employmentRateRepository.findByUniversity(university); // EmploymentRate 데이터를 가져옵니다.
+
+        List<CompetitionRateResponse> competitionRateResponses = competitionRates.stream()
+                .map(rate -> new CompetitionRateResponse(rate.getEarlyAdmissionRate(), rate.getRegularAdmissionRate(), rate.getCompetitionYear()))
+                .collect(Collectors.toList());
+
+        List<EmploymentRateResponse> employmentRateResponses = employmentRates.stream()
+                .map(rate -> new EmploymentRateResponse(rate.getEmploymentRate(), rate.getEmploymentYear()))
+                .collect(Collectors.toList());
+
         return new UniversityAllResponse(
                 university.getUniversityId(),
                 university.getName(),
@@ -91,7 +112,9 @@ public class UniversityService {
                 university.getPhoneNumber(),
                 university.getWebsite(),
                 university.getAdmissionSite(),
-                starNum
+                starNum,
+                competitionRateResponses,
+                employmentRateResponses
         );
     }
     private String getCurrentUserId() {
