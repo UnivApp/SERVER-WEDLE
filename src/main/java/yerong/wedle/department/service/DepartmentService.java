@@ -11,6 +11,7 @@ import yerong.wedle.university.domain.University;
 import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,10 @@ public class DepartmentService {
 
         List<Department> departments = departmentRepository.findByUniversityAndDepartmentType(university, departmentType);
         return departments.stream()
-                .map(this::convertToDto)
+                .collect(Collectors.groupingBy(Department::getDepartmentType))
+                .entrySet().stream()
+                .sorted(Comparator.comparing(entry -> entry.getKey().ordinal()))
+                .map(entry -> convertToDto(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 
@@ -39,15 +43,23 @@ public class DepartmentService {
                 .orElseThrow(UniversityNotFoundException::new);
 
         List<Department> departments = departmentRepository.findByUniversity(university);
+
         return departments.stream()
-                .map(this::convertToDto)
+                .collect(Collectors.groupingBy(Department::getDepartmentType))
+                .entrySet().stream()
+                .sorted(Comparator.comparing(entry -> entry.getKey().ordinal()))
+                .map(entry -> convertToDto(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 
-    private DepartmentResponse convertToDto(Department department) {
+    private DepartmentResponse convertToDto(DepartmentType departmentType, List<Department> departments) {
+        List<String> departmentNames = departments.stream()
+                .map(Department::getName)
+                .collect(Collectors.toList());
+
         return new DepartmentResponse(
-                department.getName(),
-                department.getDepartmentType().getDisplayName()
+                departmentType.getDisplayName(),
+                departmentNames
         );
     }
 }

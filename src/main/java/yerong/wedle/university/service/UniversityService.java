@@ -8,6 +8,7 @@ import yerong.wedle.competitionRate.domain.CompetitionRate;
 import yerong.wedle.competitionRate.dto.CompetitionRateResponse;
 import yerong.wedle.competitionRate.repository.CompetitionRateRepository;
 import yerong.wedle.department.domain.Department;
+import yerong.wedle.department.domain.DepartmentType;
 import yerong.wedle.department.dto.DepartmentResponse;
 import yerong.wedle.department.repository.DepartmentRepository;
 import yerong.wedle.employmentRate.domain.EmploymentRate;
@@ -24,6 +25,7 @@ import yerong.wedle.university.dto.UniversityResponse;
 import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +64,7 @@ public class UniversityService {
     }
     @Transactional
     public List<UniversityResponse> getAllUniversitiesSummary() {
-        List<University> universities = universityRepository.findAll();
+        List<University> universities = universityRepository.findAllByOrderByNameAsc();
         return universities.stream()
                 .map(this::convertToSummaryDto)
                 .collect(Collectors.toList());
@@ -70,7 +72,7 @@ public class UniversityService {
 
     @Transactional
     public List<UniversityAllResponse> getAllUniversitiesDetails() {
-        List<University> universities = universityRepository.findAll();
+        List<University> universities = universityRepository.findAllByOrderByNameAsc();
         return universities.stream()
                 .map(this::convertToDetailDto)
                 .collect(Collectors.toList());
@@ -108,7 +110,10 @@ public class UniversityService {
                 .collect(Collectors.toList());
 
         List<DepartmentResponse> departmentResponses = departments.stream()
-                .map(department -> new DepartmentResponse(department.getName(), department.getDepartmentType().getDisplayName()))
+                .collect(Collectors.groupingBy(Department::getDepartmentType))
+                .entrySet().stream()
+                .sorted(Comparator.comparing(entry -> entry.getKey().ordinal()))
+                .map(entry -> convertToDepartmentDto(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
         return new UniversityAllResponse(
@@ -126,6 +131,18 @@ public class UniversityService {
                 employmentRateResponses
         );
     }
+
+    private DepartmentResponse convertToDepartmentDto(DepartmentType departmentType, List<Department> departments) {
+        List<String> departmentNames = departments.stream()
+                .map(Department::getName)
+                .collect(Collectors.toList());
+
+        return new DepartmentResponse(
+                departmentType.getDisplayName(),
+                departmentNames
+        );
+    }
+
     private String getCurrentUserId() {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
 
