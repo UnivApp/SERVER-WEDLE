@@ -24,5 +24,6 @@ public class CompetitionRate {
 
     private Double earlyAdmissionRate;
     private Double regularAdmissionRate;
+    private Double AverageAdmissionRate;
     private String competitionYear;
 }

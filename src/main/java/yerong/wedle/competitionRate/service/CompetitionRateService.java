@@ -40,6 +40,7 @@ public class CompetitionRateService {
         return new CompetitionRateResponse(
                 competitionRate.getEarlyAdmissionRate(),
                 competitionRate.getRegularAdmissionRate(),
+                competitionRate.getAverageAdmissionRate(),
                 competitionRate.getCompetitionYear()
         );
     }

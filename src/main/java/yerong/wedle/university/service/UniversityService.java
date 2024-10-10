@@ -102,7 +102,7 @@ public class UniversityService {
         List<Department> departments = departmentRepository.findByUniversity(university);
 
         List<CompetitionRateResponse> competitionRateResponses = competitionRates.stream()
-                .map(rate -> new CompetitionRateResponse(rate.getEarlyAdmissionRate(), rate.getRegularAdmissionRate(), rate.getCompetitionYear()))
+                .map(rate -> new CompetitionRateResponse(rate.getEarlyAdmissionRate(), rate.getRegularAdmissionRate(), rate.getAverageAdmissionRate(), rate.getCompetitionYear()))
                 .collect(Collectors.toList());
 
         List<EmploymentRateResponse> employmentRateResponses = employmentRates.stream()
