@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmploymentRateResponse {
-    private Double employmentRate;
     private String year;
+    private Double employmentRate;
 }
