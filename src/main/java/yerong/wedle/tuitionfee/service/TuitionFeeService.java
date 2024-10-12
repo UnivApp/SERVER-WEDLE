@@ -7,7 +7,9 @@ import yerong.wedle.department.domain.Department;
 import yerong.wedle.department.domain.DepartmentType;
 import yerong.wedle.department.dto.DepartmentResponse;
 import yerong.wedle.tuitionfee.domain.TuitionFee;
+import yerong.wedle.tuitionfee.domain.TuitionFeeType;
 import yerong.wedle.tuitionfee.dto.TuitionFeeResponse;
+import yerong.wedle.tuitionfee.dto.YearTuitionFeeResponse;
 import yerong.wedle.tuitionfee.exception.TuitionFeeNotFoundException;
 import yerong.wedle.tuitionfee.repository.TuitionFeeRepository;
 import yerong.wedle.university.domain.University;
@@ -15,6 +17,7 @@ import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,12 +27,13 @@ public class TuitionFeeService {
 
     private final TuitionFeeRepository tuitionFeeRepository;
     private final UniversityRepository universityRepository;
-    public List<TuitionFeeResponse> getTuitionFeesByType(Long universityId) {
+
+    public List<TuitionFeeResponse> getTuitionFeesByType(Long universityId, TuitionFeeType type) {
 
         University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
 
-        List<TuitionFee> tuitionFees = tuitionFeeRepository.findByUniversity(university);
+        List<TuitionFee> tuitionFees = tuitionFeeRepository.findByUniversityAndTuitionFeeType(university, type);
         if (tuitionFees.isEmpty()) {
             throw new TuitionFeeNotFoundException();
         }
@@ -39,7 +43,8 @@ public class TuitionFeeService {
                 .collect(Collectors.toList());
     }
 
-    public TuitionFeeResponse getAverageTuitionFee(Long universityId) {
+    public YearTuitionFeeResponse getRecentTuitionFees(Long universityId) {
+
         University university = universityRepository.findById(universityId)
                 .orElseThrow(UniversityNotFoundException::new);
 
@@ -48,17 +53,22 @@ public class TuitionFeeService {
             throw new TuitionFeeNotFoundException();
         }
 
-        double averageFee = tuitionFees.stream()
-                .mapToDouble(TuitionFee::getFeeAmount)
-                .average()
+        String recentYear = tuitionFees.stream()
+                .map(TuitionFee::getTuitionFeeYear)
+                .max(String::compareTo)
                 .orElseThrow(TuitionFeeNotFoundException::new);
 
-        return new TuitionFeeResponse("전체 평균 등록금", averageFee);
+        List<TuitionFeeResponse> tuitionFeeResponses = tuitionFees.stream()
+                .filter(tuitionFee -> tuitionFee.getTuitionFeeYear().equals(recentYear))
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return new YearTuitionFeeResponse(recentYear, tuitionFeeResponses);
     }
 
     private TuitionFeeResponse convertToDto(TuitionFee tuitionFee) {
         return new TuitionFeeResponse(
-                tuitionFee.getDepartmentType().getDisplayName(),
+                tuitionFee.getTuitionFeeType().getDisplayName(),
                 tuitionFee.getFeeAmount()
         );
     }

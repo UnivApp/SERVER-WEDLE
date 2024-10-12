@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import yerong.wedle.department.domain.DepartmentType;
-import yerong.wedle.department.dto.DepartmentResponse;
-import yerong.wedle.department.service.DepartmentService;
+import yerong.wedle.tuitionfee.domain.TuitionFeeType;
 import yerong.wedle.tuitionfee.dto.TuitionFeeResponse;
+import yerong.wedle.tuitionfee.dto.YearTuitionFeeResponse;
 import yerong.wedle.tuitionfee.service.TuitionFeeService;
 
 import java.util.List;
@@ -30,18 +29,21 @@ public class TuitionFeeApiController {
             @ApiResponse(responseCode = "200", description = "계열별 등록금 조회 성공"),
             @ApiResponse(responseCode = "404", description = "대학을 찾을 수 없음")
     })
-    @GetMapping("/university/{universityId}/by-type")
-    public ResponseEntity<List<TuitionFeeResponse>> getTuitionFeesByType(@PathVariable Long universityId) {
-        return ResponseEntity.ok().body(tuitionFeeService.getTuitionFeesByType(universityId));
+    @GetMapping("/university/{universityId}/{tuitionFeeType}")
+    public ResponseEntity<List<TuitionFeeResponse>> getTuitionFeesByType(@PathVariable Long universityId, @PathVariable TuitionFeeType type){
+            List<TuitionFeeResponse> tuitionFees = tuitionFeeService.getTuitionFeesByType(universityId, type);
+            return ResponseEntity.ok().body(tuitionFees);
     }
 
-    @Operation(summary = "전체 평균 등록금 조회", description = "대학 ID에 따라 전체 평균 등록금을 조회합니다.")
+    @Operation(summary = "최근 년도 등록금 조회", description = "대학 ID에 따라 최근 년도 등록금을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "전체 평균 등록금 조회 성공"),
+            @ApiResponse(responseCode = "200", description = "최근 년도 등록금 조회 성공"),
             @ApiResponse(responseCode = "404", description = "대학을 찾을 수 없음")
     })
-    @GetMapping("/university/{universityId}/average")
-    public ResponseEntity<TuitionFeeResponse> getAverageTuitionFee(@PathVariable Long universityId) {
-        return ResponseEntity.ok().body(tuitionFeeService.getAverageTuitionFee(universityId));
+    @GetMapping("/university/{universityId}/recent")
+    public ResponseEntity<YearTuitionFeeResponse> getRecentTuitionFees(@PathVariable Long universityId) {
+        YearTuitionFeeResponse recentTuitionFees = tuitionFeeService.getRecentTuitionFees(universityId);
+        return ResponseEntity.ok().body(recentTuitionFees);
     }
+
 }

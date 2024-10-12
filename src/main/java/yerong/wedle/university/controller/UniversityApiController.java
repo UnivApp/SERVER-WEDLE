@@ -57,4 +57,5 @@ public class UniversityApiController {
         List<UniversityAllResponse> allUniversities = universityService.getAllUniversitiesDetails();
         return ResponseEntity.ok(allUniversities);
     }
+
 }

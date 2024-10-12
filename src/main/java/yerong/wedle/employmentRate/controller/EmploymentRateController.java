@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import yerong.wedle.competitionRate.dto.CompetitionRateResponse;
 import yerong.wedle.employmentRate.dto.EmploymentRateResponse;
+import yerong.wedle.employmentRate.dto.UniversityEmploymentRateResponse;
 import yerong.wedle.employmentRate.service.EmploymentRateService;
 
 import java.util.List;
@@ -25,19 +26,19 @@ public class EmploymentRateController {
             summary = "대학교 취업률 삼년치 조회",
             description = "대학교 ID를 이용해 해당 대학교의 취업률 삼년치를 조회합니다."
     )
-    @GetMapping("/three-years")
-    public ResponseEntity<List<EmploymentRateResponse>> getAllEmploymentRates(@RequestParam Long universityId) {
-        List<EmploymentRateResponse> lastThreeYearsEmploymentRates = employmentRateService.getLastThreeYearsEmploymentRates(universityId);
-        return ResponseEntity.ok(lastThreeYearsEmploymentRates);
+    @GetMapping()
+    public ResponseEntity<UniversityEmploymentRateResponse> getAllEmploymentRates(@RequestParam Long universityId) {
+        UniversityEmploymentRateResponse universityEmploymentRates = employmentRateService.getUniversityEmploymentRates(universityId);
+        return ResponseEntity.ok(universityEmploymentRates);
     }
 
     @Operation(
-            summary = "대학교 취업률 최근년도 조회",
-            description = "대학교 ID를 이용해 해당 대학교의 취업률 최근년도를 조회합니다."
+            summary = "가나다순으로 상위 5개 대학교 취업률 조회",
+            description = "가나다순으로 상위 5개 대학교의 취업률을 조회합니다."
     )
-    @GetMapping
-    public ResponseEntity<EmploymentRateResponse> getEmploymentRate(@RequestParam Long universityId) {
-        EmploymentRateResponse latestEmploymentRate = employmentRateService.getLatestEmploymentRate(universityId);
-        return ResponseEntity.ok(latestEmploymentRate);
+    @GetMapping("/top-5")
+    public ResponseEntity<List<UniversityEmploymentRateResponse>> getTop5UniversitiesEmploymentRates () {
+        List<UniversityEmploymentRateResponse> top5UniversitiesEmploymentRates = employmentRateService.getTop5UniversitiesEmploymentRates();
+        return ResponseEntity.ok(top5UniversitiesEmploymentRates);
     }
 }
