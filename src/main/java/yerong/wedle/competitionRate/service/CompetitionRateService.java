@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.competitionRate.domain.CompetitionRate;
 import yerong.wedle.competitionRate.dto.CompetitionRateResponse;
+import yerong.wedle.competitionRate.dto.UniversityCompetitionRateResponse;
 import yerong.wedle.competitionRate.exception.CompetitionRateNotFoundException;
 import yerong.wedle.competitionRate.repository.CompetitionRateRepository;
 import yerong.wedle.university.domain.University;
@@ -21,20 +22,36 @@ public class CompetitionRateService {
     private final CompetitionRateRepository competitionRateRepository;
     private final UniversityRepository universityRepository;
     @Transactional(readOnly = true)
-    public List<CompetitionRateResponse> getLastThreeYearsCompetitionRates(Long universityId) {
+    public UniversityCompetitionRateResponse getUniversityCompetitionRates(Long universityId) {
         University university = universityRepository.findById(universityId).orElseThrow(UniversityNotFoundException::new);
         List<CompetitionRate> rates = competitionRateRepository.findByUniversity(university);
 
-        return rates.stream()
+        if(rates.isEmpty()){
+            throw new CompetitionRateNotFoundException();
+        }
+
+        List<CompetitionRateResponse> competitionRateResponses = rates.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-    }
-    @Transactional(readOnly = true)
-    public CompetitionRateResponse getLatestCompetitionRate(Long universityId) {
-        University university = universityRepository.findById(universityId).orElseThrow(UniversityNotFoundException::new);
-        CompetitionRate latestRate = competitionRateRepository.findTopByUniversityOrderByCompetitionYearDesc(university).orElseThrow(CompetitionRateNotFoundException::new);
 
-        return convertToDto(latestRate);
+        return new UniversityCompetitionRateResponse(
+                university.getName(),
+                university.getLogo(),
+                competitionRateResponses
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<UniversityCompetitionRateResponse> getTop5UniversitiesCompetitionRates() {
+        List<CompetitionRate> top5Rates = competitionRateRepository.findTop5ByOrderByUniversityNameAsc();
+
+        return top5Rates.stream()
+                .map(rate -> new UniversityCompetitionRateResponse(
+                        rate.getUniversity().getName(),
+                        rate.getUniversity().getLogo(),
+                        List.of(convertToDto(rate))
+                ))
+                .collect(Collectors.toList());
     }
     private CompetitionRateResponse convertToDto(CompetitionRate competitionRate) {
         return new CompetitionRateResponse(

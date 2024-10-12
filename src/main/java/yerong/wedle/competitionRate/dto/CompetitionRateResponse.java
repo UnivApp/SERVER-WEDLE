@@ -11,6 +11,5 @@ public class CompetitionRateResponse {
     private Double earlyAdmissionRate;
     private Double regularAdmissionRate;
     private Double AverageAdmissionRate;
-
     private String year;
 }
