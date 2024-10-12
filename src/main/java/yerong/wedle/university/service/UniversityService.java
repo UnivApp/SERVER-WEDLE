@@ -19,6 +19,10 @@ import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.star.repository.StarRepository;
+import yerong.wedle.tuitionfee.domain.TuitionFee;
+import yerong.wedle.tuitionfee.dto.TuitionFeeResponse;
+import yerong.wedle.tuitionfee.dto.YearTuitionFeeResponse;
+import yerong.wedle.tuitionfee.repository.TuitionFeeRepository;
 import yerong.wedle.university.domain.University;
 import yerong.wedle.university.dto.UniversityAllResponse;
 import yerong.wedle.university.dto.UniversityResponse;
@@ -39,6 +43,8 @@ public class UniversityService {
     private final EmploymentRateRepository employmentRateRepository;
     private final CompetitionRateRepository competitionRateRepository;
     private final DepartmentRepository departmentRepository;
+    private final TuitionFeeRepository tuitionFeeRepository;
+
     @Transactional
     public List<UniversityResponse> searchUniversitiesSummary(String keyward) {
         List<University> universities = universityRepository.findByNameContainingOrLocationContaining(keyward, keyward);
@@ -95,18 +101,21 @@ public class UniversityService {
         );
     }
     private UniversityAllResponse convertToDetailDto(University university) {
-        Long starNum = starRepository.countByUniversityId(university.getUniversityId());  // 관심 설정된 횟수 계산
+        Long starNum = starRepository.countByUniversityId(university.getUniversityId());
 
+        List<TuitionFee> tuitionFees = tuitionFeeRepository.findByUniversity(university);
         List<CompetitionRate> competitionRates = competitionRateRepository.findByUniversity(university);
-        List<EmploymentRate> employmentRates = employmentRateRepository.findByUniversity(university); // EmploymentRate 데이터를 가져옵니다.
+        List<EmploymentRate> employmentRates = employmentRateRepository.findByUniversity(university);
         List<Department> departments = departmentRepository.findByUniversity(university);
+
+        YearTuitionFeeResponse tuitionFeeResponses = getLatestTuitionFeeResponse(tuitionFees);
 
         List<CompetitionRateResponse> competitionRateResponses = competitionRates.stream()
                 .map(rate -> new CompetitionRateResponse(rate.getEarlyAdmissionRate(), rate.getRegularAdmissionRate(), rate.getAverageAdmissionRate(), rate.getCompetitionYear()))
                 .collect(Collectors.toList());
 
         List<EmploymentRateResponse> employmentRateResponses = employmentRates.stream()
-                .map(rate -> new EmploymentRateResponse(rate.getEmploymentRate(), rate.getEmploymentYear()))
+                .map(rate -> new EmploymentRateResponse(rate.getEmploymentYear(),rate.getEmploymentRate()))
                 .collect(Collectors.toList());
 
         List<DepartmentResponse> departmentResponses = departments.stream()
@@ -126,10 +135,26 @@ public class UniversityService {
                 university.getWebsite(),
                 university.getAdmissionSite(),
                 starNum,
+                tuitionFeeResponses,
                 departmentResponses,
                 competitionRateResponses,
                 employmentRateResponses
         );
+    }
+
+    private YearTuitionFeeResponse getLatestTuitionFeeResponse(List<TuitionFee> tuitionFees) {
+        TuitionFee latestTuitionFee = tuitionFees.stream()
+                .max(Comparator.comparing(TuitionFee::getTuitionFeeYear))
+                .orElse(null);
+
+        if (latestTuitionFee != null) {
+            return new YearTuitionFeeResponse(
+                    latestTuitionFee.getTuitionFeeYear(),
+                    List.of(new TuitionFeeResponse(latestTuitionFee.getTuitionFeeType().getDisplayName(), latestTuitionFee.getFeeAmount())) // DTO 리스트 생성
+            );
+        } else {
+            return new YearTuitionFeeResponse();
+        }
     }
 
     private DepartmentResponse convertToDepartmentDto(DepartmentType departmentType, List<Department> departments) {
