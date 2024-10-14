@@ -17,14 +17,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/competition-rate")
-public class CompetitionRateController {
+public class CompetitionRateApiController {
     private final CompetitionRateService competitionRateService;
     @Operation(
             summary = "대학교 경쟁률 조회",
             description = "대학교 ID를 이용해 해당 대학교의 경쟁률 삼년치를 조회합니다."
     )
     @GetMapping()
-    public ResponseEntity<UniversityCompetitionRateResponse> getAllCompetitionRates(@RequestParam Long universityId) {
+    public ResponseEntity<UniversityCompetitionRateResponse> getAllCompetitionRatesByUniversity(@RequestParam Long universityId) {
         UniversityCompetitionRateResponse universityCompetitionRates = competitionRateService.getUniversityCompetitionRates(universityId);
         return ResponseEntity.ok(universityCompetitionRates);
     }
@@ -37,5 +37,15 @@ public class CompetitionRateController {
     public ResponseEntity<List<UniversityCompetitionRateResponse>> getTop5UniversitiesCompetitionRates() {
         List<UniversityCompetitionRateResponse> top5Rates = competitionRateService.getTop5UniversitiesCompetitionRates();
         return ResponseEntity.ok(top5Rates);
+    }
+
+    @Operation(
+            summary = "모든 대학교 경쟁률 조회",
+            description = "모든 대학교의 경쟁률을 조회합니다."
+    )
+    @GetMapping("/all")
+    public ResponseEntity<List<UniversityCompetitionRateResponse>> getAllUniversitiesCompetitionRates() {
+        List<UniversityCompetitionRateResponse> rates = competitionRateService.getAllUniversitiesCompetitionRates();
+        return ResponseEntity.ok(rates);
     }
 }
