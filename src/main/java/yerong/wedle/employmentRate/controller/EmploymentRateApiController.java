@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import yerong.wedle.competitionRate.dto.CompetitionRateResponse;
-import yerong.wedle.employmentRate.dto.EmploymentRateResponse;
 import yerong.wedle.employmentRate.dto.UniversityEmploymentRateResponse;
 import yerong.wedle.employmentRate.service.EmploymentRateService;
 
@@ -19,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/employment-rate")
-public class EmploymentRateController {
+public class EmploymentRateApiController {
 
         private final EmploymentRateService employmentRateService;
     @Operation(
@@ -27,7 +25,7 @@ public class EmploymentRateController {
             description = "대학교 ID를 이용해 해당 대학교의 취업률 삼년치를 조회합니다."
     )
     @GetMapping()
-    public ResponseEntity<UniversityEmploymentRateResponse> getAllEmploymentRates(@RequestParam Long universityId) {
+    public ResponseEntity<UniversityEmploymentRateResponse> getEmploymentRatesByUniversity(@RequestParam Long universityId) {
         UniversityEmploymentRateResponse universityEmploymentRates = employmentRateService.getUniversityEmploymentRates(universityId);
         return ResponseEntity.ok(universityEmploymentRates);
     }
@@ -40,5 +38,15 @@ public class EmploymentRateController {
     public ResponseEntity<List<UniversityEmploymentRateResponse>> getTop5UniversitiesEmploymentRates () {
         List<UniversityEmploymentRateResponse> top5UniversitiesEmploymentRates = employmentRateService.getTop5UniversitiesEmploymentRates();
         return ResponseEntity.ok(top5UniversitiesEmploymentRates);
+    }
+
+    @Operation(
+            summary = "모든 대학교 취업률 조회",
+            description = "모든 대학교의 취업률을 조회합니다."
+    )
+    @GetMapping("/all")
+    public ResponseEntity<List<UniversityEmploymentRateResponse>> getAllUniversityEmploymentRates () {
+        List<UniversityEmploymentRateResponse> UniversitiesEmploymentRates = employmentRateService.getAllUniversityEmploymentRates();
+        return ResponseEntity.ok(UniversitiesEmploymentRates);
     }
 }

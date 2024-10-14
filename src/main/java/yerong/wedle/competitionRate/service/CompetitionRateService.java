@@ -13,6 +13,7 @@ import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,11 +46,34 @@ public class CompetitionRateService {
     public List<UniversityCompetitionRateResponse> getTop5UniversitiesCompetitionRates() {
         List<CompetitionRate> top5Rates = competitionRateRepository.findTop5ByOrderByUniversityNameAsc();
 
-        return top5Rates.stream()
-                .map(rate -> new UniversityCompetitionRateResponse(
-                        rate.getUniversity().getName(),
-                        rate.getUniversity().getLogo(),
-                        List.of(convertToDto(rate))
+        Map<University, List<CompetitionRateResponse>> universityRatesMap = top5Rates.stream()
+                .collect(Collectors.groupingBy(
+                        CompetitionRate::getUniversity,
+                        Collectors.mapping(this::convertToDto, Collectors.toList())
+                ));
+        return universityRatesMap.entrySet().stream()
+                .map(entry -> new UniversityCompetitionRateResponse(
+                        entry.getKey().getName(),
+                        entry.getKey().getLogo(),
+                        entry.getValue()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<UniversityCompetitionRateResponse> getAllUniversitiesCompetitionRates() {
+
+        List<CompetitionRate> rates = competitionRateRepository.findAll();
+        Map<University, List<CompetitionRateResponse>> universityRatesMap = rates.stream()
+                .collect(Collectors.groupingBy(
+                        CompetitionRate::getUniversity,
+                        Collectors.mapping(this::convertToDto, Collectors.toList())
+                ));
+        return universityRatesMap.entrySet().stream()
+                .map(entry -> new UniversityCompetitionRateResponse(
+                        entry.getKey().getName(),
+                        entry.getKey().getLogo(),
+                        entry.getValue()
                 ))
                 .collect(Collectors.toList());
     }

@@ -51,8 +51,8 @@ public enum ResponseCode {
     EMPLOYMENT_RATE_NOT_FOUND("404", "취업률 정보를 찾을 수 없습니다."),
 
     //Admission Announcement
-    ADMISSION_ANNOUNCEMENT_NOT_FOUND("404", "대학 연계 행사 정보를 찾을 수 없습니다."),
-    ADMISSION_ANNOUNCEMENT_CATEGORY_NOT_FOUND("404", "대학 연계 행사 카테고리 정보를 찾을 수 없습니다.");
+    EXPO_NOT_FOUND("404", "대학 연계 행사 정보를 찾을 수 없습니다."),
+    EXPO_CATEGORY_NOT_FOUND("404", "대학 연계 행사 카테고리 정보를 찾을 수 없습니다.");
 
 
     private final String code;
