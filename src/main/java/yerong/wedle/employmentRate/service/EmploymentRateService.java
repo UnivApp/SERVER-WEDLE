@@ -17,6 +17,7 @@ import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,14 +48,36 @@ public class EmploymentRateService {
 
     @Transactional(readOnly = true)
     public List<UniversityEmploymentRateResponse> getTop5UniversitiesEmploymentRates() {
-
         List<EmploymentRate> top5Rates = employmentRateRepository.findTop5ByOrderByUniversityNameAsc();
 
-        return top5Rates.stream()
-                .map(rate -> new UniversityEmploymentRateResponse(
-                        rate.getUniversity().getName(),
-                        rate.getUniversity().getLogo(),
-                        List.of(convertToDto(rate))
+        Map<University, List<EmploymentRateResponse>> universityRatesMap = top5Rates.stream()
+                .collect(Collectors.groupingBy(
+                        EmploymentRate::getUniversity,
+                        Collectors.mapping(this::convertToDto, Collectors.toList())
+                ));
+        return universityRatesMap.entrySet().stream()
+                .map(entry -> new UniversityEmploymentRateResponse(
+                        entry.getKey().getName(),
+                        entry.getKey().getLogo(),
+                        entry.getValue()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<UniversityEmploymentRateResponse> getAllUniversityEmploymentRates() {
+        List<EmploymentRate> rates = employmentRateRepository.findAll();
+
+        Map<University, List<EmploymentRateResponse>> universityRatesMap = rates.stream()
+                .collect(Collectors.groupingBy(
+                        EmploymentRate::getUniversity,
+                        Collectors.mapping(this::convertToDto, Collectors.toList())
+                ));
+        return universityRatesMap.entrySet().stream()
+                .map(entry -> new UniversityEmploymentRateResponse(
+                        entry.getKey().getName(),
+                        entry.getKey().getLogo(),
+                        entry.getValue()
                 ))
                 .collect(Collectors.toList());
     }
@@ -63,5 +86,17 @@ public class EmploymentRateService {
                 employmentRate.getEmploymentYear(),
                 employmentRate.getEmploymentRate()
         );
+    }
+
+    public List<UniversityEmploymentRateResponse> getUniversitiesEmploymentRates() {
+
+        List<EmploymentRate> all = employmentRateRepository.findAll();
+        return all.stream().map(
+                rate -> new UniversityEmploymentRateResponse(
+                        rate.getUniversity().getName(),
+                        rate.getUniversity().getLogo(),
+                        List.of(convertToDto(rate))
+                )
+        ).collect(Collectors.toList());
     }
 }
