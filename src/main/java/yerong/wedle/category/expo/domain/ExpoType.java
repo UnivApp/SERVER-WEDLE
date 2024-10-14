@@ -1,12 +1,14 @@
-package yerong.wedle.category.announcement.domain;
+package yerong.wedle.category.expo.domain;
 
-public enum AnnouncementCategory {
+public enum ExpoType {
     ADMISSION_SESSION("입시설명회"),
-    COOPERATIVE_ACTIVITIES("연계활동");
+    COOPERATIVE_ACTIVITIES("연계활동"),
+    MAJOR_EXPERIENCE("전공체험");
+
 
     private final String displayName;
 
-    AnnouncementCategory(String displayName) {
+    ExpoType(String displayName) {
         this.displayName = displayName;
     }
 

@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
-import yerong.wedle.category.announcement.exception.AdmissionAnnouncementCategoryNotFoundException;
-import yerong.wedle.category.announcement.exception.AdmissionAnnouncementNotFoundException;
+import yerong.wedle.category.expo.exception.ExpoCategoryNotFoundException;
+import yerong.wedle.category.expo.exception.ExpoNotFoundException;
 import yerong.wedle.category.news.exception.NewsNotFoundException;
 import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
 import yerong.wedle.competitionRate.exception.CompetitionRateNotFoundException;
@@ -21,7 +21,6 @@ import yerong.wedle.oauth.exception.OAuthProcessingException;
 import yerong.wedle.star.exception.StarNotFoundException;
 import yerong.wedle.tuitionfee.exception.TuitionFeeNotFoundException;
 import yerong.wedle.university.exception.UniversityNotFoundException;
-import yerong.wedle.admission.exception.AdmissionNotFoundException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -89,20 +88,20 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
-    @ExceptionHandler(AdmissionAnnouncementNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAdmissionAnnouncementNotFoundException(AdmissionAnnouncementNotFoundException ex) {
+    @ExceptionHandler(ExpoCategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleExpoCategoryNotFoundException(ExpoCategoryNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.ADMISSION_ANNOUNCEMENT_NOT_FOUND.getCode(),
-                ResponseCode.ADMISSION_ANNOUNCEMENT_NOT_FOUND.getMessage(),
+                ResponseCode.EXPO_CATEGORY_NOT_FOUND.getCode(),
+                ResponseCode.EXPO_CATEGORY_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
-    @ExceptionHandler(AdmissionAnnouncementCategoryNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAdmissionAnnouncementCategoryNotFoundException(AdmissionAnnouncementCategoryNotFoundException ex) {
+    @ExceptionHandler(ExpoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleExpoNotFoundException(ExpoNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.ADMISSION_ANNOUNCEMENT_CATEGORY_NOT_FOUND.getCode(),
-                ResponseCode.ADMISSION_ANNOUNCEMENT_CATEGORY_NOT_FOUND.getMessage(),
+                ResponseCode.EXPO_NOT_FOUND.getCode(),
+                ResponseCode.EXPO_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -178,15 +177,6 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.STAR_NOT_FOUND.getCode(),
                 ResponseCode.STAR_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-    @ExceptionHandler(AdmissionNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAdmissionNotFoundException(AdmissionNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.ADMISSION_NOT_FOUND.getCode(),
-                ResponseCode.ADMISSION_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
