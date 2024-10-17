@@ -7,5 +7,4 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Long> {
-    List<CalendarEvent> findByDate(LocalDate date);
 }

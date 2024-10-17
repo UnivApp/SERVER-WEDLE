@@ -18,10 +18,14 @@ public class CalendarEvent extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-    @Column(nullable = false, length = 255)
-    private String content;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "calendar_event_type", nullable = false)
+    private CalendarEventType calendarEventType;
 }

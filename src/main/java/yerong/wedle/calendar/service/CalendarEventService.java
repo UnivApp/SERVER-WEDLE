@@ -20,29 +20,35 @@ public class CalendarEventService {
 
     private final CalendarEventRepository calendarEventRepository;
 
-    public CalendarEventResponse getEventById(Long eventId) {
-        CalendarEvent event = calendarEventRepository.findById(eventId)
-                .orElseThrow(CalendarEventNotFoundException::new);
-        return convertToDto(event);
-    }
+    public List<CalendarEventResponse> getAll() {
+        List<CalendarEvent> calendarEvents = calendarEventRepository.findAll();
 
-    public List<CalendarEventResponse> getAllEvents() {
-        return calendarEventRepository.findAll().stream()
-                .map(this::convertToDto)
+        return calendarEvents.stream()
+                .flatMap(event -> convertToDto(event).stream()) // 각 이벤트를 날짜별로 처리
                 .collect(Collectors.toList());
     }
 
-    public List<CalendarEventResponse> getEventsByDate(LocalDate date) {
-        return calendarEventRepository.findByDate(date).stream()
-                .map(this::convertToDto)
+    public List<CalendarEventResponse> convertToDto(CalendarEvent calendarEvent) {
+        LocalDate startDate = calendarEvent.getStartDate();
+        LocalDate endDate = calendarEvent.getEndDate();
+
+        if (endDate == null) {
+            return List.of(new CalendarEventResponse(
+                    calendarEvent.getId(),
+                    calendarEvent.getTitle(),
+                    startDate,
+                    calendarEvent.getCalendarEventType().getDisplayName()
+            ));
+        }
+
+        return startDate.datesUntil(endDate.plusDays(1))
+                .map(date -> new CalendarEventResponse(
+                        calendarEvent.getId(),
+                        calendarEvent.getTitle(),
+                        date,
+                        calendarEvent.getCalendarEventType().getDisplayName()
+                ))
                 .collect(Collectors.toList());
     }
 
-    private CalendarEventResponse convertToDto(CalendarEvent event) {
-        return new CalendarEventResponse(
-                event.getId(),
-                event.getDate(),
-                event.getContent()
-        );
-    }
 }

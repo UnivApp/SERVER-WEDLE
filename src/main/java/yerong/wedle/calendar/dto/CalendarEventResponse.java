@@ -1,20 +1,18 @@
 package yerong.wedle.calendar.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class CalendarEventResponse {
 
     private Long id;
+    private String title;
     private LocalDate date;
-    private String content;
+    private String type;
 
-    public CalendarEventResponse(Long id, LocalDate date, String content) {
-        this.id = id;
-        this.date = date;
-        this.content = content;
-    }
 }
