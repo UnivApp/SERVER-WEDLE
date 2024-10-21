@@ -8,6 +8,7 @@ import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
 import yerong.wedle.category.expo.exception.ExpoCategoryNotFoundException;
 import yerong.wedle.category.expo.exception.ExpoNotFoundException;
 import yerong.wedle.category.news.exception.NewsNotFoundException;
+import yerong.wedle.category.questionnaire.exception.MatchingResultNotFoundException;
 import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
 import yerong.wedle.competitionRate.exception.CompetitionRateNotFoundException;
 import yerong.wedle.department.exception.DepartmentNotFoundException;
@@ -171,7 +172,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-
+    @ExceptionHandler(MatchingResultNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMatchingResultNotFoundException(MatchingResultNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.MATCHING_RESULT_NOT_FOUND.getCode(),
+                ResponseCode.MATCHING_RESULT_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
     @ExceptionHandler(StarNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleStarNotFoundException(StarNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
