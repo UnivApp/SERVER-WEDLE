@@ -3,7 +3,6 @@ package yerong.wedle.university.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import yerong.wedle.category.activity.domain.ActivityUniversity;
-import yerong.wedle.common.domain.BaseTimeEntity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,12 +4,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import yerong.wedle.banner.exception.BannerNotFoundException;
 import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
-import yerong.wedle.category.announcement.exception.AdmissionAnnouncementCategoryNotFoundException;
-import yerong.wedle.category.announcement.exception.AdmissionAnnouncementNotFoundException;
+import yerong.wedle.category.expo.exception.ExpoCategoryNotFoundException;
+import yerong.wedle.category.expo.exception.ExpoNotFoundException;
+import yerong.wedle.category.news.exception.NewsNotFoundException;
+import yerong.wedle.category.questionnaire.exception.MatchingResultNotFoundException;
 import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
+import yerong.wedle.competitionRate.exception.CompetitionRateNotFoundException;
 import yerong.wedle.department.exception.DepartmentNotFoundException;
+import yerong.wedle.employmentRate.exception.EmploymentRateNotFoundException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
@@ -19,7 +22,6 @@ import yerong.wedle.oauth.exception.OAuthProcessingException;
 import yerong.wedle.star.exception.StarNotFoundException;
 import yerong.wedle.tuitionfee.exception.TuitionFeeNotFoundException;
 import yerong.wedle.university.exception.UniversityNotFoundException;
-import yerong.wedle.admission.exception.AdmissionNotFoundException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -87,20 +89,48 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
-    @ExceptionHandler(AdmissionAnnouncementNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAdmissionAnnouncementNotFoundException(AdmissionAnnouncementNotFoundException ex) {
+    @ExceptionHandler(ExpoCategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleExpoCategoryNotFoundException(ExpoCategoryNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.ADMISSION_ANNOUNCEMENT_NOT_FOUND.getCode(),
-                ResponseCode.ADMISSION_ANNOUNCEMENT_NOT_FOUND.getMessage(),
+                ResponseCode.EXPO_CATEGORY_NOT_FOUND.getCode(),
+                ResponseCode.EXPO_CATEGORY_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
-    @ExceptionHandler(AdmissionAnnouncementCategoryNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAdmissionAnnouncementCategoryNotFoundException(AdmissionAnnouncementCategoryNotFoundException ex) {
+    @ExceptionHandler(ExpoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleExpoNotFoundException(ExpoNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.ADMISSION_ANNOUNCEMENT_CATEGORY_NOT_FOUND.getCode(),
-                ResponseCode.ADMISSION_ANNOUNCEMENT_CATEGORY_NOT_FOUND.getMessage(),
+                ResponseCode.EXPO_NOT_FOUND.getCode(),
+                ResponseCode.EXPO_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(CompetitionRateNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCompetitionRateNotFoundException(CompetitionRateNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.COMPETITION_RATE_NOT_FOUND.getCode(),
+                ResponseCode.COMPETITION_RATE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+    @ExceptionHandler(EmploymentRateNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEmploymentRateNotFoundException(EmploymentRateNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.EMPLOYMENT_RATE_NOT_FOUND.getCode(),
+                ResponseCode.EMPLOYMENT_RATE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+    @ExceptionHandler(NewsNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNewsNotFoundException(NewsNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.NEWS_NOT_FOUND.getCode(),
+                ResponseCode.NEWS_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -113,15 +143,6 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-    }
-    @ExceptionHandler(BannerNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleBannerNotFoundException(BannerNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.BANNER_NOT_FOUND.getCode(),
-                ResponseCode.BANNER_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
     @ExceptionHandler(CalendarEventNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCalendarEventNotFoundException(CalendarEventNotFoundException ex) {
@@ -151,21 +172,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-
+    @ExceptionHandler(MatchingResultNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMatchingResultNotFoundException(MatchingResultNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.MATCHING_RESULT_NOT_FOUND.getCode(),
+                ResponseCode.MATCHING_RESULT_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
     @ExceptionHandler(StarNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleStarNotFoundException(StarNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.STAR_NOT_FOUND.getCode(),
                 ResponseCode.STAR_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-    @ExceptionHandler(AdmissionNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAdmissionNotFoundException(AdmissionNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.ADMISSION_NOT_FOUND.getCode(),
-                ResponseCode.ADMISSION_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);

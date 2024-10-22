@@ -3,6 +3,13 @@ package yerong.wedle.university.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import yerong.wedle.competitionRate.dto.CompetitionRateResponse;
+import yerong.wedle.department.dto.DepartmentResponse;
+import yerong.wedle.employmentRate.dto.EmploymentRateResponse;
+import yerong.wedle.tuitionfee.dto.TuitionFeeResponse;
+import yerong.wedle.tuitionfee.dto.YearTuitionFeeResponse;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,4 +24,9 @@ public class UniversityAllResponse {
     private String website;
     private String admissionSite;
     private Long starNum;
+    private YearTuitionFeeResponse tuitionFeeResponse;
+    private List<DepartmentResponse> departmentResponses;
+    private List<CompetitionRateResponse> competitionRateResponses;
+    private List<EmploymentRateResponse> employmentRateResponses;
+
 }

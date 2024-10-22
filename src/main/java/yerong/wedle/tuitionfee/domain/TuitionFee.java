@@ -21,16 +21,18 @@ public class TuitionFee {
     @JoinColumn(name = "university_id", nullable = false)
     private University university;
 
+    private String tuitionFeeYear;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private DepartmentType departmentType;
+    private TuitionFeeType tuitionFeeType;
 
     @Column(nullable = false)
     private double feeAmount;
 
-    public TuitionFee(University university, DepartmentType departmentType, double feeAmount) {
+    public TuitionFee(University university, TuitionFeeType tuitionFeeType, double feeAmount) {
         this.university = university;
-        this.departmentType = departmentType;
+        this.tuitionFeeType = tuitionFeeType;
         this.feeAmount = feeAmount;
     }
 }

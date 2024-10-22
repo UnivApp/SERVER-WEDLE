@@ -41,9 +41,21 @@ public enum ResponseCode {
     //TuitionFee
     TUITION_FEE_NOT_FOUND("404", "등록금 정보를 찾을 수 없습니다."),
 
+    //News
+    NEWS_NOT_FOUND("404", "기사 정보를 찾을 수 없습니다."),
+
+    //Competition Rate
+    COMPETITION_RATE_NOT_FOUND("404", "경쟁률 정보를 찾을 수 없습니다."),
+
+    //Employment Rate
+    EMPLOYMENT_RATE_NOT_FOUND("404", "취업률 정보를 찾을 수 없습니다."),
+
     //Admission Announcement
-    ADMISSION_ANNOUNCEMENT_NOT_FOUND("404", "대학 연계 행사 정보를 찾을 수 없습니다."),
-    ADMISSION_ANNOUNCEMENT_CATEGORY_NOT_FOUND("404", "대학 연계 행사 카테고리 정보를 찾을 수 없습니다.");
+    EXPO_NOT_FOUND("404", "대학 연계 행사 정보를 찾을 수 없습니다."),
+    EXPO_CATEGORY_NOT_FOUND("404", "대학 연계 행사 카테고리 정보를 찾을 수 없습니다."),
+
+    //Matching Result
+    MATCHING_RESULT_NOT_FOUND("404", "점수에 맞는 설문 결과를 찾을 수 없습니다.");
 
 
     private final String code;

@@ -28,7 +28,7 @@ public class Ranking {
     private int rankNum;
 
     @Column(name = "ranking_year")
-    private int rankingYear;
+    private String rankingYear;
 
     private String universityName;
     private String logo;

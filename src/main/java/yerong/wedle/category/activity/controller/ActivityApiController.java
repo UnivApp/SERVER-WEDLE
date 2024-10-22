@@ -25,7 +25,7 @@ public class ActivityApiController {
             description = "대학교 ID를 이용해 해당 대학교의 활동 목록을 조회합니다."
     )
     @GetMapping
-    public ResponseEntity<List<ActivityResponse>> getActivitiesByㅜ(@RequestParam Long universityId) {
+    public ResponseEntity<List<ActivityResponse>> getActivitiesBy(@RequestParam Long universityId) {
         List<ActivityResponse> activities = activityService.getActivitiesByUniversityId(universityId);
         return ResponseEntity.ok(activities);
     }

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yerong.wedle.university.domain.University;
 
+import java.time.LocalDate;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.*;
 
@@ -23,7 +25,8 @@ public class News {
     @Column(nullable = false)
     private String link;
 
-    @ManyToOne
-    @JoinColumn(name = "university_id")
-    private University university;
+    @Column(nullable = false)
+    private LocalDate publishedDate;
+    private String admissionYear;
+    private String source;
 }
