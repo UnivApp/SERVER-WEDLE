@@ -28,4 +28,11 @@ public class CalendarEvent extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "calendar_event_type", nullable = false)
     private CalendarEventType calendarEventType;
+
+    @Column(nullable = false)
+    private boolean isNotified;
+
+    public void setNotified(boolean notified) {
+        this.isNotified = notified;
+    }
 }

@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import yerong.wedle.calendar.dto.CalendarEventResponse;
-import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
 import yerong.wedle.calendar.service.CalendarEventService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "CalendarEvent API", description = "달력 이벤트 관련 API")

@@ -14,5 +14,6 @@ public class CalendarEventResponse {
     private String title;
     private LocalDate date;
     private String type;
+    private boolean isNotified;
 
 }

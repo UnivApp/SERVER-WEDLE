@@ -24,7 +24,7 @@ public class CalendarEventService {
         List<CalendarEvent> calendarEvents = calendarEventRepository.findAll();
 
         return calendarEvents.stream()
-                .flatMap(event -> convertToDto(event).stream()) // 각 이벤트를 날짜별로 처리
+                .flatMap(event -> convertToDto(event).stream())
                 .collect(Collectors.toList());
     }
 
@@ -37,7 +37,8 @@ public class CalendarEventService {
                     calendarEvent.getId(),
                     calendarEvent.getTitle(),
                     startDate,
-                    calendarEvent.getCalendarEventType().getDisplayName()
+                    calendarEvent.getCalendarEventType().getDisplayName(),
+                    calendarEvent.isNotified()
             ));
         }
 
@@ -46,7 +47,8 @@ public class CalendarEventService {
                         calendarEvent.getId(),
                         calendarEvent.getTitle(),
                         date,
-                        calendarEvent.getCalendarEventType().getDisplayName()
+                        calendarEvent.getCalendarEventType().getDisplayName(),
+                        calendarEvent.isNotified()
                 ))
                 .collect(Collectors.toList());
     }
