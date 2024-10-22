@@ -50,4 +50,4 @@ src/main/resources/application-oauth.yml
 wedle.pem
 
 # Firebase Admin SDK 파일 무시
-/resources/security/wedle-94dad-firebase-adminsdk-3qavr-19fe7c2a51.json
+/src/main/resources/security/wedle-94dad-firebase-adminsdk-3qavr-19fe7c2a51.json
