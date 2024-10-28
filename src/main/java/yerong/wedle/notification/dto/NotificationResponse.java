@@ -4,7 +4,7 @@ package yerong.wedle.notification.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -12,7 +12,7 @@ import java.util.List;
 public class NotificationResponse {
 
     private Long notificationId;
-    private LocalDateTime notificationTime;
+    private LocalDate notificationDate;
     private Long eventId;
     private List<String> registrationTokens;
     private boolean isActive;

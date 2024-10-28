@@ -37,8 +37,7 @@ public class CalendarEventService {
                     calendarEvent.getId(),
                     calendarEvent.getTitle(),
                     startDate,
-                    calendarEvent.getCalendarEventType().getDisplayName(),
-                    calendarEvent.isNotified()
+                    calendarEvent.getCalendarEventType().getDisplayName()
             ));
         }
 
@@ -47,8 +46,7 @@ public class CalendarEventService {
                         calendarEvent.getId(),
                         calendarEvent.getTitle(),
                         date,
-                        calendarEvent.getCalendarEventType().getDisplayName(),
-                        calendarEvent.isNotified()
+                        calendarEvent.getCalendarEventType().getDisplayName()
                 ))
                 .collect(Collectors.toList());
     }
