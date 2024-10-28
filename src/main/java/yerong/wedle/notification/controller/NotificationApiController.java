@@ -11,7 +11,6 @@ import yerong.wedle.notification.dto.CreateNotificationRequest;
 import yerong.wedle.notification.dto.NotificationResponse;
 import yerong.wedle.notification.service.NotificationService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -42,5 +41,16 @@ public class NotificationApiController {
     public ResponseEntity<Void> deleteNotification(@RequestParam Long notificationId) {
         notificationService.deleteNotification(notificationId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "회원의 모든 알림 조회", description = "특정 회원의 모든 알림을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원의 알림 목록이 성공적으로 조회되었습니다."),
+            @ApiResponse(responseCode = "404", description = "회원이 존재하지 않습니다.")
+    })
+    @GetMapping("/member")
+    public ResponseEntity<List<NotificationResponse>> getNotificationsByMember() {
+        List<NotificationResponse> notifications = notificationService.getNotificationsByMember();
+        return ResponseEntity.ok(notifications);
     }
 }

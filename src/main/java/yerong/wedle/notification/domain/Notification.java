@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yerong.wedle.calendar.domain.CalendarEvent;
 import yerong.wedle.common.domain.BaseTimeEntity;
+import yerong.wedle.member.domain.Member;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
@@ -45,6 +46,9 @@ public class Notification extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isActive;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     public void setActive(boolean isActive) {
         this.isActive = isActive;
