@@ -10,8 +10,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CalendarEventResponse {
 
-    private Long id;
+    private Long CalendarEventId;
     private String title;
     private LocalDate date;
     private String type;
+
+    private boolean notificationActive;
+    private Long notificationId;
 }

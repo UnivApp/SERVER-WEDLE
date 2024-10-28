@@ -11,6 +11,9 @@ public enum ResponseCode {
     MEMBER_NOT_FOUND("404", "회원이 존재하지 않습니다."),
     MEMBER_DUPLICATE("409", "이미 존재하는 회원입니다."),
 
+    // Member
+    NOTIFICATION_NOT_FOUND("404", "알림이 존재하지 않습니다."),
+
     // OAuth
     INVALID_REFRESH_TOKEN("400", "유효하지 않은 Refresh Token입니다."),
     INVALID_TOKEN("400", "유효하지 않은 Access Token입니다."),

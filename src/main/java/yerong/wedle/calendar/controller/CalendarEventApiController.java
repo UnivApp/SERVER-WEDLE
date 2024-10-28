@@ -34,5 +34,4 @@ public class CalendarEventApiController {
         List<CalendarEventResponse> responses = calendarEventService.getAll();
         return ResponseEntity.ok(responses);
     }
-
 }
