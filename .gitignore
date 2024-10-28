@@ -51,3 +51,4 @@ wedle.pem
 
 # Firebase Admin SDK 파일 무시
 /src/main/resources/security/wedle-94dad-firebase-adminsdk-3qavr-19fe7c2a51.json
+/src/main/resources/security/AuthKey_S86XZVR3U9.p8
