@@ -69,7 +69,6 @@ public class NotificationService {
                 FcmUtils.broadCast(registrationTokens, title, body);
 
                 notification.setActive(false);
-                log.info("알람이 울렸습니다.");
             }
         }
     }
