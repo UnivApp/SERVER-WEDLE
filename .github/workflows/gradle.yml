@@ -42,8 +42,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Set up environment variables
-        run: echo "FIREBASE_CONFIG=${{ secrets.FIREBASE_CONFIG }}" >> $GITHUB_ENV
+      - name: Set environment variables
+        run: echo "spring.cloud.gcp.firebase.config=${{ secrets.FIREBASE_CONFIG }}" 
 
       - name: Zip the JAR file
         run: zip -r myapp.zip build/libs/*.jar appspec.yml scripts
