@@ -46,8 +46,13 @@ public class CalendarEventService {
                 .orElseThrow(MemberNotFoundException::new);
 
 
-        Notification notification = notificationRepository.findByEventAndMember(calendarEvent, member).orElseThrow(NotificationNotFoundException::new);;
-        boolean notificationActive = notification != null && notification.isActive();
+        Notification notification = notificationRepository.findByEventAndMember(calendarEvent, member);
+        boolean notificationActive;
+        if(notification != null) {
+            notificationActive = notification.isActive();
+        } else {
+            notificationActive = false;
+        }
         Long notificationId = notification != null ? notification.getNotificationId() : null;
 
         if (endDate == null) {
