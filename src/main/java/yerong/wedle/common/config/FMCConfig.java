@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FMCConfig {
 
-    @Value("${FIREBASE_CONFIG}")
+    @Value("${firebase.config}")
     private String firebaseConfig;
 
     @PostConstruct
