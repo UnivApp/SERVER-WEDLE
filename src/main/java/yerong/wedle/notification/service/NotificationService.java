@@ -3,9 +3,7 @@ package yerong.wedle.notification.service;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,13 +41,6 @@ public class NotificationService {
         return convertToResponse(notification);
     }
 
-    public List<NotificationResponse> getNotificationsByDate(LocalDate date) {
-        return notificationRepository.findByNotificationDate(date)
-                .stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
-    }
-
     private CalendarEvent getCalendarEventById(Long calendarId) {
         return calendarEventRepository.findById(calendarId).orElseThrow(CalendarEventNotFoundException::new);
     }
@@ -82,5 +73,8 @@ public class NotificationService {
                 .isActive(notification.isActive())
                 .build();
     }
-
+    @Transactional
+    public void deleteNotification(Long notificationId) {
+        notificationRepository.deleteById(notificationId);
+    }
 }
