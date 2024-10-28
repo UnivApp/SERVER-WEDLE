@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CalendarEventResponse {
 
-    private Long CalendarEventId;
+    private Long calendarEventId;
     private String title;
     private LocalDate date;
     private String type;
