@@ -13,7 +13,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     List<Notification> findByNotificationDate(LocalDate notification);
 
-    Optional<Notification> findByEventAndMember(CalendarEvent calendarEvent, Member member);
+    Notification findByEventAndMember(CalendarEvent calendarEvent, Member member);
 
     List<Notification> findByMember(Member member);
 }
