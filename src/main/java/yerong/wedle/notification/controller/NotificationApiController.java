@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import yerong.wedle.notification.domain.Notification;
 import yerong.wedle.notification.dto.CreateNotificationRequest;
+import yerong.wedle.notification.dto.NotificationResponse;
 import yerong.wedle.notification.service.NotificationService;
 
 import java.time.LocalDateTime;
@@ -18,15 +18,15 @@ public class NotificationApiController {
     private final NotificationService notificationService;
 
     @PostMapping
-    public ResponseEntity<Notification> createNotification(@RequestBody @Valid CreateNotificationRequest request){
+    public ResponseEntity<NotificationResponse> createNotification(@RequestBody @Valid CreateNotificationRequest request){
 
-        Notification createdNotification = notificationService.createNotification(request);
-        return ResponseEntity.ok(createdNotification);
+        NotificationResponse notificationResponse = notificationService.createNotification(request);
+        return ResponseEntity.ok(notificationResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<Notification>> getNotifications(@RequestParam LocalDateTime time) {
-        List<Notification> notifications = notificationService.getNotificationsByTime(time);
-        return ResponseEntity.ok(notifications);
+    public ResponseEntity<List<NotificationResponse>> getNotifications(@RequestParam LocalDateTime time) {
+        List<NotificationResponse> notificationResponses = notificationService.getNotificationsByTime(time);
+        return ResponseEntity.ok(notificationResponses);
     }
 }
