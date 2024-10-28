@@ -8,6 +8,7 @@ import yerong.wedle.notification.dto.CreateNotificationRequest;
 import yerong.wedle.notification.dto.NotificationResponse;
 import yerong.wedle.notification.service.NotificationService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class NotificationApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<NotificationResponse>> getNotifications(@RequestParam LocalDateTime time) {
-        List<NotificationResponse> notificationResponses = notificationService.getNotificationsByTime(time);
+    public ResponseEntity<List<NotificationResponse>> getNotifications(@RequestParam LocalDate date) {
+        List<NotificationResponse> notificationResponses = notificationService.getNotificationsByDate(date);
         return ResponseEntity.ok(notificationResponses);
     }
 }

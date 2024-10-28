@@ -31,10 +31,9 @@ public class NotificationService {
     @Transactional
     public NotificationResponse createNotification(CreateNotificationRequest request) {
         CalendarEvent calendarEvent = getCalendarEventById(request.getEventId());
-        LocalDateTime notificationTime = request.getNotificationDate().atTime(10, 0);
 
         Notification notification = Notification.builder()
-                .notificationTime(notificationTime)
+                .notificationDate(request.getNotificationDate())
                 .event(calendarEvent)
                 .registrationTokens(request.getRegistrationTokens())
                 .isActive(true)
@@ -44,8 +43,8 @@ public class NotificationService {
         return convertToResponse(notification);
     }
 
-    public List<NotificationResponse> getNotificationsByTime(LocalDateTime time) {
-        return notificationRepository.findByNotificationTime(time)
+    public List<NotificationResponse> getNotificationsByDate(LocalDate date) {
+        return notificationRepository.findByNotificationDate(date)
                 .stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
@@ -56,11 +55,10 @@ public class NotificationService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 10 * * ?")
+    @Scheduled(cron = "0 0 17 * * ?")
     public void sendNotifications() {
         LocalDate today = LocalDate.now();
-        LocalDateTime notificationTime = today.atTime(10, 0);
-        List<Notification> dueNotifications = notificationRepository.findByNotificationTime(notificationTime);
+        List<Notification> dueNotifications = notificationRepository.findByNotificationDate(today);
 
         for (Notification notification : dueNotifications) {
             if (notification.isActive()) {
@@ -71,7 +69,6 @@ public class NotificationService {
                 FcmUtils.broadCast(registrationTokens, title, body);
 
                 notification.setActive(false);
-                notification.getEvent().setNotified(true);
                 log.info("알람이 울렸습니다.");
             }
         }
@@ -80,7 +77,7 @@ public class NotificationService {
     private NotificationResponse convertToResponse(Notification notification) {
         return NotificationResponse.builder()
                 .notificationId(notification.getNotificationId())
-                .notificationTime(notification.getNotificationTime())
+                .notificationDate(notification.getNotificationDate())
                 .eventId(notification.getEvent().getId())
                 .registrationTokens(notification.getRegistrationTokens())
                 .isActive(notification.isActive())
