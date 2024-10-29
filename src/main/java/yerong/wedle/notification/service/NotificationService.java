@@ -22,6 +22,7 @@ import yerong.wedle.notification.domain.Notification;
 import yerong.wedle.notification.dto.CreateNotificationRequest;
 import yerong.wedle.notification.dto.NotificationResponse;
 import yerong.wedle.notification.exception.DuplicateNotificationException;
+import yerong.wedle.notification.exception.NotificationDateOutOfRangeException;
 import yerong.wedle.notification.repository.NotificationRepository;
 
 @Slf4j
@@ -42,13 +43,12 @@ public class NotificationService {
         CalendarEvent calendarEvent = getCalendarEventById(request.getEventId());
 
         if (!isDateWithinEventRange(request.getNotificationDate(), calendarEvent)) {
-            throw new IllegalArgumentException("알림 날짜가 이벤트 기간에 포함되지 않습니다.");
-        }
-        
-        if (notificationRepository.existsByMemberAndEvent(member, calendarEvent)) {
-            throw new DuplicateNotificationException();
+            throw new NotificationDateOutOfRangeException();
         }
 
+        if (notificationRepository.findByMemberAndEventAndNotificationDate(member, calendarEvent, request.getNotificationDate()).isPresent()) {
+            throw new DuplicateNotificationException();
+        }
         Notification notification = Notification.builder()
                 .notificationDate(request.getNotificationDate())
                 .event(calendarEvent)

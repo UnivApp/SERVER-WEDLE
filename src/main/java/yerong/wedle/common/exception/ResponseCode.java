@@ -14,6 +14,7 @@ public enum ResponseCode {
     // Notification
     NOTIFICATION_NOT_FOUND("404", "알림이 존재하지 않습니다."),
     DUPLICATION_NOTIFICATION("409", "이미 존재하는 알림입니다."),
+    NOTIFICATION_DATE_OUT_OF_RANGE("400", "알림 날짜가 이벤트 기간에 포함되지 않습니다."),
 
     // OAuth
     INVALID_REFRESH_TOKEN("400", "유효하지 않은 Refresh Token입니다."),

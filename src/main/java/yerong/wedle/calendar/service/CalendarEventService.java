@@ -45,14 +45,7 @@ public class CalendarEventService {
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
-
-        Notification notification = notificationRepository.findByEventAndMember(calendarEvent, member);
-        boolean notificationActive;
-        if(notification != null) {
-            notificationActive = notification.isActive();
-        } else {
-            notificationActive = false;
-        }
+        Notification notification = notificationRepository.findByEventAndMember(calendarEvent, member).orElse(null);
         Long notificationId = notification != null ? notification.getNotificationId() : null;
 
         if (endDate == null) {
@@ -61,7 +54,7 @@ public class CalendarEventService {
                     calendarEvent.getTitle(),
                     startDate,
                     calendarEvent.getCalendarEventType().getDisplayName(),
-                    notificationActive,
+                    notification != null && notification.isActive() && notification.getNotificationDate().equals(startDate),
                     notificationId
             ));
         }
@@ -72,7 +65,7 @@ public class CalendarEventService {
                         calendarEvent.getTitle(),
                         date,
                         calendarEvent.getCalendarEventType().getDisplayName(),
-                        notificationActive,
+                        notification != null && notification.isActive() && notification.getNotificationDate().equals(date),
                         notificationId
                 ))
                 .collect(Collectors.toList());
