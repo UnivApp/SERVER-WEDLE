@@ -22,9 +22,9 @@ public class NotificationApiController {
     @Operation(summary = "알림 생성", description = "이벤트에 대한 새로운 알림을 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "알림이 성공적으로 생성되었습니다."),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터")
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
+            @ApiResponse(responseCode = "409", description = "이미 존재하는 알림입니다.")
     })
-
     @PostMapping
     public ResponseEntity<NotificationResponse> createNotification(@RequestBody @Valid CreateNotificationRequest request){
 
