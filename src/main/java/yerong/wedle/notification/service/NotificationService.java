@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,6 +41,10 @@ public class NotificationService {
 
         CalendarEvent calendarEvent = getCalendarEventById(request.getEventId());
 
+        if (!isDateWithinEventRange(request.getNotificationDate(), calendarEvent)) {
+            throw new IllegalArgumentException("알림 날짜가 이벤트 기간에 포함되지 않습니다.");
+        }
+        
         if (notificationRepository.existsByMemberAndEvent(member, calendarEvent)) {
             throw new DuplicateNotificationException();
         }
@@ -54,6 +59,12 @@ public class NotificationService {
         notification = notificationRepository.save(notification);
 
         return convertToResponse(notification);
+    }
+
+    private boolean isDateWithinEventRange(LocalDate notificationDate, CalendarEvent calendarEvent) {
+        LocalDate startDate = calendarEvent.getStartDate();
+        LocalDate endDate = calendarEvent.getEndDate() != null ? calendarEvent.getEndDate() : startDate;
+        return !notificationDate.isBefore(startDate) && !notificationDate.isAfter(endDate);
     }
 
     private CalendarEvent getCalendarEventById(Long calendarId) {
