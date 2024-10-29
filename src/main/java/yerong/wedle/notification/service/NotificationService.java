@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,6 +22,7 @@ import yerong.wedle.notification.domain.Notification;
 import yerong.wedle.notification.dto.CreateNotificationRequest;
 import yerong.wedle.notification.dto.NotificationResponse;
 import yerong.wedle.notification.exception.DuplicateNotificationException;
+import yerong.wedle.notification.exception.NotificationDateOutOfRangeException;
 import yerong.wedle.notification.repository.NotificationRepository;
 
 @Slf4j
@@ -40,10 +42,13 @@ public class NotificationService {
 
         CalendarEvent calendarEvent = getCalendarEventById(request.getEventId());
 
-        if (notificationRepository.existsByMemberAndEvent(member, calendarEvent)) {
-            throw new DuplicateNotificationException();
+        if (!isDateWithinEventRange(request.getNotificationDate(), calendarEvent)) {
+            throw new NotificationDateOutOfRangeException();
         }
 
+        if (notificationRepository.findByMemberAndEventAndNotificationDate(member, calendarEvent, request.getNotificationDate()).isPresent()) {
+            throw new DuplicateNotificationException();
+        }
         Notification notification = Notification.builder()
                 .notificationDate(request.getNotificationDate())
                 .event(calendarEvent)
@@ -54,6 +59,12 @@ public class NotificationService {
         notification = notificationRepository.save(notification);
 
         return convertToResponse(notification);
+    }
+
+    private boolean isDateWithinEventRange(LocalDate notificationDate, CalendarEvent calendarEvent) {
+        LocalDate startDate = calendarEvent.getStartDate();
+        LocalDate endDate = calendarEvent.getEndDate() != null ? calendarEvent.getEndDate() : startDate;
+        return !notificationDate.isBefore(startDate) && !notificationDate.isAfter(endDate);
     }
 
     private CalendarEvent getCalendarEventById(Long calendarId) {
