@@ -15,6 +15,7 @@ import yerong.wedle.department.exception.DepartmentNotFoundException;
 import yerong.wedle.employmentRate.exception.EmploymentRateNotFoundException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.MemberDuplicateException;
+import yerong.wedle.notification.exception.DuplicateNotificationException;
 import yerong.wedle.notification.exception.NotificationNotFoundException;
 import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
@@ -68,6 +69,16 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.NOTIFICATION_NOT_FOUND.getCode(),
                 ResponseCode.NOTIFICATION_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(DuplicateNotificationException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateNotificationException(DuplicateNotificationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.DUPLICATION_NOTIFICATION.getCode(),
+                ResponseCode.DUPLICATION_NOTIFICATION.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);

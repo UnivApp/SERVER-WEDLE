@@ -16,4 +16,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     Notification findByEventAndMember(CalendarEvent calendarEvent, Member member);
 
     List<Notification> findByMember(Member member);
+
+    boolean existsByMemberAndEvent(Member member, CalendarEvent calendarEvent);
 }

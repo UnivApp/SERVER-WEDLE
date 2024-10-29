@@ -20,6 +20,7 @@ import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.notification.domain.Notification;
 import yerong.wedle.notification.dto.CreateNotificationRequest;
 import yerong.wedle.notification.dto.NotificationResponse;
+import yerong.wedle.notification.exception.DuplicateNotificationException;
 import yerong.wedle.notification.repository.NotificationRepository;
 
 @Slf4j
@@ -38,6 +39,10 @@ public class NotificationService {
                 .orElseThrow(MemberNotFoundException::new);
 
         CalendarEvent calendarEvent = getCalendarEventById(request.getEventId());
+
+        if (notificationRepository.existsByMemberAndEvent(member, calendarEvent)) {
+            throw new DuplicateNotificationException();
+        }
 
         Notification notification = Notification.builder()
                 .notificationDate(request.getNotificationDate())
