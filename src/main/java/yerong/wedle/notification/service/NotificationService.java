@@ -71,7 +71,7 @@ public class NotificationService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 42 22 * * ?", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 10 23 * * ?", zone = "Asia/Seoul")
     public void sendNotifications() {
         LocalDate today = LocalDate.now();
         List<Notification> dueNotifications = notificationRepository.findByNotificationDate(today);
