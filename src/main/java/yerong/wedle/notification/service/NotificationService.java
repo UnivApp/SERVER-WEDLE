@@ -72,7 +72,7 @@ public class NotificationService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 10 * * ?")
+    @Scheduled(cron = "0 40 14 * * ?")
     public void sendNotifications() {
         LocalDate today = LocalDate.now();
         List<Notification> dueNotifications = notificationRepository.findByNotificationDate(today);
@@ -81,7 +81,7 @@ public class NotificationService {
             if (notification.isActive()) {
                 List<String> registrationTokens = notification.getRegistrationTokens();
                 String title = notification.getEvent().getTitle();
-                String body = "";
+                String body = "일정 당일입니다.";
 
                 FcmUtils.broadCast(registrationTokens, title, body);
 
