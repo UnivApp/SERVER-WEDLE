@@ -24,23 +24,22 @@ public class FcmUtils {
 
         MulticastMessage message = MulticastMessage.builder()
                 .setNotification(Notification.builder()
-                        .setTitle(title)  // 알림 제목
-                        .setBody(body)    // 알림 내용
+                        .setTitle(title)
+                        .setBody(body)
                         .build())
                 .setApnsConfig(ApnsConfig.builder()
-                        .setAps(Aps.builder().setAlert(body).build())  // iOS에 맞춰 알림 내용 설정
+                        .setAps(Aps.builder().setAlert(body).build())
                         .putHeader("apns-expiration", Long.toString(EXPIRED_TIME_FOR_UNIX))
                         .build())
                 .addAllTokens(registrationTokens)
                 .build();
 
-        BatchResponse response;
         try {
-            response = FirebaseMessaging.getInstance().sendEachForMulticast(message);
+            BatchResponse response = FirebaseMessaging.getInstance().sendEachForMulticast(message);
             pushSuccessValidate(registrationTokens, response);
         } catch (FirebaseMessagingException e) {
             e.printStackTrace();
-            // 예외 처리 추가 가능
+            System.out.println("FCM 메시지 전송 중 예외 발생: " + e.getMessage());
         }
     }
 
@@ -54,6 +53,12 @@ public class FcmUtils {
         System.out.println(response.getSuccessCount() + " messages were sent successfully.");
         if (response.getFailureCount() > 0) {
             System.out.println(response.getFailureCount() + " messages failed to send.");
+            response.getResponses().forEach(sendResponse -> {
+                if (!sendResponse.isSuccessful()) {
+                    System.out.println("Failed to send message to token: " + sendResponse.getMessageId());
+                    System.out.println("Error: " + sendResponse.getException().getMessage());
+                }
+            });
         }
     }
 }
