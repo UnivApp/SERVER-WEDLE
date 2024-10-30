@@ -7,6 +7,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
+
 import java.util.Date;
 import java.util.List;
 import lombok.AccessLevel;
@@ -29,8 +30,8 @@ public class FcmUtils {
                         .build())
                 .setApnsConfig(ApnsConfig.builder()
                         .setAps(Aps.builder().setAlert(body).build())
-                        .putHeader("apns-expiration", Long.toString(EXPIRED_TIME_FOR_UNIX))
-                        .build())
+                    .putHeader("apns-expiration", Long.toString(EXPIRED_TIME_FOR_UNIX))
+                .build())
                 .addAllTokens(registrationTokens)
                 .build();
 
