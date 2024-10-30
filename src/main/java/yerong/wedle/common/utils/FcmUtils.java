@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 public class FcmUtils {
 
     private static final int FCM_PUSH_LIMIT_SIZE = 500;
-    private static final long ONE_WEEK = (long) 60 * 60 * 24 * 7;
-    private static final long EXPIRED_TIME_FOR_UNIX = new Date(new Date().getTime() + ONE_WEEK).getTime();
+    private static final long ONE_WEEK_IN_SECONDS = 60 * 60 * 24 * 7;
+    private static final long EXPIRED_TIME_FOR_UNIX = new Date().getTime() / 1000 + ONE_WEEK_IN_SECONDS;
 
     public static void broadCast(final List<String> registrationTokens, String title, String body) {
         limitSizeValidate(registrationTokens);
@@ -30,7 +30,7 @@ public class FcmUtils {
                         .build())
                 .setApnsConfig(ApnsConfig.builder()
                         .setAps(Aps.builder().setAlert(body).build())
-                    .putHeader("apns-expiration", Long.toString(EXPIRED_TIME_FOR_UNIX))
+                        .putHeader("apns-expiration", Long.toString(EXPIRED_TIME_FOR_UNIX))
                 .build())
                 .addAllTokens(registrationTokens)
                 .build();
