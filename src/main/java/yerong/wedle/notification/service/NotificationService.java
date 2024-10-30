@@ -5,7 +5,6 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -72,7 +71,7 @@ public class NotificationService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 14 * * ?")
+    @Scheduled(cron = "0 10 14 * * ?", zone = "Asia/Seoul")
     public void sendNotifications() {
         LocalDate today = LocalDate.now();
         List<Notification> dueNotifications = notificationRepository.findByNotificationDate(today);
