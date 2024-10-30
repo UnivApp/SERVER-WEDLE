@@ -12,7 +12,9 @@ import java.util.Date;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FcmUtils {
 
@@ -29,9 +31,12 @@ public class FcmUtils {
                         .setBody(body)
                         .build())
                 .setApnsConfig(ApnsConfig.builder()
-                        .setAps(Aps.builder().setAlert(body).build())
+                        .setAps(Aps
+                                .builder()
+                                .setAlert(body)
+                                .build())
                         .putHeader("apns-expiration", Long.toString(EXPIRED_TIME_FOR_UNIX))
-                .build())
+                        .build())
                 .addAllTokens(registrationTokens)
                 .build();
 
@@ -39,10 +44,13 @@ public class FcmUtils {
             BatchResponse response = FirebaseMessaging.getInstance().sendEachForMulticast(message);
             pushSuccessValidate(registrationTokens, response);
         } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
-            System.out.println("FCM 메시지 전송 중 예외 발생: " + e.getMessage());
+            log.error("FCM 메시지 전송 중 예외 발생: {}", e.getMessage(), e);
+            for (String token : registrationTokens) {
+                log.error("유효하지 않은 토큰: {}", token);
+            }
         }
     }
+
 
     private static void limitSizeValidate(final List<String> registrationTokens) {
         if (registrationTokens.size() > FCM_PUSH_LIMIT_SIZE) {
