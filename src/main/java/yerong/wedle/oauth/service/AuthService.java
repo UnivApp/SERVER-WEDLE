@@ -9,13 +9,13 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import yerong.wedle.common.exception.ResponseCode;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.domain.Role;
 import yerong.wedle.member.dto.MemberRequest;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.oauth.domain.RefreshToken;
+import yerong.wedle.oauth.dto.LoginResponse;
 import yerong.wedle.oauth.dto.MemberLogoutResponse;
 import yerong.wedle.oauth.dto.TokenResponse;
 import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
@@ -41,20 +41,23 @@ public class AuthService {
 
 
     @Transactional
-    public TokenResponse login(MemberRequest memberRequest){
+    public LoginResponse login(MemberRequest memberRequest){
 
         Member member = memberRepository.findBySocialId(memberRequest.getSocialId()).orElse(null);
 
-        if (member == null){
+        if (member == null) {
+
             member = Member.builder()
                     .socialId(memberRequest.getSocialId())
                     .email(memberRequest.getEmail())
                     .username(memberRequest.getName())
                     .role(Role.USER)
+                    .isExistingMember(false)
                     .build();
             memberRepository.save(member);
+        }else {
+            member.setExistingMember(true);
         }
-
         TokenResponse tokenResponse = jwtProvider.generateTokenDto(memberRequest.getSocialId());
 
         Optional<RefreshToken> existingRefreshToken = refreshTokenRepository.findByMemberId(member.getMemberId());
@@ -70,7 +73,8 @@ public class AuthService {
         }
         redisTemplate.opsForValue().set("RT:" + member.getSocialId(), tokenResponse.getRefreshToken(), tokenResponse.getRefreshTokenExpiresIn(), TimeUnit.MILLISECONDS);
 
-        return tokenResponse;
+
+        return new LoginResponse(tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), member.isExistingMember());
     }
     @Transactional
     public TokenResponse refreshAccessToken(String refreshTokenValue){

@@ -10,6 +10,8 @@ public enum ResponseCode {
     // Member
     MEMBER_NOT_FOUND("404", "회원이 존재하지 않습니다."),
     MEMBER_DUPLICATE("409", "이미 존재하는 회원입니다."),
+    MEMBER_NICKNAME_DUPLICATE("409", "이미 존재하는 닉네임입니다."),
+    EXISTING_NICKNAME("400", "기존 닉네임과 동일합니다."),
 
     // Notification
     NOTIFICATION_NOT_FOUND("404", "알림이 존재하지 않습니다."),
