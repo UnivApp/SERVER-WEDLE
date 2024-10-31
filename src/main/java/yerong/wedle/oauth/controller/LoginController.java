@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import yerong.wedle.common.exception.ErrorResponse;
-import yerong.wedle.common.exception.ResponseCode;
 import yerong.wedle.member.dto.MemberRequest;
 import yerong.wedle.member.exception.MemberNotFoundException;
+import yerong.wedle.oauth.dto.LoginResponse;
 import yerong.wedle.oauth.dto.MemberLogoutResponse;
 import yerong.wedle.oauth.dto.TokenResponse;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
@@ -50,11 +49,12 @@ public class LoginController {
     @PostMapping("/login/apple")
     public ResponseEntity<?> login(@RequestBody MemberRequest memberRequest) throws Exception {
         try {
-            TokenResponse tokenResponse = authService.login(memberRequest);
+            LoginResponse loginResponse = authService.login(memberRequest);
+            HttpHeaders headers = authService.setTokenHeaders(TokenResponse.builder()
+                    .accessToken(loginResponse.getAccessToken())
+                    .refreshToken(loginResponse.getRefreshToken()).build());
 
-            HttpHeaders headers = authService.setTokenHeaders(tokenResponse);
-
-            return ResponseEntity.ok().headers(headers).body(tokenResponse);
+            return ResponseEntity.ok().headers(headers).body(loginResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그인 중 오류가 발생했습니다.");
         }
@@ -203,4 +203,6 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원탈퇴 중 오류가 발생했습니다.");
         }
     }
+
+
 }
