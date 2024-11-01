@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yerong.wedle.department.dto.DepartmentResponse;
 import yerong.wedle.department.service.DepartmentService;
+import yerong.wedle.member.dto.NicknameDuplicateResponse;
 import yerong.wedle.member.dto.NicknameRequest;
 import yerong.wedle.member.dto.NicknameResponse;
 import yerong.wedle.member.service.MemberService;
@@ -45,6 +46,16 @@ public class MemberApiController {
     @PutMapping("/nickname")
     public ResponseEntity<NicknameResponse> updateNickname(@RequestBody NicknameRequest nicknameRequest) {
         return ResponseEntity.ok(memberService.setNickname(nicknameRequest));
+    }
+
+    @Operation(summary = "닉네임 중복 체크", description = "닉네임의 중복 여부를 확인합니다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "닉네임 중복 확인 성공")
+    })
+    @GetMapping("/nickname/check")
+    public ResponseEntity<NicknameDuplicateResponse> checkNicknameDuplicate(@RequestParam String nickname) {
+        NicknameDuplicateResponse nicknameDuplicateResponse = memberService.checkNicknameDuplicate(nickname);
+        return ResponseEntity.ok(nicknameDuplicateResponse);
     }
 
     @GetMapping("/nickname")
