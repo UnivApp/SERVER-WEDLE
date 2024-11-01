@@ -12,6 +12,8 @@ import java.util.List;
 public class NotificationResponse {
 
     private Long notificationId;
+    private String title;
+    private String type;
     private LocalDate notificationDate;
     private Long eventId;
     private List<String> registrationTokens;
