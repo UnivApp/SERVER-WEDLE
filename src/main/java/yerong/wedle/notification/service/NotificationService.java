@@ -92,6 +92,8 @@ public class NotificationService {
     private NotificationResponse convertToResponse(Notification notification) {
         return NotificationResponse.builder()
                 .notificationId(notification.getNotificationId())
+                .title(notification.getEvent().getTitle())
+                .type(notification.getEvent().getCalendarEventType().getDisplayName())
                 .notificationDate(notification.getNotificationDate())
                 .eventId(notification.getEvent().getId())
                 .registrationTokens(notification.getRegistrationTokens())
