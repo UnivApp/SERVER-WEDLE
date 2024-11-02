@@ -19,6 +19,7 @@ import yerong.wedle.common.exception.ErrorResponse;
 import yerong.wedle.member.dto.MemberRequest;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.oauth.dto.LoginResponse;
+import yerong.wedle.oauth.dto.LoginStatusResponse;
 import yerong.wedle.oauth.dto.MemberLogoutResponse;
 import yerong.wedle.oauth.dto.TokenResponse;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
@@ -86,40 +87,39 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("토큰 갱신 중 오류가 발생했습니다.");
         }
     }
-    @Operation(
-            summary = "로그인 상태 확인",
-            description = "현재 사용자의 로그인 상태를 확인합니다."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "로그인 상태 확인 성공"),
-            @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
-            @ApiResponse(responseCode = "500", description = "상태 확인 중 서버 오류 발생")
-    })
     @PostMapping("/login/status")
-    public ResponseEntity<?> checkLoginStatus(HttpServletRequest request) {
+    public ResponseEntity<LoginStatusResponse> checkLoginStatus(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
-
         String accessToken = authService.extractAccessTokenFromHeader(authorizationHeader);
 
         try {
-
             if (jwtBlacklistService.isTokenBlacklisted(accessToken)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 블랙리스트에 등록되어 있습니다.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(new LoginStatusResponse(false, false, "토큰이 유효하지 않습니다. 다시 로그인 해주세요."));
             }
 
             boolean isLoggedIn = authService.isLoggedIn();
 
-            if (isLoggedIn) {
-                return ResponseEntity.ok().body("사용자는 로그인 상태입니다.");
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자는 로그인 상태가 아닙니다.");
+            if (!isLoggedIn) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(new LoginStatusResponse(false, false, "사용자는 로그인 상태가 아닙니다."));
             }
+
+            boolean hasNickname = authService.hasNickname();
+            String message = hasNickname ? "사용자는 완벽하게 회원가입 후 로그인된 상태입니다." :
+                    "닉네임이 없는 상태로 회원가입이 완료되었습니다. 닉네임 입력이 필요합니다.";
+
+            return ResponseEntity.ok(new LoginStatusResponse(true, hasNickname, message));
+
         } catch (InvalidTokenException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 토큰입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new LoginStatusResponse(false, false, "유효하지 않은 토큰입니다."));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상태 확인 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new LoginStatusResponse(false, false, "상태 확인 중 오류가 발생했습니다."));
         }
     }
+
 
     @Operation(
             summary = "로그아웃",
