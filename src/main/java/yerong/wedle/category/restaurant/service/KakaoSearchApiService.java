@@ -53,6 +53,8 @@ public class KakaoSearchApiService {
                         .categoryName(lastCategory)
                         .phone(document.getPhone())
                         .placeUrl(document.getPlace_url())
+                        .x(document.getX())
+                        .y(document.getY())
                         .build());
             }
         }

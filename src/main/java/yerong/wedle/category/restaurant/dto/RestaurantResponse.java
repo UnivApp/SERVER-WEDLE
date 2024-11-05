@@ -17,4 +17,6 @@ public class RestaurantResponse {
     private String phone;
     private String categoryName;
     private String placeUrl;
+    private Double x;
+    private Double y;
 }
