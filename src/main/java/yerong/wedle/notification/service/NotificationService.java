@@ -85,6 +85,7 @@ public class NotificationService {
                 FcmUtils.broadCast(registrationTokens, title, body);
 
                 notification.setActive(false);
+                notificationRepository.delete(notification);
             }
         }
     }
@@ -110,11 +111,11 @@ public class NotificationService {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
-
-        List<Notification> notifications = notificationRepository.findByMember(member);
+        List<Notification> notifications = notificationRepository.findByMemberAndIsActiveTrue(member);
         return notifications.stream()
                 .map(this::convertToResponse)
                 .toList();
+
     }
     private String getCurrentUserId() {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
