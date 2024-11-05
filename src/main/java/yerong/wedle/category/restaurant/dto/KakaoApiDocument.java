@@ -10,4 +10,6 @@ public class KakaoApiDocument {
     private String phone;
     private String category_name;
     private String place_url;
+    private Double x;
+    private Double y;
 }
