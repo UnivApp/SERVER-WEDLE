@@ -13,6 +13,9 @@ import org.springframework.web.client.RestTemplate;
 import yerong.wedle.category.restaurant.dto.RestaurantResponse;
 import yerong.wedle.category.restaurant.dto.KakaoApiDocument;
 import yerong.wedle.category.restaurant.dto.KakaoApiResponse;
+import yerong.wedle.university.domain.University;
+import yerong.wedle.university.exception.UniversityNotFoundException;
+import yerong.wedle.university.repository.UniversityRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +25,17 @@ public class KakaoSearchApiService {
     private String KAKAO_CLIENT_ID;
 
     private final RestTemplate restTemplate;
+    private final UniversityRepository universityRepository;
 
-    public List<RestaurantResponse> searchRestaurant(String query) {
+    public List<RestaurantResponse> searchRestaurant(String universityName) {
+        University university = universityRepository.findByName(universityName)
+                .orElseThrow(UniversityNotFoundException::new);
+        String query;
+        if (university.getSubName() != null) {
+            query = university.getSubName() + " 맛집";
+        } else {
+            query = universityName + " 맛집";
+        }
         String url = "https://dapi.kakao.com/v2/local/search/keyword.json?query=" + query + "&size=15";
 
         HttpHeaders headers = new HttpHeaders();
@@ -42,7 +54,7 @@ public class KakaoSearchApiService {
                 if (fullCategoryName != null && !fullCategoryName.isEmpty()) {
                     String[] categories = fullCategoryName.split(" > ");
                     if (categories.length > 0) {
-                        lastCategory = categories[categories.length - 1]; // 마지막 부분
+                        lastCategory = categories[categories.length - 1];
                     }
                 }
 
@@ -59,6 +71,6 @@ public class KakaoSearchApiService {
             }
         }
 
-        return restaurantResponses; // 맛집 정보 반환
+        return restaurantResponses;
     }
 }

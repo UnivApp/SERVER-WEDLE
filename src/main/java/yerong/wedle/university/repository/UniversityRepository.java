@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface UniversityRepository extends JpaRepository<University, Long> {
 
+    Optional<University> findByName(String name);
     List<University> findByNameContainingOrLocationContaining(String name, String location);
 
     List<University> findAllByOrderByNameAsc();

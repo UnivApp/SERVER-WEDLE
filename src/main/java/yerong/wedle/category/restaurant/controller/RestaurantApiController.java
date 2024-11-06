@@ -31,7 +31,7 @@ public class RestaurantApiController {
     })
     @GetMapping("/kakao")
     public ResponseEntity<List<RestaurantResponse>> kakaoSearchDynamic(@RequestParam String universityName) {
-        List<RestaurantResponse> restaurantResponses = kakaoSearchApiService.searchRestaurant(universityName + " 맛집");
+        List<RestaurantResponse> restaurantResponses = kakaoSearchApiService.searchRestaurant(universityName);
         return ResponseEntity.ok(restaurantResponses);
     }
 }
