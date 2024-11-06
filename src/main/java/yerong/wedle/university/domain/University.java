@@ -20,6 +20,9 @@ public class University {
 
     @Column(nullable = false)
     private String name;
+
+    private String subName;
+
     @Column(nullable = false)
     private String location;
     private String type; //국립/사립
