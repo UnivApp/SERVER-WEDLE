@@ -34,7 +34,7 @@ public class ActivityService {
 
     @Transactional
     public List<ActivityResponse> getActivitiesByIds() {
-        List<Long> activityIds = Arrays.asList(45L, 51L, 94L, 59L, 48L, 18L, 16L, 11L, 19L, 114L);
+        List<Long> activityIds = Arrays.asList(45L, 50L, 101L, 59L, 138L, 18L, 53L, 13L, 19L, 128L);
 
         List<Activity> activities = activityRepository.findByActivityIdIn(activityIds);
 
