@@ -1,24 +1,20 @@
 package yerong.wedle.calendar.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.calendar.domain.CalendarEvent;
 import yerong.wedle.calendar.dto.CalendarEventResponse;
-import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
 import yerong.wedle.calendar.repository.CalendarEventRepository;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.notification.domain.Notification;
-import yerong.wedle.notification.exception.NotificationNotFoundException;
 import yerong.wedle.notification.repository.NotificationRepository;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,45 +27,59 @@ public class CalendarEventService {
 
     public List<CalendarEventResponse> getAll() {
         List<CalendarEvent> calendarEvents = calendarEventRepository.findAll();
-
-        return calendarEvents.stream()
-                .flatMap(event -> convertToDto(event).stream())
-                .collect(Collectors.toList());
+        return convertToDto(calendarEvents);
     }
 
-    public List<CalendarEventResponse> convertToDto(CalendarEvent calendarEvent) {
-        LocalDate startDate = calendarEvent.getStartDate();
-        LocalDate endDate = calendarEvent.getEndDate();
-
+    public List<CalendarEventResponse> convertToDto(List<CalendarEvent> calendarEvents) {
+        List<CalendarEventResponse> calendarEventResponses = new ArrayList<>();
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
+        for (CalendarEvent calendarEvent : calendarEvents) {
+            LocalDate startDate = calendarEvent.getStartDate();
+            LocalDate endDate = calendarEvent.getEndDate();
 
-        Notification notification = notificationRepository.findByEventAndMember(calendarEvent, member).orElse(null);
-        Long notificationId = notification != null ? notification.getNotificationId() : null;
-
-        if (endDate == null) {
-            return List.of(new CalendarEventResponse(
-                    calendarEvent.getId(),
-                    calendarEvent.getTitle(),
-                    startDate,
-                    calendarEvent.getCalendarEventType().getDisplayName(),
-                    notification != null && notification.isActive() && notification.getNotificationDate().equals(startDate),
-                    notificationId
-            ));
-        }
-
-        return startDate.datesUntil(endDate.plusDays(1))
-                .map(date -> new CalendarEventResponse(
+            if (endDate == null) {
+                Notification notification = notificationRepository.findByMemberAndEventAndNotificationDate(member,
+                        calendarEvent, startDate).orElse(null);
+                Long notificationId = notification != null ? notification.getNotificationId() : null;
+                calendarEventResponses.add(new CalendarEventResponse(
                         calendarEvent.getId(),
                         calendarEvent.getTitle(),
-                        date,
+                        startDate,
                         calendarEvent.getCalendarEventType().getDisplayName(),
-                        notification != null && notification.isActive() && notification.getNotificationDate().equals(date),
+                        notification != null && notification.isActive() && notification.getNotificationDate()
+                                .equals(startDate),
                         notificationId
-                ))
-                .collect(Collectors.toList());
+                ));
+            } else {
+                System.out.println("==============");
+                System.out.println("success");
+                System.out.println("==============");
+
+                startDate.datesUntil(endDate.plusDays(1))
+                        .forEach(date -> {
+                            Notification notification = notificationRepository.findByMemberAndEventAndNotificationDate(
+                                    member, calendarEvent, date).orElse(null);
+                            Long notificationId = notification != null ? notification.getNotificationId() : null;
+                            System.out.println("notificationId: " + notificationId);
+                            boolean isActive = notification != null && notification.isActive()
+                                    && notification.getNotificationDate().equals(date);
+
+                            calendarEventResponses.add(new CalendarEventResponse(
+                                    calendarEvent.getId(),
+                                    calendarEvent.getTitle(),
+                                    date,
+                                    calendarEvent.getCalendarEventType().getDisplayName(),
+                                    isActive,
+                                    notificationId
+                            ));
+                        });
+            }
+        }
+        return calendarEventResponses;
     }
+
     private String getCurrentUserId() {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
 
