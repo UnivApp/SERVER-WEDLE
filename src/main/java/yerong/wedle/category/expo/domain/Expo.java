@@ -39,7 +39,6 @@ class Expo {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
     private String link;
 
     private String location;
