@@ -157,7 +157,7 @@ public class UniversityService {
                     String year = entry.getKey();
                     List<TuitionFeeResponse> tuitionFeeResponses = entry.getValue().stream()
                             .map(tuitionFee -> new TuitionFeeResponse(
-                                    tuitionFee.getTuitionFeeType().name(),
+                                    tuitionFee.getTuitionFeeType().getDisplayName(),
                                     tuitionFee.getFeeAmount()))
                             .collect(Collectors.toList());
                     return new YearTuitionFeeResponse(year, tuitionFeeResponses);
