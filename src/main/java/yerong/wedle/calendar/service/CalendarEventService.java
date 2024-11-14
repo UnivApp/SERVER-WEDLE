@@ -53,16 +53,11 @@ public class CalendarEventService {
                         notificationId
                 ));
             } else {
-                System.out.println("==============");
-                System.out.println("success");
-                System.out.println("==============");
-
                 startDate.datesUntil(endDate.plusDays(1))
                         .forEach(date -> {
                             Notification notification = notificationRepository.findByMemberAndEventAndNotificationDate(
                                     member, calendarEvent, date).orElse(null);
                             Long notificationId = notification != null ? notification.getNotificationId() : null;
-                            System.out.println("notificationId: " + notificationId);
                             boolean isActive = notification != null && notification.isActive()
                                     && notification.getNotificationDate().equals(date);
 
