@@ -114,6 +114,7 @@ public class AuthService {
         return socialId != null && memberRepository.findBySocialId(socialId).isPresent();
     }
 
+    @Transactional
     public boolean hasNickname(String socialId) {
         if (socialId == null) socialId = SecurityContextHolder.getContext().getAuthentication().getName();
 
