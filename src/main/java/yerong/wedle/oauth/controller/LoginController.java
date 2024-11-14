@@ -104,7 +104,7 @@ public class LoginController {
                         .body(new LoginStatusResponse(false, false, "사용자는 로그인 상태가 아닙니다."));
             }
 
-            boolean hasNickname = authService.hasNickname();
+            boolean hasNickname = authService.hasNickname(null);
             String message = hasNickname ? "사용자는 완벽하게 회원가입 후 로그인된 상태입니다." :
                     "닉네임이 없는 상태로 회원가입이 완료되었습니다. 닉네임 입력이 필요합니다.";
 

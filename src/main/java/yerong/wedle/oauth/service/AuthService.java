@@ -73,7 +73,7 @@ public class AuthService {
         }
         redisTemplate.opsForValue().set("RT:" + member.getSocialId(), tokenResponse.getRefreshToken(), tokenResponse.getRefreshTokenExpiresIn(), TimeUnit.MILLISECONDS);
 
-        return new LoginResponse(tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), member.isExistingMember(), hasNickname());
+        return new LoginResponse(tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), member.isExistingMember(), hasNickname(member.getSocialId()));
     }
     @Transactional
     public TokenResponse refreshAccessToken(String refreshTokenValue){
@@ -114,8 +114,8 @@ public class AuthService {
         return socialId != null && memberRepository.findBySocialId(socialId).isPresent();
     }
 
-    public boolean hasNickname() {
-        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+    public boolean hasNickname(String socialId) {
+        if (socialId == null) socialId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Member member = memberRepository.findBySocialId(socialId).orElse(null);
         return member.getNickname() != null;
