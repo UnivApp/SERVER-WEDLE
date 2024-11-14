@@ -1,5 +1,9 @@
 package yerong.wedle.university.service;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,7 +18,6 @@ import yerong.wedle.department.repository.DepartmentRepository;
 import yerong.wedle.employmentRate.domain.EmploymentRate;
 import yerong.wedle.employmentRate.dto.EmploymentRateResponse;
 import yerong.wedle.employmentRate.repository.EmploymentRateRepository;
-import yerong.wedle.employmentRate.service.EmploymentRateService;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
@@ -28,10 +31,6 @@ import yerong.wedle.university.dto.UniversityAllResponse;
 import yerong.wedle.university.dto.UniversityResponse;
 import yerong.wedle.university.exception.UniversityNotFoundException;
 import yerong.wedle.university.repository.UniversityRepository;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -60,14 +59,18 @@ public class UniversityService {
 
     @Transactional
     public UniversityResponse getUniversitySummaryById(Long universityId) {
-        University university = universityRepository.findById(universityId).orElseThrow(UniversityNotFoundException::new);
+        University university = universityRepository.findById(universityId)
+                .orElseThrow(UniversityNotFoundException::new);
         return convertToSummaryDto(university);
     }
+
     @Transactional
     public UniversityAllResponse getUniversityDetailsById(Long universityId) {
-        University university = universityRepository.findById(universityId).orElseThrow(UniversityNotFoundException::new);
+        University university = universityRepository.findById(universityId)
+                .orElseThrow(UniversityNotFoundException::new);
         return convertToDetailDto(university);
     }
+
     @Transactional
     public List<UniversityResponse> getAllUniversitiesSummary() {
         List<University> universities = universityRepository.findAllByOrderByNameAsc();
@@ -83,6 +86,7 @@ public class UniversityService {
                 .map(this::convertToDetailDto)
                 .collect(Collectors.toList());
     }
+
     private UniversityResponse convertToSummaryDto(University university) {
         Long starNum = starRepository.countByUniversityId(university.getUniversityId());
         String socialId = getCurrentUserId();
@@ -100,6 +104,7 @@ public class UniversityService {
                 isStarred
         );
     }
+
     private UniversityAllResponse convertToDetailDto(University university) {
         Long starNum = starRepository.countByUniversityId(university.getUniversityId());
 
@@ -108,14 +113,15 @@ public class UniversityService {
         List<EmploymentRate> employmentRates = employmentRateRepository.findByUniversity(university);
         List<Department> departments = departmentRepository.findByUniversity(university);
 
-        YearTuitionFeeResponse tuitionFeeResponses = getLatestTuitionFeeResponse(tuitionFees);
+        List<YearTuitionFeeResponse> allTuitionFeeResponses = getAllTuitionFeeResponses(tuitionFees);
 
         List<CompetitionRateResponse> competitionRateResponses = competitionRates.stream()
-                .map(rate -> new CompetitionRateResponse(rate.getEarlyAdmissionRate(), rate.getRegularAdmissionRate(), rate.getAverageAdmissionRate(), rate.getCompetitionYear()))
+                .map(rate -> new CompetitionRateResponse(rate.getEarlyAdmissionRate(), rate.getRegularAdmissionRate(),
+                        rate.getAverageAdmissionRate(), rate.getCompetitionYear()))
                 .collect(Collectors.toList());
 
         List<EmploymentRateResponse> employmentRateResponses = employmentRates.stream()
-                .map(rate -> new EmploymentRateResponse(rate.getEmploymentYear(),rate.getEmploymentRate()))
+                .map(rate -> new EmploymentRateResponse(rate.getEmploymentYear(), rate.getEmploymentRate()))
                 .collect(Collectors.toList());
 
         List<DepartmentResponse> departmentResponses = departments.stream()
@@ -135,26 +141,28 @@ public class UniversityService {
                 university.getWebsite(),
                 university.getAdmissionSite(),
                 starNum,
-                tuitionFeeResponses,
+                allTuitionFeeResponses,
                 departmentResponses,
                 competitionRateResponses,
                 employmentRateResponses
         );
     }
 
-    private YearTuitionFeeResponse getLatestTuitionFeeResponse(List<TuitionFee> tuitionFees) {
-        TuitionFee latestTuitionFee = tuitionFees.stream()
-                .max(Comparator.comparing(TuitionFee::getTuitionFeeYear))
-                .orElse(null);
+    private List<YearTuitionFeeResponse> getAllTuitionFeeResponses(List<TuitionFee> tuitionFees) {
+        Map<String, List<TuitionFee>> groupedByYear = tuitionFees.stream()
+                .collect(Collectors.groupingBy(TuitionFee::getTuitionFeeYear));
 
-        if (latestTuitionFee != null) {
-            return new YearTuitionFeeResponse(
-                    latestTuitionFee.getTuitionFeeYear(),
-                    List.of(new TuitionFeeResponse(latestTuitionFee.getTuitionFeeType().getDisplayName(), latestTuitionFee.getFeeAmount())) // DTO 리스트 생성
-            );
-        } else {
-            return new YearTuitionFeeResponse();
-        }
+        return groupedByYear.entrySet().stream()
+                .map(entry -> {
+                    String year = entry.getKey();
+                    List<TuitionFeeResponse> tuitionFeeResponses = entry.getValue().stream()
+                            .map(tuitionFee -> new TuitionFeeResponse(
+                                    tuitionFee.getTuitionFeeType().name(),
+                                    tuitionFee.getFeeAmount()))
+                            .collect(Collectors.toList());
+                    return new YearTuitionFeeResponse(year, tuitionFeeResponses);
+                })
+                .collect(Collectors.toList());
     }
 
     private DepartmentResponse convertToDepartmentDto(DepartmentType departmentType, List<Department> departments) {
