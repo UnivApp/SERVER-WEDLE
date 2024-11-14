@@ -104,7 +104,7 @@ public class LoginController {
                         .body(new LoginStatusResponse(false, false, "사용자는 로그인 상태가 아닙니다."));
             }
 
-            boolean hasNickname = authService.hasNickname(null);
+            boolean hasNickname = authService.hasNickname();
             String message = hasNickname ? "사용자는 완벽하게 회원가입 후 로그인된 상태입니다." :
                     "닉네임이 없는 상태로 회원가입이 완료되었습니다. 닉네임 입력이 필요합니다.";
 
@@ -155,8 +155,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "유효하지 않은 토큰입니다."));
         }
 
-        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
-        MemberLogoutResponse memberLogoutResponse = authService.logout(socialId);
+        MemberLogoutResponse memberLogoutResponse = authService.logout();
         if (memberLogoutResponse == null) {
             log.warn("Social Id {}로 회원을 찾을 수 없음", principal.getName());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Social Id로 회원을 찾을 수 없습니다."));
