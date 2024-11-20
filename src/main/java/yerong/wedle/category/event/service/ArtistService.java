@@ -18,17 +18,19 @@ public class ArtistService {
 
         List<ArtistTop10Response> artistResponses = topArtistsData.stream()
                 .map(record -> {
+                    String image = (record[3] != null) ? String.valueOf(record[3]) : "";
                     ArtistTop10Response response = new ArtistTop10Response(
                             String.valueOf(record[1]),
                             String.valueOf(record[2]),
-                            String.valueOf(record[3]),
+                            image,
+
                             ((Number) record[4]).intValue()
                     );
                     return response;
                 })
                 .limit(10)
                 .collect(Collectors.toList());
-        
+
         return artistResponses;
     }
 }

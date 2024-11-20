@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FestivalResponse {
     private String eventName;
-    private Integer year;
+    private String year;
     private String date;
     private List<FestivalWithArtistsResponse> dayLineup;
 }

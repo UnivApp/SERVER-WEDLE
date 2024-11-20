@@ -28,7 +28,7 @@ public class Artist {
     @Column(nullable = false)
     private String subname;
 
-    private String image = "";
+    private final String image = "";
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FestivalArtist> eventArtists;

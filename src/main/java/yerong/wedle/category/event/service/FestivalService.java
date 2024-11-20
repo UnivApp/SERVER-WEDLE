@@ -51,7 +51,7 @@ public class FestivalService {
                 .collect(Collectors.toList());
         return new FestivalResponse(
                 festival.getName(),
-                festival.getFestivalYear(),
+                String.valueOf(festival.getFestivalYear()),
                 festival.getDate(),
                 dayLineup
         );
