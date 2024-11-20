@@ -13,8 +13,13 @@ import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
 import yerong.wedle.competitionRate.exception.CompetitionRateNotFoundException;
 import yerong.wedle.department.exception.DepartmentNotFoundException;
 import yerong.wedle.employmentRate.exception.EmploymentRateNotFoundException;
+import yerong.wedle.member.exception.ExistingNicknameException;
+import yerong.wedle.member.exception.MemberNicknameDuplicateException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.MemberDuplicateException;
+import yerong.wedle.notification.exception.DuplicateNotificationException;
+import yerong.wedle.notification.exception.NotificationDateOutOfRangeException;
+import yerong.wedle.notification.exception.NotificationNotFoundException;
 import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
@@ -60,6 +65,56 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(MemberNicknameDuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleMemberNicknameDuplicateException(MemberNicknameDuplicateException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.MEMBER_NICKNAME_DUPLICATE.getCode(),
+                ResponseCode.MEMBER_NICKNAME_DUPLICATE.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(NotificationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotificationNotFoundException(NotificationNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.NOTIFICATION_NOT_FOUND.getCode(),
+                ResponseCode.NOTIFICATION_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(DuplicateNotificationException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateNotificationException(DuplicateNotificationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.DUPLICATION_NOTIFICATION.getCode(),
+                ResponseCode.DUPLICATION_NOTIFICATION.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+    @ExceptionHandler(ExistingNicknameException.class)
+    public ResponseEntity<ErrorResponse> handleExistingNicknameException(ExistingNicknameException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.EXISTING_NICKNAME.getCode(),
+                ResponseCode.EXISTING_NICKNAME.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+
+    @ExceptionHandler(NotificationDateOutOfRangeException.class)
+    public ResponseEntity<ErrorResponse> handleNotificationDateOutOfRangeException(NotificationDateOutOfRangeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.NOTIFICATION_DATE_OUT_OF_RANGE.getCode(),
+                ResponseCode.NOTIFICATION_DATE_OUT_OF_RANGE.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(InvalidRefreshTokenException.class)

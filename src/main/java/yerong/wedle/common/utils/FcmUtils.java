@@ -1,47 +1,57 @@
 package yerong.wedle.common.utils;
 
-import com.google.firebase.messaging.ApnsConfig;
-import com.google.firebase.messaging.Aps;
-import com.google.firebase.messaging.BatchResponse;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.MulticastMessage;
-import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.*;
+
 import java.util.Date;
 import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FcmUtils {
 
     private static final int FCM_PUSH_LIMIT_SIZE = 500;
-    private static final long ONE_WEEK = (long) 60 * 60 * 24 * 7;
-    private static final long EXPIRED_TIME_FOR_UNIX = new Date(new Date().getTime() + ONE_WEEK).getTime();
+    private static final long ONE_WEEK_IN_SECONDS = 60 * 60 * 24 * 7;
+    private static final long EXPIRED_TIME_FOR_UNIX = new Date().getTime() / 1000 + ONE_WEEK_IN_SECONDS;
 
     public static void broadCast(final List<String> registrationTokens, String title, String body) {
         limitSizeValidate(registrationTokens);
 
-        MulticastMessage message = MulticastMessage.builder()
+        MulticastMessage message = buildMessage(registrationTokens, title, body);
+
+        try {
+            BatchResponse response = FirebaseMessaging.getInstance().sendEachForMulticast(message);
+            pushSuccessValidate(registrationTokens, response);
+        } catch (FirebaseMessagingException e) {
+            log.error("FCM 메시지 전송 중 예외 발생: {}", e.getMessage(), e);
+            if (e.getErrorCode() != null) {
+                log.error("Error Code: {}", e.getErrorCode());
+            }
+        }
+    }
+
+    private static MulticastMessage buildMessage(List<String> registrationTokens, String title, String body) {
+        return MulticastMessage.builder()
                 .setNotification(Notification.builder()
-                        .setTitle(title)  // 알림 제목
-                        .setBody(body)    // 알림 내용
+                        .setTitle(title)
+                        .setBody(body)
                         .build())
                 .setApnsConfig(ApnsConfig.builder()
-                        .setAps(Aps.builder().setAlert(body).build())  // iOS에 맞춰 알림 내용 설정
+                        .setAps(Aps.builder()
+                                .setAlert(
+                                        ApsAlert.builder()
+                                                .setTitle(title)
+                                                .setBody(body)
+                                                .build()
+                                )
+                                .build())
                         .putHeader("apns-expiration", Long.toString(EXPIRED_TIME_FOR_UNIX))
                         .build())
                 .addAllTokens(registrationTokens)
                 .build();
-
-        BatchResponse response;
-        try {
-            response = FirebaseMessaging.getInstance().sendEachForMulticast(message);
-            pushSuccessValidate(registrationTokens, response);
-        } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
-            // 예외 처리 추가 가능
-        }
     }
 
     private static void limitSizeValidate(final List<String> registrationTokens) {
@@ -51,9 +61,18 @@ public class FcmUtils {
     }
 
     private static void pushSuccessValidate(final List<String> registrationTokens, final BatchResponse response) {
-        System.out.println(response.getSuccessCount() + " messages were sent successfully.");
+        log.info("{} messages were sent successfully.", response.getSuccessCount());
         if (response.getFailureCount() > 0) {
-            System.out.println(response.getFailureCount() + " messages failed to send.");
+            log.error("{} messages failed to send.", response.getFailureCount());
+            response.getResponses().forEach(sendResponse -> {
+                if (!sendResponse.isSuccessful()) {
+                    String messageId = sendResponse.getMessageId();
+                    String errorMessage = sendResponse.getException() != null ? sendResponse.getException().getMessage() : "Unknown error";
+
+                    log.error("Failed to send message to token: {}. Error: {}",
+                            messageId != null ? messageId : "null", errorMessage);
+                }
+            });
         }
     }
 }

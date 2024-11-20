@@ -28,6 +28,7 @@ public class MatchingService {
                 .map(this::convertQuestionnaireDto)
                 .collect(Collectors.toList());
     }
+
     private QuestionnaireResponse convertQuestionnaireDto(QuestionnaireCategory category) {
         List<Questionnaire> questionnaires = questionnaireRepository.findAllByQuestionnaireCategory(category);
 
@@ -52,13 +53,13 @@ public class MatchingService {
     private Optional<MatchingResult> findResultByScore(int score) {
         if (score >= 5 && score <= 30) {
             return matchingResultRepository.findByMatchingResultType(MatchingResultType.PRACTICAL_APPLICATION_TYPE);
-        } else if (score >= 31 && score <= 50) {
+        } else if (score >= 31 && score <= 56) {
             return matchingResultRepository.findByMatchingResultType(MatchingResultType.BALANCED_TYPE);
-        } else if (score >= 51 && score <= 70) {
+        } else if (score >= 57 && score <= 82) {
             return matchingResultRepository.findByMatchingResultType(MatchingResultType.ANALYTICAL_TYPE);
-        } else if (score >= 71 && score <= 90) {
+        } else if (score >= 83 && score <= 105) {
             return matchingResultRepository.findByMatchingResultType(MatchingResultType.CREATIVE_INNOVATOR_TYPE);
-        } else if (score >= 91 && score <= 100) {
+        } else if (score >= 106 && score <= 125) {
             return matchingResultRepository.findByMatchingResultType(MatchingResultType.PROFESSIONAL_RESEARCH_TYPE);
         }
         return Optional.empty();

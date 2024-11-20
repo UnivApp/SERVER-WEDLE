@@ -10,6 +10,13 @@ public enum ResponseCode {
     // Member
     MEMBER_NOT_FOUND("404", "회원이 존재하지 않습니다."),
     MEMBER_DUPLICATE("409", "이미 존재하는 회원입니다."),
+    MEMBER_NICKNAME_DUPLICATE("409", "이미 존재하는 닉네임입니다."),
+    EXISTING_NICKNAME("400", "기존 닉네임과 동일합니다."),
+
+    // Notification
+    NOTIFICATION_NOT_FOUND("404", "알림이 존재하지 않습니다."),
+    DUPLICATION_NOTIFICATION("409", "이미 존재하는 알림입니다."),
+    NOTIFICATION_DATE_OUT_OF_RANGE("400", "알림 날짜가 이벤트 기간에 포함되지 않습니다."),
 
     // OAuth
     INVALID_REFRESH_TOKEN("400", "유효하지 않은 Refresh Token입니다."),
