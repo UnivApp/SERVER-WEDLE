@@ -12,7 +12,7 @@ public enum ResponseCode {
     MEMBER_DUPLICATE("409", "이미 존재하는 회원입니다."),
     MEMBER_NICKNAME_DUPLICATE("409", "이미 존재하는 닉네임입니다."),
     EXISTING_NICKNAME("400", "기존 닉네임과 동일합니다."),
-
+    NICKNAME_BLANK("400", "닉네임에 공백을 포함할 수 없습니다."),
     // Notification
     NOTIFICATION_NOT_FOUND("404", "알림이 존재하지 않습니다."),
     DUPLICATION_NOTIFICATION("409", "이미 존재하는 알림입니다."),
