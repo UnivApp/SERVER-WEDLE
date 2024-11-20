@@ -24,7 +24,7 @@ public class MemberService {
     }
 
     private void validateNickname(String nickname) {
-        if (nickname == null || nickname.trim().isEmpty()) {
+        if (nickname == null || nickname.trim().isEmpty() || nickname.contains(" ")) {
             throw new InvalidNicknameException();
         }
     }
