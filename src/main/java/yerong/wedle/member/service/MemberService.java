@@ -8,6 +8,7 @@ import yerong.wedle.member.dto.NicknameDuplicateResponse;
 import yerong.wedle.member.dto.NicknameRequest;
 import yerong.wedle.member.dto.NicknameResponse;
 import yerong.wedle.member.exception.ExistingNicknameException;
+import yerong.wedle.member.exception.InvalidNicknameException;
 import yerong.wedle.member.exception.MemberNicknameDuplicateException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
@@ -22,10 +23,18 @@ public class MemberService {
         return memberRepository.existsByNickname(nickname);
     }
 
+    private void validateNickname(String nickname) {
+        if (nickname == null || nickname.trim().isEmpty() || nickname.contains(" ")) {
+            throw new InvalidNicknameException();
+        }
+    }
+
     public NicknameResponse setNickname(NicknameRequest nicknameRequest) {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
+
+        validateNickname(nicknameRequest.getNickName());
 
         if (member.getNickname() != null && member.getNickname().equals(nicknameRequest.getNickName())) {
             throw new ExistingNicknameException();
@@ -58,7 +67,7 @@ public class MemberService {
         return socialId;
     }
 
-    public NicknameDuplicateResponse checkNicknameDuplicate(String  nickname) {
+    public NicknameDuplicateResponse checkNicknameDuplicate(String nickname) {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
@@ -82,4 +91,5 @@ public class MemberService {
                 .message(message)
                 .build();
     }
+
 }
