@@ -36,12 +36,9 @@ public class SchoolService {
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        System.out.println("Success");
-
         School school = schoolRepository.findById(schoolRegistrationRequest.getSchoolId())
                 .orElseThrow(SchoolNotFoundException::new);
 
-        System.out.println("Success");
         if (member.getSchool() != null && member.getSchoolRegisteredDate() != null) {
             long monthSinceRegistered = ChronoUnit.MONTHS.between(member.getSchoolRegisteredDate(),
                     LocalDateTime.now());

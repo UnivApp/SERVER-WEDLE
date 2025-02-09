@@ -35,10 +35,6 @@ public class SchoolApiController {
     @Operation(summary = "학교 선택 및 등록", description = "사용자가 선택한 학교를 등록합니다.")
     @PostMapping("/register")
     public ResponseEntity<Void> registerSchool(SchoolRegistrationRequest schoolRegistrationRequest) {
-        System.out.println("=================");
-        System.out.println("id : " + schoolRegistrationRequest.getSchoolId());
-        System.out.println("=================");
-
         schoolService.setSchool(schoolRegistrationRequest);
         return ResponseEntity.ok().build();
     }
