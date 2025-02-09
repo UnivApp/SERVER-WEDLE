@@ -61,8 +61,12 @@ public enum ResponseCode {
     EXPO_NOT_FOUND("404", "대학 연계 행사 정보를 찾을 수 없습니다."),
     EXPO_CATEGORY_NOT_FOUND("404", "대학 연계 행사 카테고리 정보를 찾을 수 없습니다."),
 
-    //Matching Result
-    MATCHING_RESULT_NOT_FOUND("404", "점수에 맞는 설문 결과를 찾을 수 없습니다.");
+    //Matching
+    MATCHING_RESULT_NOT_FOUND("404", "점수에 맞는 설문 결과를 찾을 수 없습니다."),
+
+    //School
+    SCHOOL_NOT_FOUND("404", "해당 학교를 찾을 수 없습니다."),
+    SCHOOL_CHANGE_NOT_ALLOWED("403", "학교는 등록 후 1년이 지나야 변경할 수 있습니다.");
 
 
     private final String code;

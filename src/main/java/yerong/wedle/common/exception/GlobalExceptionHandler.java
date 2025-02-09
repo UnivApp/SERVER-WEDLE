@@ -27,6 +27,8 @@ import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
 import yerong.wedle.oauth.exception.OAuthProcessingException;
+import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
+import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.star.exception.StarNotFoundException;
 import yerong.wedle.tuitionfee.exception.TuitionFeeNotFoundException;
 import yerong.wedle.university.exception.UniversityNotFoundException;
@@ -281,13 +283,33 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TuitionFeeNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleDTuitionFeeNotFoundException(TuitionFeeNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleTuitionFeeNotFoundException(TuitionFeeNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.TUITION_FEE_NOT_FOUND.getCode(),
                 ResponseCode.TUITION_FEE_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(SchoolNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSchoolNotFoundException(SchoolNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.SCHOOL_NOT_FOUND.getCode(),
+                ResponseCode.SCHOOL_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(SchoolChangeNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleSchoolChangeNotAllowedException(SchoolChangeNotAllowedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.SCHOOL_CHANGE_NOT_ALLOWED.getCode(),
+                ResponseCode.SCHOOL_CHANGE_NOT_ALLOWED.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
@@ -299,4 +321,5 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
+
 }

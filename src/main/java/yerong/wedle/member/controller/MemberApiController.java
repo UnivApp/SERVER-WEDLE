@@ -17,6 +17,8 @@ import yerong.wedle.member.dto.NicknameDuplicateResponse;
 import yerong.wedle.member.dto.NicknameRequest;
 import yerong.wedle.member.dto.NicknameResponse;
 import yerong.wedle.member.service.MemberService;
+import yerong.wedle.school.dto.SchoolRegistrationRequest;
+import yerong.wedle.school.service.SchoolService;
 
 @Tag(name = "Member API", description = "회원 관련 API")
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ import yerong.wedle.member.service.MemberService;
 public class MemberApiController {
 
     private final MemberService memberService;
+    private final SchoolService schoolService;
 
     @Operation(summary = "회원 닉네임 등록", description = "신규 회원의 닉네임을 등록합니다")
     @ApiResponses({
@@ -65,5 +68,18 @@ public class MemberApiController {
     @GetMapping("/nickname")
     public ResponseEntity<NicknameResponse> getNickname() {
         return ResponseEntity.ok(memberService.getNickname());
+    }
+
+    @Operation(summary = "학교 등록", description = "회원의 학교를 등록합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "학교 등록 성공"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+            @ApiResponse(responseCode = "404", description = "학교를 찾을 수 없음"),
+            @ApiResponse(responseCode = "409", description = "학교가 이미 등록되어 있음")
+    })
+    @PostMapping("/school")
+    public ResponseEntity<Void> registerSchool(@RequestBody SchoolRegistrationRequest schoolRegistrationRequest) {
+        schoolService.setSchool(schoolRegistrationRequest);
+        return ResponseEntity.ok().build();
     }
 }
