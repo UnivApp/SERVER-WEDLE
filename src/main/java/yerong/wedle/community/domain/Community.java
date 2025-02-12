@@ -35,4 +35,8 @@ public class Community {
     public Community(School school) {
         this.school = school;
     }
+
+    public void addBoard(Board board) {
+        boards.add(board);
+    }
 }

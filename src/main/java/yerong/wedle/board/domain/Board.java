@@ -20,9 +20,14 @@ public class Board {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     @ManyToOne
     @JoinColumn(name = "community_id", nullable = false)
     private Community community;
+
+    public Board(String title, Community community) {
+        this.title = title;
+        this.community = community;
+    }
 }
