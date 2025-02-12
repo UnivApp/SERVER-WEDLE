@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
@@ -20,6 +21,7 @@ import yerong.wedle.school.repository.SchoolRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SchoolService {
     private final SchoolRepository schoolRepository;
     private final MemberRepository memberRepository;
