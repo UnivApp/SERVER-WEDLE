@@ -15,17 +15,15 @@ import yerong.wedle.community.repository.CommunityRepository;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
-import yerong.wedle.school.repository.SchoolRepository;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
     private final CommunityRepository communityRepository;
-    private final SchoolRepository schoolRepository;
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
 
-    public Board createBoard(BoardRequest boardRequest) {
+    public BoardResponse createBoard(BoardRequest boardRequest) {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
@@ -33,7 +31,8 @@ public class BoardService {
                 BoardNotFoundException::new);
         Board board = new Board(boardRequest.getTitle(), community);
         community.addBoard(board);
-        return boardRepository.save(board);
+        boardRepository.save(board);
+        return convertToBoardResponse(board);
     }
 
     public void deleteBoard(Long boardId) {
