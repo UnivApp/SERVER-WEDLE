@@ -12,10 +12,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.stream.events.Comment;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import yerong.wedle.board.domain.Board;
+import yerong.wedle.comment.domain.Comment;
 import yerong.wedle.member.domain.Member;
 
 @Entity
@@ -39,8 +41,27 @@ public class Post {
     @Column(nullable = false)
     private boolean isAnonymous;
 
+    @ManyToOne
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    
+    @Builder
+    public Post(String title, String content, boolean isAnonymous, Member member, Board board) {
+        this.member = member;
+        this.title = title;
+        this.content = content;
+        this.isAnonymous = isAnonymous;
+        this.board = board;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
