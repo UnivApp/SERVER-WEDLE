@@ -26,15 +26,12 @@ public class BoardApiController {
     @Operation(summary = "게시판 생성", description = "게시판을 생성합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시판이 성공적으로 생성되었습니다."),
+            @ApiResponse(responseCode = "400", description = "게시판을 찾을 수 없습니다.")
     })
     @PostMapping
-    public ResponseEntity<String> createBoard(BoardRequest boardRequest) {
-        try {
-            boardService.createBoard(boardRequest);
-            return ResponseEntity.ok("게시판이 성공적으로 생성되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body("게시판 정보를 확인해 주세요.");
-        }
+    public ResponseEntity<BoardResponse> createBoard(BoardRequest boardRequest) {
+        BoardResponse board = boardService.createBoard(boardRequest);
+        return ResponseEntity.ok(board);
     }
 
     @Operation(summary = "게시판 삭제", description = "게시판을 삭제합니다.")
