@@ -3,6 +3,7 @@ package yerong.wedle.board.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import yerong.wedle.board.dto.BoardRequest;
 import yerong.wedle.board.dto.BoardResponse;
 import yerong.wedle.board.service.BoardService;
 
+@Tag(name = "Board API", description = "게시판 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/board")
@@ -31,7 +33,7 @@ public class BoardApiController {
     @PostMapping
     public ResponseEntity<BoardResponse> createBoard(BoardRequest boardRequest) {
         BoardResponse board = boardService.createBoard(boardRequest);
-        return ResponseEntity.ok(board);
+        return ResponseEntity.ok().body(board);
     }
 
     @Operation(summary = "게시판 삭제", description = "게시판을 삭제합니다.")
