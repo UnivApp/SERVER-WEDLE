@@ -13,9 +13,11 @@ import yerong.wedle.category.expo.exception.ExpoNotFoundException;
 import yerong.wedle.category.news.exception.NewsNotFoundException;
 import yerong.wedle.category.questionnaire.exception.MatchingResultNotFoundException;
 import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
+import yerong.wedle.comment.exception.CommentNotFoundException;
 import yerong.wedle.competitionRate.exception.CompetitionRateNotFoundException;
 import yerong.wedle.department.exception.DepartmentNotFoundException;
 import yerong.wedle.employmentRate.exception.EmploymentRateNotFoundException;
+import yerong.wedle.like.exception.LikeNotFoundException;
 import yerong.wedle.member.exception.ExistingNicknameException;
 import yerong.wedle.member.exception.InvalidNicknameException;
 import yerong.wedle.member.exception.MemberDuplicateException;
@@ -28,6 +30,7 @@ import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
 import yerong.wedle.oauth.exception.OAuthProcessingException;
+import yerong.wedle.post.exception.PostNotFoundException;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.star.exception.StarNotFoundException;
@@ -322,6 +325,37 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostNotFoundException(PostNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.POST_NOT_FOUND.getCode(),
+                ResponseCode.POST_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.COMMENT_NOT_FOUND.getCode(),
+                ResponseCode.COMMENT_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(LikeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleLikeNotFoundException(LikeNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.LIKE_NOT_FOUND.getCode(),
+                ResponseCode.LIKE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {

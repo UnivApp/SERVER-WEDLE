@@ -69,7 +69,16 @@ public enum ResponseCode {
     SCHOOL_CHANGE_NOT_ALLOWED("403", "학교는 등록 후 1년이 지나야 변경할 수 있습니다."),
 
     //Board
-    BOARD_NOT_FOUND("404", "해당 게시판을 찾을 수 없습니다.");
+    BOARD_NOT_FOUND("404", "해당 게시판을 찾을 수 없습니다."),
+
+    //Post
+    POST_NOT_FOUND("404", "해당 게시글을 찾을 수 없습니다."),
+
+    //Comment
+    COMMENT_NOT_FOUND("404", "해당 댓글을 찾을 수 없습니다."),
+
+    //Comment
+    LIKE_NOT_FOUND("404", "해당 좋아요를 찾을 수 없습니다.");
 
 
     private final String code;
