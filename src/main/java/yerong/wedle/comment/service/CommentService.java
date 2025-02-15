@@ -11,6 +11,7 @@ import yerong.wedle.comment.dto.CommentRequest;
 import yerong.wedle.comment.dto.CommentResponse;
 import yerong.wedle.comment.exception.CommentNotFoundException;
 import yerong.wedle.comment.repository.CommentRepository;
+import yerong.wedle.like.commentLike.repository.CommentLikeRepository;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
@@ -25,6 +26,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     public CommentResponse createComment(CommentRequest commentRequest) {
         String socialId = getCurrentUserId();
@@ -75,8 +77,22 @@ public class CommentService {
         return comments.stream().map(this::convertToCommentResponse).collect(Collectors.toList());
     }
 
+    public Long likeCount(Long commentId) {
+        return commentLikeRepository.countByCommentId(commentId);
+    }
+
+    public boolean isLiked(Long commentId) {
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        return commentLikeRepository.existsByMemberAndComment(member, comment);
+
+    }
+
     private CommentResponse convertToCommentResponse(Comment comment) {
-        return new CommentResponse(comment.getId(), comment.getContent(), comment.isAnonymous());
+        Long count = likeCount(comment.getId());
+        boolean isLiked = isLiked(comment.getId());
+        return new CommentResponse(comment.getId(), comment.getContent(), comment.isAnonymous(), count, isLiked);
     }
 
     private String getCurrentUserId() {

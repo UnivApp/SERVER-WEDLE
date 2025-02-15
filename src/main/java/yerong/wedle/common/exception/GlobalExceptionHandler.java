@@ -17,7 +17,8 @@ import yerong.wedle.comment.exception.CommentNotFoundException;
 import yerong.wedle.competitionRate.exception.CompetitionRateNotFoundException;
 import yerong.wedle.department.exception.DepartmentNotFoundException;
 import yerong.wedle.employmentRate.exception.EmploymentRateNotFoundException;
-import yerong.wedle.like.exception.LikeNotFoundException;
+import yerong.wedle.like.commentLike.exception.CommentLikeNotFoundException;
+import yerong.wedle.like.postLike.exception.PostLikeNotFoundException;
 import yerong.wedle.member.exception.ExistingNicknameException;
 import yerong.wedle.member.exception.InvalidNicknameException;
 import yerong.wedle.member.exception.MemberDuplicateException;
@@ -346,16 +347,25 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-    @ExceptionHandler(LikeNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleLikeNotFoundException(LikeNotFoundException ex) {
+    @ExceptionHandler(CommentLikeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommentLikeNotFoundException(CommentLikeNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.LIKE_NOT_FOUND.getCode(),
-                ResponseCode.LIKE_NOT_FOUND.getMessage(),
+                ResponseCode.COMMENT_LIKE_NOT_FOUND.getCode(),
+                ResponseCode.COMMENT_LIKE_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
+    @ExceptionHandler(PostLikeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostLikeNotFoundException(PostLikeNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.POST_LIKE_NOT_FOUND.getCode(),
+                ResponseCode.POST_LIKE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {

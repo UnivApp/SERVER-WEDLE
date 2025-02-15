@@ -1,4 +1,4 @@
-package yerong.wedle.like.domain;
+package yerong.wedle.like.commentLike.domain;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -8,16 +8,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yerong.wedle.comment.domain.Comment;
 import yerong.wedle.member.domain.Member;
-import yerong.wedle.post.domain.Post;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Like {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class CommentLike {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -27,10 +27,12 @@ public class Like {
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
-
-    @ManyToOne
-    @JoinColumn(name = "comment_id")
+    @JoinColumn(name = "comment_id", nullable = false)
     private Comment comment;
+
+    @Builder
+    public CommentLike(Member member, Comment comment) {
+        this.member = member;
+        this.comment = comment;
+    }
 }
