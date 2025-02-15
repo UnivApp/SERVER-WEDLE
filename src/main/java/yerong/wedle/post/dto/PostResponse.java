@@ -12,4 +12,7 @@ public class PostResponse {
     private String title;
     private String content;
     private boolean isAnonymous;
+    private Long likeCount;
+    private boolean isLiked;
+
 }
