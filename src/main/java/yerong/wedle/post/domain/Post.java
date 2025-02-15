@@ -22,7 +22,7 @@ import yerong.wedle.member.domain.Member;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
     @Id
     @GeneratedValue(strategy = IDENTITY)

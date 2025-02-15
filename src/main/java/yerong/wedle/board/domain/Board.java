@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yerong.wedle.community.domain.Community;
@@ -18,7 +19,7 @@ import yerong.wedle.post.domain.Post;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
