@@ -85,8 +85,14 @@ public class PostService {
         Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
         return postLikeRepository.existsByMemberAndPost(member, post);
-
     }
+
+    public List<PostResponse> getHotPosts() {
+        return postRepository.findAllByIsHot(true).stream()
+                .map(this::convertToPostResponse)
+                .collect(Collectors.toList());
+    }
+
 
     private PostResponse convertToPostResponse(Post post) {
         Long count = likeCount(post.getId());

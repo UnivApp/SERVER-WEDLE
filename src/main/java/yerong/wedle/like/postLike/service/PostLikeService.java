@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import yerong.wedle.comment.repository.CommentRepository;
 import yerong.wedle.common.exception.CustomException;
 import yerong.wedle.common.exception.ResponseCode;
 import yerong.wedle.like.postLike.domain.PostLike;
@@ -23,7 +22,6 @@ public class PostLikeService {
 
     private final PostLikeRepository postLikeRepository;
     private final MemberRepository memberRepository;
-    private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
     public void addLike(Long postId) {
@@ -38,6 +36,8 @@ public class PostLikeService {
                     .post(post)
                     .build();
             postLikeRepository.save(postLike);
+            post.increaseLike();
+            postRepository.save(post);
         }
     }
 
@@ -52,6 +52,9 @@ public class PostLikeService {
         authorizeMember(postLike);
 
         postLikeRepository.delete(postLike);
+
+        post.decreaseLike();
+        postRepository.save(post);
     }
 
     public Long likeCount(Long postId) {

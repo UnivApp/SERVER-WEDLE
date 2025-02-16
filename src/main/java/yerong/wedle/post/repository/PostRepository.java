@@ -7,4 +7,6 @@ import yerong.wedle.post.domain.Post;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByBoard(Board board);
+
+    List<Post> findAllByIsHot(boolean isHot);
 }

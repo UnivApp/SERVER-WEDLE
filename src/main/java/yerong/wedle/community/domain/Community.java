@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import yerong.wedle.board.board.domain.Board;
+import yerong.wedle.board.domain.Board;
 import yerong.wedle.school.domain.School;
 
 @Entity
