@@ -5,7 +5,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -29,7 +28,7 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
@@ -43,9 +42,9 @@ public class Comment extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isAnonymous;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "parent_id")
-    private Comment parentComment;
+    private Comment parentComment = null;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> replies = new ArrayList<>();

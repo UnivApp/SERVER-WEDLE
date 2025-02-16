@@ -25,6 +25,7 @@ import yerong.wedle.member.exception.InvalidNicknameException;
 import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.member.exception.MemberNicknameDuplicateException;
 import yerong.wedle.member.exception.MemberNotFoundException;
+import yerong.wedle.member.exception.UnauthorizedAccessException;
 import yerong.wedle.notification.exception.DuplicateNotificationException;
 import yerong.wedle.notification.exception.NotificationDateOutOfRangeException;
 import yerong.wedle.notification.exception.NotificationNotFoundException;
@@ -346,6 +347,16 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.UNAUTHORIZED_ACCESS.getCode(),
+                ResponseCode.POST_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     @ExceptionHandler(CommentNotFoundException.class)

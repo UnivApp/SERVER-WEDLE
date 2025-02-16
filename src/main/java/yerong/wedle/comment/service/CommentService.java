@@ -92,7 +92,9 @@ public class CommentService {
     private CommentResponse convertToCommentResponse(Comment comment) {
         Long count = likeCount(comment.getId());
         boolean isLiked = isLiked(comment.getId());
-        return new CommentResponse(comment.getId(), comment.getContent(), comment.isAnonymous(), count, isLiked);
+        Long parentId = (comment.getParentComment() != null) ? comment.getParentComment().getId() : null;
+        return new CommentResponse(comment.getId(), comment.getContent(), comment.isAnonymous(), count, isLiked,
+                parentId);
     }
 
     private String getCurrentUserId() {

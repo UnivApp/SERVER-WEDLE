@@ -14,5 +14,4 @@ public class MemberRequest {
     private String socialId;
     private String name;
     private String email;
-    private Long schoolId;
 }

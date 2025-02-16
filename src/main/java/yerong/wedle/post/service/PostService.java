@@ -9,11 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.board.domain.Board;
 import yerong.wedle.board.exception.BoardNotFoundException;
 import yerong.wedle.board.repository.BoardRepository;
+import yerong.wedle.community.domain.Community;
+import yerong.wedle.community.repository.CommunityRepository;
 import yerong.wedle.like.postLike.repository.PostLikeRepository;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
+import yerong.wedle.member.exception.UnauthorizedAccessException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.post.domain.Post;
+import yerong.wedle.post.dto.HotPostResponse;
 import yerong.wedle.post.dto.PostCreateRequest;
 import yerong.wedle.post.dto.PostResponse;
 import yerong.wedle.post.dto.PostUpdateRequest;
@@ -29,6 +33,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final PostLikeRepository postLikeRepository;
+    private final CommunityRepository communityRepository;
 
     public PostResponse createPost(PostCreateRequest postRequest) {
         String socialId = getCurrentUserId();
@@ -36,8 +41,10 @@ public class PostService {
                 .orElseThrow(MemberNotFoundException::new);
 
         Board board = boardRepository.findById(postRequest.getBoardId()).orElseThrow(BoardNotFoundException::new);
-        System.out.println("board : " + board.getTitle());
 
+        if (!board.getCommunity().getId().equals(member.getSchool().getCommunity().getId())) {
+            throw new UnauthorizedAccessException();
+        }
         Post post = new Post(postRequest.getTitle(), postRequest.getContent(), postRequest.isAnonymous(), member,
                 board);
         board.addPost(post);
@@ -47,10 +54,12 @@ public class PostService {
 
     public PostResponse updatePost(PostUpdateRequest postUpdateRequest) {
         String socialId = getCurrentUserId();
-        Member member = memberRepository.findBySocialId(socialId)
-                .orElseThrow(MemberNotFoundException::new);
-
         Post post = postRepository.findById(postUpdateRequest.getPostId()).orElseThrow(PostNotFoundException::new);
+
+        if (!post.getMember().getSocialId().equals(socialId)) {
+            throw new UnauthorizedAccessException();
+        }
+
         post.updateTitle(postUpdateRequest.getTitle());
         post.updateContent(postUpdateRequest.getContent());
 
@@ -61,18 +70,55 @@ public class PostService {
 
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        String socialId = getCurrentUserId();
+
+        if (!post.getMember().getSocialId().equals(socialId)) {
+            throw new UnauthorizedAccessException();
+        }
         postRepository.delete(post);
     }
 
     public List<PostResponse> getAllPosts(Long boardId) {
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId)
+                .orElseThrow(MemberNotFoundException::new);
+
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-        return postRepository.findAllByBoard(board).stream()
+
+        if (!board.getCommunity().getId().equals(member.getSchool().getCommunity().getId())) {
+            throw new UnauthorizedAccessException();
+        }
+
+        List<Post> posts = postRepository.findAllByBoardOrderByCreatedAtDesc(board);
+
+        return posts.stream()
                 .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
     }
 
+    public List<HotPostResponse> getAllHotPosts() {
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
+        Community community = member.getSchool().getCommunity();
+
+        List<Post> hotPosts = postRepository.findAllByBoard_CommunityAndIsHotBoardTrueOrderByHotBoardTimeDesc(
+                community);
+
+        return hotPosts.stream()
+                .map(this::convertToHotPostResponse)
+                .collect(Collectors.toList());
+    }
+
+
     public PostResponse getPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        if (!post.getBoard().getCommunity().getId().equals(member.getSchool().getCommunity().getId())) {
+            throw new UnauthorizedAccessException();
+        }
         return convertToPostResponse(post);
     }
 
@@ -87,18 +133,19 @@ public class PostService {
         return postLikeRepository.existsByMemberAndPost(member, post);
     }
 
-    public List<PostResponse> getHotPosts() {
-        return postRepository.findAllByIsHot(true).stream()
-                .map(this::convertToPostResponse)
-                .collect(Collectors.toList());
-    }
-
-
     private PostResponse convertToPostResponse(Post post) {
         Long count = likeCount(post.getId());
         boolean isLiked = isLiked(post.getId());
 
         return new PostResponse(post.getId(), post.getTitle(), post.getContent(), post.isAnonymous(), count, isLiked);
+    }
+
+    private HotPostResponse convertToHotPostResponse(Post post) {
+        Long count = likeCount(post.getId());
+        boolean isLiked = isLiked(post.getId());
+
+        return new HotPostResponse(post.getId(), post.getTitle(), post.getContent(), post.isAnonymous(), count, isLiked,
+                post.getBoard().getType().getName());
     }
 
     private String getCurrentUserId() {

@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class BoardResponse {
     private Long boardId;
     private String title;
-    private Long communityId;
 }

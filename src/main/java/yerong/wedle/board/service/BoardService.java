@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.board.domain.Board;
+import yerong.wedle.board.domain.BoardType;
 import yerong.wedle.board.dto.BoardRequest;
 import yerong.wedle.board.dto.BoardResponse;
 import yerong.wedle.board.exception.BoardDuplicateException;
@@ -16,6 +17,7 @@ import yerong.wedle.community.domain.Community;
 import yerong.wedle.community.repository.CommunityRepository;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
+import yerong.wedle.member.exception.UnauthorizedAccessException;
 import yerong.wedle.member.repository.MemberRepository;
 
 @Service
@@ -25,7 +27,7 @@ public class BoardService {
     private final CommunityRepository communityRepository;
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
-    
+
     public BoardResponse createBoard(BoardRequest boardRequest) {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
@@ -37,14 +39,19 @@ public class BoardService {
             throw new BoardDuplicateException();
         }
 
-        Board board = new Board(boardRequest.getTitle(), community);
+        Board board = new Board(boardRequest.getTitle(), community, BoardType.CUSTOM, member);
         community.addBoard(board);
         boardRepository.save(board);
         return convertToBoardResponse(board);
     }
 
     public void deleteBoard(Long boardId) {
+        String socialId = getCurrentUserId();
+
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        if (!board.getMember().getSocialId().equals(socialId)) {
+            throw new UnauthorizedAccessException();
+        }
         boardRepository.delete(board);
     }
 
@@ -66,7 +73,7 @@ public class BoardService {
     }
 
     private BoardResponse convertToBoardResponse(Board board) {
-        return new BoardResponse(board.getId(), board.getTitle(), board.getCommunity().getId());
+        return new BoardResponse(board.getId(), board.getTitle());
     }
 
     private String getCurrentUserId() {

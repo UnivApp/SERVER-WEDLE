@@ -4,8 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import yerong.wedle.board.domain.Board;
+import yerong.wedle.board.domain.BoardType;
+import yerong.wedle.board.repository.BoardRepository;
 import yerong.wedle.common.exception.CustomException;
 import yerong.wedle.common.exception.ResponseCode;
+import yerong.wedle.community.domain.Community;
 import yerong.wedle.like.postLike.domain.PostLike;
 import yerong.wedle.like.postLike.repository.PostLikeRepository;
 import yerong.wedle.member.domain.Member;
@@ -23,6 +27,7 @@ public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final BoardRepository boardRepository;
 
     public void addLike(Long postId) {
         String socialId = getCurrentUserId();
@@ -37,7 +42,23 @@ public class PostLikeService {
                     .build();
             postLikeRepository.save(postLike);
             post.increaseLike();
+            if (post.getLikeCount() >= 3) {
+                moveToHotBoard(post);
+            }
             postRepository.save(post);
+        }
+    }
+
+    public void moveToHotBoard(Post post) {
+        Community community = post.getBoard().getCommunity();
+        Board hotboard = community.getBoards().stream()
+                .filter(board -> board.getType() == BoardType.HOT)
+                .findFirst()
+                .orElse(null);
+        if (hotboard != null) {
+            post.setHotBoardTime();
+            post.setHotBoard(true);
+            hotboard.addPost(post);
         }
     }
 
@@ -54,7 +75,22 @@ public class PostLikeService {
         postLikeRepository.delete(postLike);
 
         post.decreaseLike();
+        if (post.getLikeCount() < 3) {
+            removeToHotBoard(post);
+        }
         postRepository.save(post);
+    }
+
+    public void removeToHotBoard(Post post) {
+        Community community = post.getBoard().getCommunity();
+        Board hotboard = community.getBoards().stream()
+                .filter(board -> board.getType() == BoardType.HOT)
+                .findFirst()
+                .orElse(null);
+        if (hotboard != null) {
+            post.setHotBoard(false);
+            hotboard.removePost(post);
+        }
     }
 
     public Long likeCount(Long postId) {

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import yerong.wedle.post.dto.HotPostResponse;
 import yerong.wedle.post.dto.PostCreateRequest;
 import yerong.wedle.post.dto.PostResponse;
 import yerong.wedle.post.dto.PostUpdateRequest;
@@ -33,10 +35,6 @@ public class PostApiController {
     })
     @PostMapping
     public ResponseEntity<PostResponse> createPost(PostCreateRequest postCreateRequest) {
-        System.out.println("success");
-        System.out.println("id : " + postCreateRequest.getBoardId());
-        System.out.println("title : " + postCreateRequest.getTitle());
-        System.out.println("content : " + postCreateRequest.getContent());
         PostResponse post = postService.createPost(postCreateRequest);
         return ResponseEntity.ok().body(post);
     }
@@ -71,6 +69,24 @@ public class PostApiController {
     public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable Long boardId) {
         List<PostResponse> allPosts = postService.getAllPosts(boardId);
         return ResponseEntity.ok(allPosts);
+    }
+
+    @Operation(summary = "해당 HOT 게시판의 게시글 조회", description = "해당 HOT 게시판의 게시글을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 목록을 성공적으로 반환했습니다.")
+    })
+    @GetMapping("/hot-board")
+    public ResponseEntity<List<HotPostResponse>> getAllHotPosts() {
+        try {
+            System.out.println("Entering getAllHotPosts");
+            List<HotPostResponse> allPosts = postService.getAllHotPosts();
+            System.out.println("Post fetched successfully: " + allPosts.size());
+            return ResponseEntity.ok(allPosts);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null); // 에러 메시지 반환
+        }
     }
 
     @Operation(summary = "게시글 조회", description = "게시글을 조회합니다.")

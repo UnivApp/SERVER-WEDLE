@@ -75,6 +75,7 @@ public enum ResponseCode {
     //Post
     POST_NOT_FOUND("404", "해당 게시글을 찾을 수 없습니다."),
     POST_LIKE_NOT_FOUND("404", "해당 게시글 좋아요를 찾을 수 없습니다."),
+    UNAUTHORIZED_ACCESS("403", "권한이 없습니다"),
 
     //Comment
     COMMENT_NOT_FOUND("404", "해당 댓글을 찾을 수 없습니다."),

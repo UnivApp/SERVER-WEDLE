@@ -6,6 +6,6 @@ import yerong.wedle.common.exception.ResponseCode;
 public class BoardNotFoundException extends CustomException {
 
     public BoardNotFoundException() {
-        super(ResponseCode.SCHOOL_NOT_FOUND);
+        super(ResponseCode.BOARD_NOT_FOUND);
     }
 }

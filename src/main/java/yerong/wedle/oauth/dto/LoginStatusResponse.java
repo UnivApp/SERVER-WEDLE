@@ -10,5 +10,6 @@ import lombok.Getter;
 public class LoginStatusResponse {
     private final boolean isLoggedIn;
     private final boolean isNicknameSet;
+    private final boolean isSchoolSet;
     private final String message;
 }
