@@ -11,12 +11,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import yerong.wedle.common.domain.BaseTimeEntity;
 import yerong.wedle.community.domain.Community;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class School {
+public class School extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

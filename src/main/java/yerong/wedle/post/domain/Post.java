@@ -18,12 +18,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yerong.wedle.board.domain.Board;
 import yerong.wedle.comment.domain.Comment;
+import yerong.wedle.common.domain.BaseTimeEntity;
 import yerong.wedle.member.domain.Member;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
