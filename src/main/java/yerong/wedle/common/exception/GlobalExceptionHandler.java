@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import yerong.wedle.board.exception.BoardDuplicateException;
 import yerong.wedle.board.exception.BoardNotFoundException;
 import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
 import yerong.wedle.category.expo.exception.ExpoCategoryNotFoundException;
@@ -325,6 +326,16 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(BoardDuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleBoardDuplicateException(BoardDuplicateException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.BOARD_DUPULICATE.getCode(),
+                ResponseCode.BOARD_DUPULICATE.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
     @ExceptionHandler(PostNotFoundException.class)

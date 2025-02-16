@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SchoolRequest {
-    private Long id;
+    private Long schoolId;
 }

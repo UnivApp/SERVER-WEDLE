@@ -70,6 +70,7 @@ public enum ResponseCode {
 
     //Board
     BOARD_NOT_FOUND("404", "해당 게시판을 찾을 수 없습니다."),
+    BOARD_DUPULICATE("409", "이미 존재하는 게시판입니다."),
 
     //Post
     POST_NOT_FOUND("404", "해당 게시글을 찾을 수 없습니다."),

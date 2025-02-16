@@ -7,4 +7,6 @@ import yerong.wedle.community.domain.Community;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByCommunity(Community community);
+
+    boolean existsByTitleAndCommunity(String title, Community community);
 }
