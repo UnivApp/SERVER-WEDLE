@@ -1,6 +1,6 @@
 ---
 name: "\U0001F4D1docs"
-about: Describe this issue template's purpose here.
+about: 문서 생성시 사용하는 템플릿.
 title: "\U0001F4D1Docs: "
 labels: "\U0001F4D1documentation"
 assignees: ''
