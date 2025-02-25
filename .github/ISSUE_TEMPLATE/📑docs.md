@@ -1,8 +1,8 @@
 ---
-name: "✨feature"
-about: 기능 추가할 때 쓰는 템플릿
-title: "✨Feat: "
-labels: "✨feature"
+name: "\U0001F4D1docs"
+about: Describe this issue template's purpose here.
+title: "\U0001F4D1Docs: "
+labels: "\U0001F4D1documentation"
 assignees: ''
 
 ---
@@ -14,8 +14,8 @@ assignees: ''
 
 ## ✅ Todo
 
-- [ ] 구현 내용 1
-- [ ] 구현 내용 2
+- [ ] 내용1
+- [ ] 내용 2
 
 ## ⭐️ 추가 정보
 <!-- 추가로 공유할 정보를 알려주세요. -->

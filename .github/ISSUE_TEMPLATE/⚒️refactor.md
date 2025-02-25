@@ -1,8 +1,8 @@
 ---
-name: "✨feature"
-about: 기능 추가할 때 쓰는 템플릿
-title: "✨Feat: "
-labels: "✨feature"
+name: "⚒️refactor"
+about: Describe this issue template's purpose here.
+title: "⚒️Refactor: "
+labels: "⚒️refactor"
 assignees: ''
 
 ---
