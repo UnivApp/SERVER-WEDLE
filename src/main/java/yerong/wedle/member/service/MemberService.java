@@ -51,7 +51,6 @@ public class MemberService {
                 .nickName(member.getNickname()).build();
     }
 
-
     public NicknameResponse getNickname() {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
@@ -91,5 +90,4 @@ public class MemberService {
                 .message(message)
                 .build();
     }
-
 }

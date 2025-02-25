@@ -61,8 +61,25 @@ public enum ResponseCode {
     EXPO_NOT_FOUND("404", "대학 연계 행사 정보를 찾을 수 없습니다."),
     EXPO_CATEGORY_NOT_FOUND("404", "대학 연계 행사 카테고리 정보를 찾을 수 없습니다."),
 
-    //Matching Result
-    MATCHING_RESULT_NOT_FOUND("404", "점수에 맞는 설문 결과를 찾을 수 없습니다.");
+    //Matching
+    MATCHING_RESULT_NOT_FOUND("404", "점수에 맞는 설문 결과를 찾을 수 없습니다."),
+
+    //School
+    SCHOOL_NOT_FOUND("404", "해당 학교를 찾을 수 없습니다."),
+    SCHOOL_CHANGE_NOT_ALLOWED("403", "학교는 등록 후 1년이 지나야 변경할 수 있습니다."),
+
+    //Board
+    BOARD_NOT_FOUND("404", "해당 게시판을 찾을 수 없습니다."),
+    BOARD_DUPULICATE("409", "이미 존재하는 게시판입니다."),
+
+    //Post
+    POST_NOT_FOUND("404", "해당 게시글을 찾을 수 없습니다."),
+    POST_LIKE_NOT_FOUND("404", "해당 게시글 좋아요를 찾을 수 없습니다."),
+    UNAUTHORIZED_ACCESS("403", "권한이 없습니다"),
+
+    //Comment
+    COMMENT_NOT_FOUND("404", "해당 댓글을 찾을 수 없습니다."),
+    COMMENT_LIKE_NOT_FOUND("404", "해당 댓글 좋아요를 찾을 수 없습니다.");
 
 
     private final String code;

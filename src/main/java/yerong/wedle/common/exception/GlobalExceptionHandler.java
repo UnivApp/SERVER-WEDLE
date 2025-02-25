@@ -6,20 +6,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import yerong.wedle.board.exception.BoardDuplicateException;
+import yerong.wedle.board.exception.BoardNotFoundException;
 import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
 import yerong.wedle.category.expo.exception.ExpoCategoryNotFoundException;
 import yerong.wedle.category.expo.exception.ExpoNotFoundException;
 import yerong.wedle.category.news.exception.NewsNotFoundException;
 import yerong.wedle.category.questionnaire.exception.MatchingResultNotFoundException;
 import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
+import yerong.wedle.comment.exception.CommentNotFoundException;
 import yerong.wedle.competitionRate.exception.CompetitionRateNotFoundException;
 import yerong.wedle.department.exception.DepartmentNotFoundException;
 import yerong.wedle.employmentRate.exception.EmploymentRateNotFoundException;
+import yerong.wedle.like.commentLike.exception.CommentLikeNotFoundException;
+import yerong.wedle.like.postLike.exception.PostLikeNotFoundException;
 import yerong.wedle.member.exception.ExistingNicknameException;
 import yerong.wedle.member.exception.InvalidNicknameException;
 import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.member.exception.MemberNicknameDuplicateException;
 import yerong.wedle.member.exception.MemberNotFoundException;
+import yerong.wedle.member.exception.UnauthorizedAccessException;
 import yerong.wedle.notification.exception.DuplicateNotificationException;
 import yerong.wedle.notification.exception.NotificationDateOutOfRangeException;
 import yerong.wedle.notification.exception.NotificationNotFoundException;
@@ -27,6 +33,9 @@ import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
 import yerong.wedle.oauth.exception.OAuthProcessingException;
+import yerong.wedle.post.exception.PostNotFoundException;
+import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
+import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.star.exception.StarNotFoundException;
 import yerong.wedle.tuitionfee.exception.TuitionFeeNotFoundException;
 import yerong.wedle.university.exception.UniversityNotFoundException;
@@ -281,10 +290,100 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(TuitionFeeNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleDTuitionFeeNotFoundException(TuitionFeeNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleTuitionFeeNotFoundException(TuitionFeeNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.TUITION_FEE_NOT_FOUND.getCode(),
                 ResponseCode.TUITION_FEE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(SchoolNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSchoolNotFoundException(SchoolNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.SCHOOL_NOT_FOUND.getCode(),
+                ResponseCode.SCHOOL_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(SchoolChangeNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleSchoolChangeNotAllowedException(SchoolChangeNotAllowedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.SCHOOL_CHANGE_NOT_ALLOWED.getCode(),
+                ResponseCode.SCHOOL_CHANGE_NOT_ALLOWED.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    @ExceptionHandler(BoardNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBoardNotFoundException(BoardNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.BOARD_NOT_FOUND.getCode(),
+                ResponseCode.BOARD_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(BoardDuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleBoardDuplicateException(BoardDuplicateException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.BOARD_DUPULICATE.getCode(),
+                ResponseCode.BOARD_DUPULICATE.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostNotFoundException(PostNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.POST_NOT_FOUND.getCode(),
+                ResponseCode.POST_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.UNAUTHORIZED_ACCESS.getCode(),
+                ResponseCode.POST_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.COMMENT_NOT_FOUND.getCode(),
+                ResponseCode.COMMENT_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(CommentLikeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommentLikeNotFoundException(CommentLikeNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.COMMENT_LIKE_NOT_FOUND.getCode(),
+                ResponseCode.COMMENT_LIKE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(PostLikeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostLikeNotFoundException(PostLikeNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.POST_LIKE_NOT_FOUND.getCode(),
+                ResponseCode.POST_LIKE_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -299,4 +398,5 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
+
 }

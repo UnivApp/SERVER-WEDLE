@@ -1,6 +1,8 @@
 package yerong.wedle.oauth.service;
 
 import com.nimbusds.jwt.JWT;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,9 +25,6 @@ import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.jwt.JwtProvider;
 import yerong.wedle.oauth.repository.RefreshTokenRepository;
 
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class AuthService {
 
 
     @Transactional
-    public LoginResponse login(MemberRequest memberRequest){
+    public LoginResponse login(MemberRequest memberRequest) {
 
         Member member = memberRepository.findBySocialId(memberRequest.getSocialId()).orElse(null);
 
@@ -55,7 +54,7 @@ public class AuthService {
                     .isExistingMember(false)
                     .build();
             memberRepository.save(member);
-        }else {
+        } else {
             member.setExistingMember(true);
         }
         TokenResponse tokenResponse = jwtProvider.generateTokenDto(memberRequest.getSocialId());
@@ -71,12 +70,15 @@ public class AuthService {
                     .build();
             refreshTokenRepository.save(refreshToken);
         }
-        redisTemplate.opsForValue().set("RT:" + member.getSocialId(), tokenResponse.getRefreshToken(), tokenResponse.getRefreshTokenExpiresIn(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("RT:" + member.getSocialId(), tokenResponse.getRefreshToken(),
+                tokenResponse.getRefreshTokenExpiresIn(), TimeUnit.MILLISECONDS);
 
-        return new LoginResponse(tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), member.isExistingMember(), hasNickname(member.getSocialId()));
+        return new LoginResponse(tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(),
+                member.isExistingMember(), hasNickname(member.getSocialId()));
     }
+
     @Transactional
-    public TokenResponse refreshAccessToken(String refreshTokenValue){
+    public TokenResponse refreshAccessToken(String refreshTokenValue) {
         RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(refreshTokenValue).orElse(null);
         if (refreshToken == null) {
             throw new InvalidRefreshTokenException();
@@ -98,7 +100,7 @@ public class AuthService {
         HttpHeaders headers = new HttpHeaders();
         ResponseCookie cookie = ResponseCookie.from("RefreshToken", tokenResponse.getRefreshToken())
                 .path("/")
-                .maxAge(60*60*24*7) // 쿠키 유효기간 7일로 설정
+                .maxAge(60 * 60 * 24 * 7) // 쿠키 유효기간 7일로 설정
                 .secure(true)
                 .sameSite("None")
                 .httpOnly(true)
@@ -116,11 +118,24 @@ public class AuthService {
 
     @Transactional
     public boolean hasNickname(String socialId) {
-        if (socialId == null) socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (socialId == null) {
+            socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+        }
 
         Member member = memberRepository.findBySocialId(socialId).orElse(null);
         return member.getNickname() != null;
     }
+
+    @Transactional
+    public boolean hasSchool(String socialId) {
+        if (socialId == null) {
+            socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+
+        Member member = memberRepository.findBySocialId(socialId).orElse(null);
+        return member.getSchool() != null;
+    }
+
     @Transactional
     public MemberLogoutResponse logout() {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -150,7 +165,8 @@ public class AuthService {
         redisTemplate.delete("RT:" + socialId);
 
         Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByMemberId(member.getMemberId());
-        refreshTokenOptional.ifPresent(refreshToken -> jwtBlacklistService.addTokenToBlacklist(refreshToken.getRefreshToken()));
+        refreshTokenOptional.ifPresent(
+                refreshToken -> jwtBlacklistService.addTokenToBlacklist(refreshToken.getRefreshToken()));
 
     }
 

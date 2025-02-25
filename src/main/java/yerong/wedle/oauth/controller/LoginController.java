@@ -8,13 +8,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 import yerong.wedle.common.exception.ErrorResponse;
 import yerong.wedle.member.dto.MemberRequest;
 import yerong.wedle.member.exception.MemberNotFoundException;
@@ -26,9 +32,6 @@ import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
 import yerong.wedle.oauth.service.AuthService;
 import yerong.wedle.oauth.service.JwtBlacklistService;
-
-import java.security.Principal;
-import java.util.Map;
 
 @Tag(name = "Authentication API", description = "로그인 및 토큰 갱신 관련 API")
 @RestController
@@ -87,6 +90,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("토큰 갱신 중 오류가 발생했습니다.");
         }
     }
+
     @PostMapping("/login/status")
     public ResponseEntity<LoginStatusResponse> checkLoginStatus(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
@@ -94,28 +98,35 @@ public class LoginController {
         try {
             if (jwtBlacklistService.isTokenBlacklisted(accessToken)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(new LoginStatusResponse(false, false, "토큰이 유효하지 않습니다. 다시 로그인 해주세요."));
+                        .body(new LoginStatusResponse(false, false, false, "토큰이 유효하지 않습니다. 다시 로그인 해주세요."));
             }
 
             boolean isLoggedIn = authService.isLoggedIn();
 
             if (!isLoggedIn) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(new LoginStatusResponse(false, false, "사용자는 로그인 상태가 아닙니다."));
+                        .body(new LoginStatusResponse(false, false, false, "사용자는 로그인 상태가 아닙니다."));
             }
 
             boolean hasNickname = authService.hasNickname(null);
-            String message = hasNickname ? "사용자는 완벽하게 회원가입 후 로그인된 상태입니다." :
-                    "닉네임이 없는 상태로 회원가입이 완료되었습니다. 닉네임 입력이 필요합니다.";
+            boolean hasSchool = authService.hasSchool(null);
 
-            return ResponseEntity.ok(new LoginStatusResponse(true, hasNickname, message));
+            String message = "";
+            if (hasNickname && hasSchool) {
+                message = "사용자는 완벽하게 회원가입 후 로그인된 상태입니다.";
+            } else if (!hasNickname) {
+                message = "닉네임이 없는 상태로 회원가입이 완료되었습니다. 닉네임 입력이 필요합니다.";
+            } else {
+                message = "학교 정보가 없습니다. 학교 등록이 필요합니다.";
+            }
+            return ResponseEntity.ok(new LoginStatusResponse(true, hasNickname, hasSchool, message));
 
         } catch (InvalidTokenException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new LoginStatusResponse(false, false, "유효하지 않은 토큰입니다."));
+                    .body(new LoginStatusResponse(false, false, false, "유효하지 않은 토큰입니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new LoginStatusResponse(false, false, "상태 확인 중 오류가 발생했습니다."));
+                    .body(new LoginStatusResponse(false, false, false, "상태 확인 중 오류가 발생했습니다."));
         }
     }
 
@@ -176,6 +187,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "로그아웃 실패하였습니다."));
         }
     }
+
     @Operation(
             summary = "회원탈퇴",
             description = "회원 정보를 삭제하고, 관련된 리프레시 토큰을 무효화합니다."
