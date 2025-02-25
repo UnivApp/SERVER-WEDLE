@@ -4,19 +4,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yerong.wedle.community.service.CommunityService;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
+import yerong.wedle.neis.NeisApiClient;
+import yerong.wedle.neis.NeisSchoolResponse;
 import yerong.wedle.school.domain.School;
 import yerong.wedle.school.dto.SchoolRegistrationRequest;
-import yerong.wedle.school.dto.SchoolResponse;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
-import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.school.repository.SchoolRepository;
 
 @Service
@@ -25,12 +26,12 @@ import yerong.wedle.school.repository.SchoolRepository;
 public class SchoolService {
     private final SchoolRepository schoolRepository;
     private final MemberRepository memberRepository;
+    private final NeisApiClient neisApiClient;
+    private final CommunityService communityService;
 
-    public List<SchoolResponse> searchSchool(String keyword) {
-        List<School> schools = schoolRepository.findByNameContaining(keyword);
-        return schools.stream()
-                .map(school -> new SchoolResponse(school.getId(), school.getName(), school.getAddress()))
-                .collect(Collectors.toList());
+    public List<NeisSchoolResponse> searchSchool(String keyword) {
+        List<NeisSchoolResponse> neisSchools = neisApiClient.searchSchool(keyword);
+        return neisSchools;
     }
 
     public void setSchool(SchoolRegistrationRequest schoolRegistrationRequest) {
@@ -38,8 +39,21 @@ public class SchoolService {
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        School school = schoolRepository.findById(schoolRegistrationRequest.getSchoolId())
-                .orElseThrow(SchoolNotFoundException::new);
+        Optional<School> schoolOpt = schoolRepository.findBySchoolCode(schoolRegistrationRequest.getSchoolCode());
+        School school;
+        if (schoolOpt.isEmpty()) {
+            school = School.builder()
+                    .name(schoolRegistrationRequest.getName())
+                    .schoolCode(schoolRegistrationRequest.getSchoolCode())
+                    .address(schoolRegistrationRequest.getAddress())
+                    .phone(schoolRegistrationRequest.getPhone())
+                    .hompage(schoolRegistrationRequest.getHompage())
+                    .build();
+            schoolRepository.save(school);
+            communityService.createCommunityIfNotExists(school.getId());
+        } else {
+            school = schoolOpt.get();
+        }
 
         if (member.getSchool() != null && member.getSchoolRegisteredDate() != null) {
             long monthSinceRegistered = ChronoUnit.MONTHS.between(member.getSchoolRegisteredDate(),

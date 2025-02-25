@@ -6,5 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SchoolRegistrationRequest {
-    private Long schoolId;
+    private String name;
+    private String schoolCode;
+    private String address;
+    private String phone;
+    private String hompage;
 }

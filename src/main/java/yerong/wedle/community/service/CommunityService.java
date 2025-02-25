@@ -10,7 +10,6 @@ import yerong.wedle.board.repository.BoardRepository;
 import yerong.wedle.community.domain.Community;
 import yerong.wedle.community.repository.CommunityRepository;
 import yerong.wedle.school.domain.School;
-import yerong.wedle.school.dto.SchoolRequest;
 import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.school.repository.SchoolRepository;
 
@@ -23,8 +22,8 @@ public class CommunityService {
     private final BoardRepository boardRepository;
 
     @PreAuthorize("hasRole('ADMIN')")
-    public void createCommunityIfNotExists(SchoolRequest schoolRequest) {
-        School school = schoolRepository.findById(schoolRequest.getSchoolId())
+    public void createCommunityIfNotExists(Long schoolId) {
+        School school = schoolRepository.findById(schoolId)
                 .orElseThrow(SchoolNotFoundException::new);
 
         boolean exists = communityRepository.existsBySchool(school);
