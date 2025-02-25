@@ -44,6 +44,7 @@ public class SchoolService {
         if (schoolOpt.isEmpty()) {
             school = School.builder()
                     .name(schoolRegistrationRequest.getName())
+                    .atptCode(schoolRegistrationRequest.getAtpt())
                     .schoolCode(schoolRegistrationRequest.getSchoolCode())
                     .address(schoolRegistrationRequest.getAddress())
                     .phone(schoolRegistrationRequest.getPhone())

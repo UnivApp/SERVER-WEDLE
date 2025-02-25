@@ -8,6 +8,9 @@ public class NeisSchoolResponse {
     @JsonProperty("SCHUL_NM")
     private String schoolName;  // 학교 이름
 
+    @JsonProperty("ATPT_OFCDC_SC_CODE")
+    private String atptCode;
+
     @JsonProperty("SD_SCHUL_CODE")
     private String schoolCode;  // 학교 코드
 

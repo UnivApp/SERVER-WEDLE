@@ -24,6 +24,7 @@ public class School extends BaseTimeEntity {
     private Long id;
 
     private String schoolCode;
+    private String atptCode;
 
     @Column(nullable = false)
     private String name;
@@ -38,8 +39,9 @@ public class School extends BaseTimeEntity {
     private Community community;
 
     @Builder
-    public School(String schoolCode, String name, String address, String phone, String hompage) {
+    public School(String schoolCode, String atptCode, String name, String address, String phone, String hompage) {
         this.schoolCode = schoolCode;
+        this.atptCode = atptCode;
         this.name = name;
         this.address = address;
         this.phone = phone;

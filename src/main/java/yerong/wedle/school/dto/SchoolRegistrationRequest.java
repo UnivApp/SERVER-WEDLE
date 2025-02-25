@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SchoolRegistrationRequest {
     private String name;
+    private String atpt;
     private String schoolCode;
     private String address;
     private String phone;
