@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class SchoolInfo {
     @JsonProperty("head")
-    private List<Head> head;
+    private List<SchoolHead> head;
 
     @JsonProperty("row")
     private List<NeisSchoolResponse> row;
