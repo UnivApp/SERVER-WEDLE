@@ -16,7 +16,7 @@ import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.school.domain.School;
 import yerong.wedle.school.dto.SchoolRegistrationRequest;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
-import yerong.wedle.school.neis.NeisApiClient;
+import yerong.wedle.school.neis.NeisSchoolApiClient;
 import yerong.wedle.school.neis.NeisSchoolResponse;
 import yerong.wedle.school.repository.SchoolRepository;
 
@@ -26,11 +26,11 @@ import yerong.wedle.school.repository.SchoolRepository;
 public class SchoolService {
     private final SchoolRepository schoolRepository;
     private final MemberRepository memberRepository;
-    private final NeisApiClient neisApiClient;
+    private final NeisSchoolApiClient neisSchoolApiClient;
     private final CommunityService communityService;
 
     public List<NeisSchoolResponse> searchSchool(String keyword) {
-        List<NeisSchoolResponse> neisSchools = neisApiClient.searchSchool(keyword);
+        List<NeisSchoolResponse> neisSchools = neisSchoolApiClient.searchSchool(keyword);
         return neisSchools;
     }
 
