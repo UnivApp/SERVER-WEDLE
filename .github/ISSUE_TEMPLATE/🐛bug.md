@@ -1,8 +1,8 @@
 ---
-name: "\U0001F41Bbug"
-about: Create a report to help us improve
-title: "\U0001F41BBug: "
-labels: "\U0001F41Bbug"
+name: "🐛bug"
+about: 버그 발생시 쓰는 템플릿
+title: "🐛bug: "
+labels: "🐛bug"
 assignees: ''
 
 ---
