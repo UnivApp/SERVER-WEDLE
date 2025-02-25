@@ -10,14 +10,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.community.service.CommunityService;
+import yerong.wedle.meal.service.MealService;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
-import yerong.wedle.neis.NeisApiClient;
-import yerong.wedle.neis.NeisSchoolResponse;
 import yerong.wedle.school.domain.School;
 import yerong.wedle.school.dto.SchoolRegistrationRequest;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
+import yerong.wedle.school.neis.NeisSchoolApiClient;
+import yerong.wedle.school.neis.NeisSchoolResponse;
 import yerong.wedle.school.repository.SchoolRepository;
 
 @Service
@@ -26,11 +27,12 @@ import yerong.wedle.school.repository.SchoolRepository;
 public class SchoolService {
     private final SchoolRepository schoolRepository;
     private final MemberRepository memberRepository;
-    private final NeisApiClient neisApiClient;
+    private final NeisSchoolApiClient neisSchoolApiClient;
     private final CommunityService communityService;
+    private final MealService mealService;
 
     public List<NeisSchoolResponse> searchSchool(String keyword) {
-        List<NeisSchoolResponse> neisSchools = neisApiClient.searchSchool(keyword);
+        List<NeisSchoolResponse> neisSchools = neisSchoolApiClient.searchSchool(keyword);
         return neisSchools;
     }
 
@@ -44,6 +46,7 @@ public class SchoolService {
         if (schoolOpt.isEmpty()) {
             school = School.builder()
                     .name(schoolRegistrationRequest.getName())
+                    .atptCode(schoolRegistrationRequest.getAtpt())
                     .schoolCode(schoolRegistrationRequest.getSchoolCode())
                     .address(schoolRegistrationRequest.getAddress())
                     .phone(schoolRegistrationRequest.getPhone())
@@ -51,6 +54,7 @@ public class SchoolService {
                     .build();
             schoolRepository.save(school);
             communityService.createCommunityIfNotExists(school.getId());
+            mealService.initializeMealsForNewSchool(school);
         } else {
             school = schoolOpt.get();
         }

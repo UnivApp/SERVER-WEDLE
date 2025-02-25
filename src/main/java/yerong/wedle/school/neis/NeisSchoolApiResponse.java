@@ -1,11 +1,11 @@
-package yerong.wedle.neis;
+package yerong.wedle.school.neis;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class NeisApiResponse {
+public class NeisSchoolApiResponse {
 
     @JsonProperty("schoolInfo")
     private List<SchoolInfo> schoolInfo;

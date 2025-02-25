@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import yerong.wedle.member.service.MemberService;
-import yerong.wedle.neis.NeisSchoolResponse;
 import yerong.wedle.school.dto.SchoolRegistrationRequest;
+import yerong.wedle.school.neis.NeisSchoolResponse;
 import yerong.wedle.school.service.SchoolService;
 
 @Tag(name = "School API", description = "학교 관련 API")
@@ -24,7 +23,6 @@ import yerong.wedle.school.service.SchoolService;
 @RequestMapping("/api/school")
 public class SchoolApiController {
     private final SchoolService schoolService;
-    private final MemberService memberService;
 
     @Operation(summary = "학교 리스트 검색", description = "회원이 선택할 수 있는 학교 목록을 반환합니다.")
     @GetMapping("/list")
