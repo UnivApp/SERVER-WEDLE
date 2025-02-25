@@ -13,11 +13,11 @@ import yerong.wedle.community.service.CommunityService;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
-import yerong.wedle.neis.NeisApiClient;
-import yerong.wedle.neis.NeisSchoolResponse;
 import yerong.wedle.school.domain.School;
 import yerong.wedle.school.dto.SchoolRegistrationRequest;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
+import yerong.wedle.school.neis.NeisApiClient;
+import yerong.wedle.school.neis.NeisSchoolResponse;
 import yerong.wedle.school.repository.SchoolRepository;
 
 @Service

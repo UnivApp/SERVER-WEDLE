@@ -1,4 +1,4 @@
-package yerong.wedle.neis;
+package yerong.wedle.school.neis;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

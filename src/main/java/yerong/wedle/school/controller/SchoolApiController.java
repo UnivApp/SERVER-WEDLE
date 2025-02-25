@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import yerong.wedle.member.service.MemberService;
-import yerong.wedle.neis.NeisSchoolResponse;
 import yerong.wedle.school.dto.SchoolRegistrationRequest;
+import yerong.wedle.school.neis.NeisSchoolResponse;
 import yerong.wedle.school.service.SchoolService;
 
 @Tag(name = "School API", description = "학교 관련 API")
