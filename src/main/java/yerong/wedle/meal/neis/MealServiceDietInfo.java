@@ -5,10 +5,10 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class SchoolInfo {
+public class MealServiceDietInfo {
     @JsonProperty("head")
-    private List<Head> head;
+    private List<MealHead> mealHead;
 
     @JsonProperty("row")
-    private List<NeisSchoolResponse> row;
+    private List<NeisMealResponse> row;
 }

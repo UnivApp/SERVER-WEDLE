@@ -1,5 +1,7 @@
-package yerong.wedle.school.neis;
+package yerong.wedle.meal.neis;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,21 +12,24 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-public class NeisApiClient {
+public class NeisMealApiClient {
 
     private final WebClient webClient;
 
     @Value("${neis.key}")
     private String API_KEY;
 
-    public NeisApiClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("https://open.neis.go.kr/hub/schoolInfo").build();
+    public NeisMealApiClient(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl("https://open.neis.go.kr/hub/mealServiceDietInfo").build();
     }
 
-    public List<NeisSchoolResponse> searchSchool(String keyword) {
-        String url = String.format("?Type=json&pIndex=1&pSize=100&SCHUL_NM=%s&KEY=%s", keyword, API_KEY);
-
-        NeisApiResponse response = webClient.get()
+    public List<NeisMealResponse> getMealByDate(String schoolCode, LocalDate date, String atpt) {
+        String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String url = String.format(
+                "?Type=json&pIndex=1&pSize=100&SD_SCHUL_CODE=%s&KEY=%s&ATPT_OFCDC_SC_CODE=%s&MLSV_YMD=%s",
+                schoolCode, API_KEY, atpt, formattedDate);
+        System.out.println("url = " + url);
+        NeisMealApiResponse response = webClient.get()
                 .uri(url)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, clientResponse -> {
@@ -34,12 +39,12 @@ public class NeisApiClient {
                                 return Mono.error(new RuntimeException("API Error: " + errorBody));
                             });
                 })
-                .bodyToMono(NeisApiResponse.class)
+                .bodyToMono(NeisMealApiResponse.class)
                 .doOnError(e -> {
                     log.error("Error occurred: " + e.getMessage());
                 })
                 .block();
-        List<NeisSchoolResponse> neisSchoolResponses = response.getSchoolList();
-        return neisSchoolResponses;
+        List<NeisMealResponse> neisMealRespons = response.getSchoolList();
+        return neisMealRespons;
     }
 }

@@ -1,8 +1,8 @@
-package yerong.wedle.school.neis;
+package yerong.wedle.meal.neis;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Result {
+public class MealResult {
     @JsonProperty("CODE")
     private String code;
     @JsonProperty("MESSAGE")

@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.community.service.CommunityService;
+import yerong.wedle.meal.service.MealService;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
@@ -28,6 +29,7 @@ public class SchoolService {
     private final MemberRepository memberRepository;
     private final NeisSchoolApiClient neisSchoolApiClient;
     private final CommunityService communityService;
+    private final MealService mealService;
 
     public List<NeisSchoolResponse> searchSchool(String keyword) {
         List<NeisSchoolResponse> neisSchools = neisSchoolApiClient.searchSchool(keyword);
@@ -52,6 +54,7 @@ public class SchoolService {
                     .build();
             schoolRepository.save(school);
             communityService.createCommunityIfNotExists(school.getId());
+            mealService.initializeMealsForNewSchool(school);
         } else {
             school = schoolOpt.get();
         }
