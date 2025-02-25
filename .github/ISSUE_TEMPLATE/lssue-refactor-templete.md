@@ -1,7 +1,7 @@
 ---
-name: "⚒️refactor"
-about: 기능 리팩터링 할 때 쓰는 템플릿
-title: "⚒️refactor: "
+name: "lssue-feature-templete"
+about: 기능 리팩토링시 사용하는 템플릿
+title: "⚒️Refactor: "
 labels: "⚒️refactor"
 assignees: ''
 
