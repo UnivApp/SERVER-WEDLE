@@ -1,7 +1,7 @@
 ---
 name: "⚒️refactor"
-about: Describe this issue template's purpose here.
-title: "⚒️Refactor: "
+about: 기능 리팩터링 할 때 쓰는 템플릿
+title: "⚒️refactor: "
 labels: "⚒️refactor"
 assignees: ''
 
