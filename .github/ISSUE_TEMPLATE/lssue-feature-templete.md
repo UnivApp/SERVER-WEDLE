@@ -1,5 +1,5 @@
 ---
-name: "✨feature"
+name: "lssue-feature-templete"
 about: 기능 추가할 때 쓰는 템플릿
 title: "✨Feat: "
 labels: "✨feature"
