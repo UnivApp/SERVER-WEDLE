@@ -26,7 +26,7 @@ public class CommunityApiController {
     @PostMapping
     public ResponseEntity<String> createCommunity(SchoolRequest schoolRequest) {
         try {
-            communityService.createCommunityIfNotExists(schoolRequest);
+            communityService.createCommunityIfNotExists(schoolRequest.getSchoolId());
             return ResponseEntity.ok("커뮤니티가 성공적으로 생성되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(400).body("학교 정보를 확인해 주세요.");

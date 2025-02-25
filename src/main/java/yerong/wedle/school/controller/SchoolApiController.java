@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import yerong.wedle.member.service.MemberService;
+import yerong.wedle.neis.NeisSchoolResponse;
 import yerong.wedle.school.dto.SchoolRegistrationRequest;
-import yerong.wedle.school.dto.SchoolResponse;
 import yerong.wedle.school.service.SchoolService;
 
 @Tag(name = "School API", description = "학교 관련 API")
@@ -26,12 +26,12 @@ public class SchoolApiController {
     private final SchoolService schoolService;
     private final MemberService memberService;
 
-    @Operation(summary = "학교 리스트 조회", description = "회원이 선택할 수 있는 학교 목록을 반환합니다.")
+    @Operation(summary = "학교 리스트 검색", description = "회원이 선택할 수 있는 학교 목록을 반환합니다.")
     @GetMapping("/list")
-    public ResponseEntity<List<SchoolResponse>> getSchoolList(
-            @Parameter(description = "검색할 키워드 (학교명 또는 소재지)", required = true) @RequestParam String keyword) {
-        List<SchoolResponse> schoolResponses = schoolService.searchSchool(keyword);
-        return ResponseEntity.ok(schoolResponses);
+    public ResponseEntity<List<NeisSchoolResponse>> getSchoolList(
+            @Parameter(description = "검색할 키워드 (학교명)", required = true) @RequestParam String keyword) {
+        List<NeisSchoolResponse> neisSchoolResponses = schoolService.searchSchool(keyword);
+        return ResponseEntity.ok(neisSchoolResponses);
     }
 
     @Operation(summary = "학교 선택 및 등록", description = "사용자가 선택한 학교를 등록합니다.")
