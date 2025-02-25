@@ -1,5 +1,5 @@
 ---
-name: "lssue-feature-templete"
+name: "⚒️refactor-templete"
 about: 기능 리팩토링시 사용하는 템플릿
 title: "⚒️Refactor: "
 labels: "⚒️refactor"
