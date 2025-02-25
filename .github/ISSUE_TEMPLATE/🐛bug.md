@@ -1,8 +1,8 @@
 ---
-name: "🐛bug"
-about: 버그 발생시 쓰는 템플릿
-title: "🐛bug: "
-labels: "🐛bug"
+name: "⚒️refactor"
+about: 버그 발생시 사용하는 템플릿
+title: "⚒️Refactor: "
+labels: "⚒️refactor"
 assignees: ''
 
 ---
