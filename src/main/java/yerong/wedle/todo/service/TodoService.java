@@ -1,7 +1,10 @@
 package yerong.wedle.todo.service;
 
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import yerong.wedle.member.exception.UnauthorizedAccessException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.todo.domain.Todo;
 import yerong.wedle.todo.domain.TodoList;
+import yerong.wedle.todo.dto.TodoListResponse;
 import yerong.wedle.todo.dto.TodoRequest;
 import yerong.wedle.todo.dto.TodoResponse;
 import yerong.wedle.todo.dto.UpdateTodoCompletionRequest;
@@ -105,5 +109,20 @@ public class TodoService {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return socialId;
+    }
+
+    public TodoListResponse getTodosByDate(LocalDate date) {
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        TodoList todoList = todoListRepository.findByMember(member)
+                .orElseThrow(TodoNotFoundException::new);
+
+        List<Todo> todos = todoRepository.findByTodoListAndDate(todoList, date);
+        List<TodoResponse> responses = todos.stream()
+                .map(todo -> new TodoResponse(todo.getDate(), todo.getTask(), todo.isCompleted()))
+                .collect(Collectors.toList());
+        return new TodoListResponse(date, responses);
     }
 }
