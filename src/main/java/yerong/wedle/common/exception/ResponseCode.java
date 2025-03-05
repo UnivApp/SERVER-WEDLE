@@ -79,8 +79,9 @@ public enum ResponseCode {
 
     //Comment
     COMMENT_NOT_FOUND("404", "해당 댓글을 찾을 수 없습니다."),
-    COMMENT_LIKE_NOT_FOUND("404", "해당 댓글 좋아요를 찾을 수 없습니다.");
+    COMMENT_LIKE_NOT_FOUND("404", "해당 댓글 좋아요를 찾을 수 없습니다."),
 
+    SCHOOL_CALENDAR_EVENT_NOT_FOUND("404", "일정을 찾을 수 없습니다.");
 
     private final String code;
     private final String message;

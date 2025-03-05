@@ -20,6 +20,7 @@ import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.neis.NeisSchoolApiClient;
 import yerong.wedle.school.neis.NeisSchoolResponse;
 import yerong.wedle.school.repository.SchoolRepository;
+import yerong.wedle.schoolcalendar.service.SchoolCalendarService;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class SchoolService {
     private final NeisSchoolApiClient neisSchoolApiClient;
     private final CommunityService communityService;
     private final MealService mealService;
+    private final SchoolCalendarService schoolCalendarService;
 
     public List<NeisSchoolResponse> searchSchool(String keyword) {
         List<NeisSchoolResponse> neisSchools = neisSchoolApiClient.searchSchool(keyword);
@@ -40,7 +42,6 @@ public class SchoolService {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
-
         Optional<School> schoolOpt = schoolRepository.findBySchoolCode(schoolRegistrationRequest.getSchoolCode());
         School school;
         if (schoolOpt.isEmpty()) {
@@ -52,9 +53,10 @@ public class SchoolService {
                     .phone(schoolRegistrationRequest.getPhone())
                     .hompage(schoolRegistrationRequest.getHompage())
                     .build();
-            schoolRepository.save(school);
+            school = schoolRepository.save(school);
             communityService.createCommunityIfNotExists(school.getId());
             mealService.initializeMealsForNewSchool(school);
+            schoolCalendarService.initializeSchoolCalendar(school);
         } else {
             school = schoolOpt.get();
         }
@@ -70,6 +72,7 @@ public class SchoolService {
         member.setSchoolRegisteredDate(LocalDate.now());
         memberRepository.save(member);
     }
+
 
     private String getCurrentUserId() {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();

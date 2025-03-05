@@ -36,6 +36,7 @@ import yerong.wedle.oauth.exception.OAuthProcessingException;
 import yerong.wedle.post.exception.PostNotFoundException;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.exception.SchoolNotFoundException;
+import yerong.wedle.schoolcalendar.exception.SchoolCalendarNotFoundException;
 import yerong.wedle.star.exception.StarNotFoundException;
 import yerong.wedle.tuitionfee.exception.TuitionFeeNotFoundException;
 import yerong.wedle.university.exception.UniversityNotFoundException;
@@ -384,6 +385,16 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.POST_LIKE_NOT_FOUND.getCode(),
                 ResponseCode.POST_LIKE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(SchoolCalendarNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSchoolCalendarNotFoundException(SchoolCalendarNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.SCHOOL_CALENDAR_EVENT_NOT_FOUND.getCode(),
+                ResponseCode.SCHOOL_CALENDAR_EVENT_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
