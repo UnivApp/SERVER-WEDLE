@@ -14,6 +14,7 @@ import yerong.wedle.member.exception.UnauthorizedAccessException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.todo.domain.Todo;
 import yerong.wedle.todo.domain.TodoList;
+import yerong.wedle.todo.domain.Visibility;
 import yerong.wedle.todo.dto.TodoListResponse;
 import yerong.wedle.todo.dto.TodoRequest;
 import yerong.wedle.todo.dto.TodoResponse;
@@ -45,7 +46,7 @@ public class TodoService {
         } else {
             todoList = todoListOptional.get();
         }
-        Todo todo = new Todo(todoRequest.getDate(), todoRequest.getTask(), todoList);
+        Todo todo = new Todo(todoRequest.getDate(), todoRequest.getTask(), todoList, Visibility.PRIVATE);
         System.out.println("name : " + todoRequest.getTask());
 
         System.out.println("date : " + todoRequest.getDate());
