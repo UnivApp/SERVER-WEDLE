@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 import yerong.wedle.common.domain.BaseTimeEntity;
 import yerong.wedle.notification.domain.Notification;
 import yerong.wedle.school.domain.School;
+import yerong.wedle.todo.domain.TodoList;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -61,6 +62,9 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Member와 Notification 간의 관계 설정
     private List<Notification> notifications;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)  // Member와 TodoList 간의 관계 설정
+    private List<TodoList> todoLists;
 
     public void setExistingMember(boolean isExistingMember) {
         this.isExistingMember = isExistingMember;
