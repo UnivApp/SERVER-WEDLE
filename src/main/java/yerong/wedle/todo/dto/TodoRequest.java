@@ -7,4 +7,5 @@ import lombok.Getter;
 public class TodoRequest {
     private String task;
     private LocalDate date;
+//    private Visibility visibility;
 }

@@ -2,6 +2,8 @@ package yerong.wedle.todo.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,15 +34,20 @@ public class Todo extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isCompleted = false;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Visibility visibility = Visibility.PRIVATE;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_list_id")
     private TodoList todoList;
 
-    public Todo(LocalDate date, String task, TodoList todoList) {
+    public Todo(LocalDate date, String task, TodoList todoList, Visibility visibility) {
         this.date = date;
         this.task = task;
         this.isCompleted = false;
         this.todoList = todoList;
+        this.visibility = visibility;
     }
 
     public void addTodoList(TodoList todoList) {
@@ -63,4 +70,7 @@ public class Todo extends BaseTimeEntity {
         this.isCompleted = isCompleted;
     }
 
+    public void updateVisibility(Visibility visibility) {
+        this.visibility = visibility;
+    }
 }
