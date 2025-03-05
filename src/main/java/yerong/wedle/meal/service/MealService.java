@@ -64,8 +64,8 @@ public class MealService {
     }
 
     public void initializeMealsForNewSchool(School school) {
-//        LocalDate startDate = LocalDate.now();
-        LocalDate startDate = LocalDate.of(2024, 3, 20);
+        LocalDate startDate = LocalDate.now();
+//        LocalDate startDate = LocalDate.of(2024, 3, 20);
         List<Meal> mealsToSave = new ArrayList<>();
 
         for (int i = 0; i < 14; i++) {
