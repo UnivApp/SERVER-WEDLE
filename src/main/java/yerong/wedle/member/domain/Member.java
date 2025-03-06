@@ -55,15 +55,18 @@ public class Member extends BaseTimeEntity {
     @Column(name = "school_registered_date")
     private LocalDate schoolRegisteredDate;
 
+    private int grade;
+    private String className;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
     private boolean isExistingMember;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Member와 Notification 간의 관계 설정
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Notification> notifications;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)  // Member와 TodoList 간의 관계 설정
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TodoList> todoLists;
 
     public void setExistingMember(boolean isExistingMember) {
@@ -80,5 +83,10 @@ public class Member extends BaseTimeEntity {
 
     public void setSchoolRegisteredDate(LocalDate now) {
         this.schoolRegisteredDate = now;
+    }
+
+    public void setGradeAndClass(int grade, String className) {
+        this.grade = grade;
+        this.className = className;
     }
 }

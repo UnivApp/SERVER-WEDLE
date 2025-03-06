@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yerong.wedle.common.domain.BaseTimeEntity;
+import yerong.wedle.common.domain.Visibility;
 
 @Entity
 @Getter

@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import yerong.wedle.community.service.CommunityService;
 import yerong.wedle.meal.service.MealService;
 import yerong.wedle.member.domain.Member;
+import yerong.wedle.member.dto.SchoolRegistrationRequest;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.school.domain.School;
-import yerong.wedle.school.dto.SchoolRegistrationRequest;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.neis.NeisSchoolApiClient;
 import yerong.wedle.school.neis.NeisSchoolResponse;
@@ -72,7 +72,6 @@ public class SchoolService {
         member.setSchoolRegisteredDate(LocalDate.now());
         memberRepository.save(member);
     }
-
 
     private String getCurrentUserId() {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
