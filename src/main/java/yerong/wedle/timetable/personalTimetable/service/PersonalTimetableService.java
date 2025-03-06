@@ -19,6 +19,7 @@ import yerong.wedle.timetable.personalTimetable.domain.PersonalTimetable;
 import yerong.wedle.timetable.personalTimetable.dto.PersonalScheduleRequest;
 import yerong.wedle.timetable.personalTimetable.dto.PersonalScheduleResponse;
 import yerong.wedle.timetable.personalTimetable.dto.PersonalTimetableResponse;
+import yerong.wedle.timetable.personalTimetable.exception.PersonalScheduleAlreadyExistsException;
 import yerong.wedle.timetable.personalTimetable.exception.PersonalScheduleNotFoundException;
 import yerong.wedle.timetable.personalTimetable.exception.PersonalTimetableNotFoundException;
 import yerong.wedle.timetable.personalTimetable.repository.PersonalScheduleRepository;
@@ -78,6 +79,13 @@ public class PersonalTimetableService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime startTime = LocalTime.parse(personalScheduleRequest.getStartTime(), formatter);
         LocalTime endTime = LocalTime.parse(personalScheduleRequest.getEndTime(), formatter);
+
+        boolean scheduleExists = personalScheduleRepository.existsByPersonalTimetableAndDayOfWeekAndStartTimeBeforeAndEndTimeAfter(
+                personalTimetable, dayOfWeek, endTime, startTime);
+
+        if (scheduleExists) {
+            throw new PersonalScheduleAlreadyExistsException();
+        }
 
         PersonalSchedule personalSchedule = PersonalSchedule.builder()
                 .personalTimetable(personalTimetable)
