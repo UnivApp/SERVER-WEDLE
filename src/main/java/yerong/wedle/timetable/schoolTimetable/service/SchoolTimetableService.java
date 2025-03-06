@@ -6,11 +6,12 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import yerong.wedle.common.domain.Visibility;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.UnauthorizedAccessException;
 import yerong.wedle.member.repository.MemberRepository;
-import yerong.wedle.timetable.schoolTimetable.domain.DayOfWeek;
+import yerong.wedle.timetable.DayOfWeek;
 import yerong.wedle.timetable.schoolTimetable.domain.SchoolSchedule;
 import yerong.wedle.timetable.schoolTimetable.domain.SchoolTimetable;
 import yerong.wedle.timetable.schoolTimetable.dto.SchoolScheduleRequest;
@@ -48,6 +49,7 @@ public class SchoolTimetableService {
         SchoolTimetable schoolTimetable = SchoolTimetable.builder()
                 .member(member)
                 .school(member.getSchool())
+                .visibility(Visibility.PRIVATE)
                 .title(title)
                 .build();
         schoolTimetableRepository.save(schoolTimetable);
