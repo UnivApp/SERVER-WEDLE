@@ -17,6 +17,7 @@ import yerong.wedle.timetable.schoolTimetable.domain.SchoolTimetable;
 import yerong.wedle.timetable.schoolTimetable.dto.SchoolScheduleRequest;
 import yerong.wedle.timetable.schoolTimetable.dto.SchoolScheduleResponse;
 import yerong.wedle.timetable.schoolTimetable.dto.SchoolTimetableResponse;
+import yerong.wedle.timetable.schoolTimetable.exception.SchoolScheduleAlreadyExistsException;
 import yerong.wedle.timetable.schoolTimetable.exception.SchoolScheduleNotFoundException;
 import yerong.wedle.timetable.schoolTimetable.exception.SchoolTimetableNotFoundException;
 import yerong.wedle.timetable.schoolTimetable.repository.SchoolScheduleRepository;
@@ -75,6 +76,13 @@ public class SchoolTimetableService {
                 .orElseThrow(
                         SchoolTimetableNotFoundException::new);
         DayOfWeek dayOfWeek = getDayOfWeekFromRequest(schoolScheduleRequest.getDay());
+
+        boolean scheduleExists = schoolScheduleRepository.existsBySchoolTimetableAndDayOfWeekAndPeriod(schoolTimetable,
+                dayOfWeek, schoolScheduleRequest.getPeriod());
+        if (scheduleExists) {
+            throw new SchoolScheduleAlreadyExistsException();
+        }
+
         SchoolSchedule schoolSchedule = SchoolSchedule.builder()
                 .schoolTimetable(schoolTimetable)
                 .dayOfWeek(dayOfWeek)

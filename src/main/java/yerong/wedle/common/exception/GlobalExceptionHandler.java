@@ -38,8 +38,10 @@ import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.schoolcalendar.exception.SchoolCalendarNotFoundException;
 import yerong.wedle.star.exception.StarNotFoundException;
+import yerong.wedle.timetable.personalTimetable.exception.PersonalScheduleAlreadyExistsException;
 import yerong.wedle.timetable.personalTimetable.exception.PersonalScheduleNotFoundException;
 import yerong.wedle.timetable.personalTimetable.exception.PersonalTimetableNotFoundException;
+import yerong.wedle.timetable.schoolTimetable.exception.SchoolScheduleAlreadyExistsException;
 import yerong.wedle.timetable.schoolTimetable.exception.SchoolScheduleNotFoundException;
 import yerong.wedle.timetable.schoolTimetable.exception.SchoolTimetableNotFoundException;
 import yerong.wedle.todo.exception.TodoNotFoundException;
@@ -454,6 +456,28 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(SchoolScheduleAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleSchoolScheduleAlreadyExistsException(
+            SchoolScheduleAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.SCHOOL_SCHEDULE_ALREADY_EXISTS.getCode(),
+                ResponseCode.SCHOOL_SCHEDULE_ALREADY_EXISTS.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(PersonalScheduleAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handlePersonalScheduleAlreadyExistsException(
+            PersonalScheduleAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.PERSONAL_SCHEDULE_ALREADY_EXISTS.getCode(),
+                ResponseCode.PERSONAL_SCHEDULE_ALREADY_EXISTS.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)

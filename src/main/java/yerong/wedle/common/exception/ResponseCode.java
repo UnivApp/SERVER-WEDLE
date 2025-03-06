@@ -88,7 +88,10 @@ public enum ResponseCode {
     SCHOOL_SCHEDULE_NOT_FOUND("404", "학교 시간표 스케줄을 찾을 수 없습니다."),
 
     PERSONAL_TIMETABLE_NOT_FOUND("404", "개인 시간표를 찾을 수 없습니다."),
-    PERSONAL_SCHEDULE_NOT_FOUND("404", "개인 시간표 스케줄을 찾을 수 없습니다.");
+    PERSONAL_SCHEDULE_NOT_FOUND("404", "개인 시간표 스케줄을 찾을 수 없습니다."),
+
+    SCHOOL_SCHEDULE_ALREADY_EXISTS("409", "해당 요일과 교시에 이미 일정이 존재합니다."),
+    PERSONAL_SCHEDULE_ALREADY_EXISTS("409", "해당 시간에 이미 일정이 존재합니다.");
 
 
     private final String code;
