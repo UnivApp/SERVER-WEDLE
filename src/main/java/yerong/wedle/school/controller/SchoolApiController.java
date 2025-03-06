@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import yerong.wedle.school.dto.SchoolRegistrationRequest;
+import yerong.wedle.member.dto.SchoolRegistrationRequest;
 import yerong.wedle.school.neis.NeisSchoolResponse;
 import yerong.wedle.school.service.SchoolService;
 

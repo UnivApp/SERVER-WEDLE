@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import yerong.wedle.member.domain.Member;
+import yerong.wedle.member.dto.GradeAndClassRegistrationRequest;
 import yerong.wedle.member.dto.NicknameDuplicateResponse;
 import yerong.wedle.member.dto.NicknameRequest;
 import yerong.wedle.member.dto.NicknameResponse;
@@ -60,12 +61,6 @@ public class MemberService {
                 .nickName(member.getNickname()).build();
     }
 
-    private String getCurrentUserId() {
-        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        return socialId;
-    }
-
     public NicknameDuplicateResponse checkNicknameDuplicate(String nickname) {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
@@ -89,5 +84,21 @@ public class MemberService {
                 .isDuplicate(isDuplicate)
                 .message(message)
                 .build();
+    }
+
+    public void setGradeAndClass(GradeAndClassRegistrationRequest gradeAndClassRegistrationRequest) {
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        member.setGradeAndClass(gradeAndClassRegistrationRequest.getGrade(),
+                gradeAndClassRegistrationRequest.getClassName());
+        memberRepository.save(member);
+    }
+
+    private String getCurrentUserId() {
+        String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return socialId;
     }
 }

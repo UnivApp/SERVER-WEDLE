@@ -1,4 +1,4 @@
-package yerong.wedle.school.dto;
+package yerong.wedle.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

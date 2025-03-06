@@ -38,6 +38,8 @@ import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.schoolcalendar.exception.SchoolCalendarNotFoundException;
 import yerong.wedle.star.exception.StarNotFoundException;
+import yerong.wedle.timetable.schoolTimetable.exception.SchoolScheduleNotFoundException;
+import yerong.wedle.timetable.schoolTimetable.exception.SchoolTimetableNotFoundException;
 import yerong.wedle.todo.exception.TodoNotFoundException;
 import yerong.wedle.tuitionfee.exception.TuitionFeeNotFoundException;
 import yerong.wedle.university.exception.UniversityNotFoundException;
@@ -406,6 +408,26 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.TODO_NOT_FOUND.getCode(),
                 ResponseCode.TODO_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(SchoolTimetableNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSchoolTimetableNotFoundException(SchoolTimetableNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.SCHOOL_TIMETABLE_NOT_FOUND.getCode(),
+                ResponseCode.SCHOOL_TIMETABLE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(SchoolScheduleNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSchoolScheduleNotFoundException(SchoolScheduleNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.SCHOOL_SCHEDULE_NOT_FOUND.getCode(),
+                ResponseCode.SCHOOL_TIMETABLE_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);

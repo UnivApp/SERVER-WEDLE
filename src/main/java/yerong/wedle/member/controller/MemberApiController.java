@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import yerong.wedle.member.dto.GradeAndClassRegistrationRequest;
 import yerong.wedle.member.dto.NicknameDuplicateResponse;
 import yerong.wedle.member.dto.NicknameRequest;
 import yerong.wedle.member.dto.NicknameResponse;
+import yerong.wedle.member.dto.SchoolRegistrationRequest;
 import yerong.wedle.member.service.MemberService;
-import yerong.wedle.school.dto.SchoolRegistrationRequest;
 import yerong.wedle.school.service.SchoolService;
 
 @Tag(name = "Member API", description = "회원 관련 API")
@@ -80,6 +81,20 @@ public class MemberApiController {
     @PostMapping("/school")
     public ResponseEntity<Void> registerSchool(@RequestBody SchoolRegistrationRequest schoolRegistrationRequest) {
         schoolService.setSchool(schoolRegistrationRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "학년/반 등록", description = "회원의 학년/반을 등록합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "학년/반 등록 성공"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+            @ApiResponse(responseCode = "404", description = "학교를 찾을 수 없음"),
+            @ApiResponse(responseCode = "409", description = "학교가 이미 등록되어 있음")
+    })
+    @PostMapping("/grade-class")
+    public ResponseEntity<Void> registerGradeAndClass(@RequestBody
+                                                      GradeAndClassRegistrationRequest gradeAndClassRegistrationRequest) {
+        memberService.setGradeAndClass(gradeAndClassRegistrationRequest);
         return ResponseEntity.ok().build();
     }
 }
