@@ -38,6 +38,8 @@ import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.schoolcalendar.exception.SchoolCalendarNotFoundException;
 import yerong.wedle.star.exception.StarNotFoundException;
+import yerong.wedle.timetable.personalTimetable.exception.PersonalScheduleNotFoundException;
+import yerong.wedle.timetable.personalTimetable.exception.PersonalTimetableNotFoundException;
 import yerong.wedle.timetable.schoolTimetable.exception.SchoolScheduleNotFoundException;
 import yerong.wedle.timetable.schoolTimetable.exception.SchoolTimetableNotFoundException;
 import yerong.wedle.todo.exception.TodoNotFoundException;
@@ -428,6 +430,27 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.SCHOOL_SCHEDULE_NOT_FOUND.getCode(),
                 ResponseCode.SCHOOL_TIMETABLE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(PersonalTimetableNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePersonalTimetableNotFoundException(
+            PersonalTimetableNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.PERSONAL_TIMETABLE_NOT_FOUND.getCode(),
+                ResponseCode.PERSONAL_TIMETABLE_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(PersonalScheduleNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePersonalScheduleNotFoundException(PersonalScheduleNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.PERSONAL_SCHEDULE_NOT_FOUND.getCode(),
+                ResponseCode.PERSONAL_SCHEDULE_NOT_FOUND.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);

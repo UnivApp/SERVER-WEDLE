@@ -1,4 +1,4 @@
-package yerong.wedle.timetable.schoolTimetable.domain;
+package yerong.wedle.timetable.personalTimetable.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,39 +19,40 @@ import yerong.wedle.timetable.DayOfWeek;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SchoolSchedule {
+public class PersonalSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "school_timetable_id", nullable = false)
-    private SchoolTimetable schoolTimetable;
+    @JoinColumn(name = "personal_timetable_id", nullable = false)
+    private PersonalTimetable personalTimetable;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DayOfWeek dayOfWeek;
 
     @Column(nullable = false)
-    private int period;
+    private String title;
 
     @Column(nullable = false)
-    private String subject;
+    private LocalTime startTime;
 
-    private String teacher;
+    @Column(nullable = false)
+    private LocalTime endTime;
 
     @Column(nullable = false)
     private String color;
 
     @Builder
-    public SchoolSchedule(SchoolTimetable schoolTimetable, int period, String subject, String teacher, String color,
-                          DayOfWeek dayOfWeek) {
-        this.schoolTimetable = schoolTimetable;
-        this.period = period;
-        this.subject = subject;
-        this.teacher = teacher;
-        this.color = color;
+    public PersonalSchedule(PersonalTimetable personalTimetable, DayOfWeek dayOfWeek, String title, LocalTime startTime,
+                            LocalTime endTime, String color) {
+        this.personalTimetable = personalTimetable;
         this.dayOfWeek = dayOfWeek;
+        this.title = title;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.color = color;
     }
 }
