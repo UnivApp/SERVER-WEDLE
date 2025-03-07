@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -35,6 +36,8 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final RedisTemplate redisTemplate;
     private final JwtBlacklistService jwtBlacklistService;
+    @Value("${cloud.aws.s3.defaultImage}")
+    String defaultImageUrl;
 
     private static final String BEARER = "Bearer ";
 
@@ -52,6 +55,7 @@ public class AuthService {
                     .username(memberRequest.getName())
                     .role(Role.USER)
                     .isExistingMember(false)
+                    .profileImageUrl(defaultImageUrl)
                     .build();
             memberRepository.save(member);
         } else {

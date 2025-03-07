@@ -47,6 +47,7 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true)
     private String nickname;
 
+    private String profileImageUrl;
     @ManyToOne
     @JoinColumn(name = "school_id")
     private School school;
@@ -84,5 +85,9 @@ public class Member extends BaseTimeEntity {
     public void setGradeAndClass(int grade, String className) {
         this.grade = grade;
         this.className = className;
+    }
+
+    public void setProfileImageUrl(String imageUrl) {
+        this.profileImageUrl = imageUrl;
     }
 }

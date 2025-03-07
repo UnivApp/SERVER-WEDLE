@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import yerong.wedle.member.dto.GradeAndClassRegistrationRequest;
 import yerong.wedle.member.dto.NicknameDuplicateResponse;
 import yerong.wedle.member.dto.NicknameRequest;
 import yerong.wedle.member.dto.NicknameResponse;
+import yerong.wedle.member.dto.ProfileImageResponse;
 import yerong.wedle.member.dto.SchoolRegistrationRequest;
 import yerong.wedle.member.service.MemberService;
 import yerong.wedle.school.service.SchoolService;
@@ -96,5 +99,29 @@ public class MemberApiController {
                                                       GradeAndClassRegistrationRequest gradeAndClassRegistrationRequest) {
         memberService.setGradeAndClass(gradeAndClassRegistrationRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "프로필 사진 제거", description = "프로필 사진을 제거하고 기본 이미지로 설정합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로필 사진 제거 성공"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
+    })
+    @PutMapping("/profile-image/remove")
+    public ResponseEntity<Void> removeProfileImage() {
+        memberService.removeProfileImage();
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "프로필 사진 변경", description = "프로필 사진을 변경합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로필 사진 변경 성공"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
+    })
+    @PutMapping("/profile-image/update")
+    public ResponseEntity<ProfileImageResponse> updateProfileImage(
+            @RequestPart("profileImage") MultipartFile profileImageRequest) {
+        System.out.println("success");
+        ProfileImageResponse profileImageResponse = memberService.setProfileImage(profileImageRequest);
+        return ResponseEntity.ok(profileImageResponse);
     }
 }
