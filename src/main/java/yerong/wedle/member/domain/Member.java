@@ -21,7 +21,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import yerong.wedle.common.domain.BaseTimeEntity;
-import yerong.wedle.notification.domain.Notification;
 import yerong.wedle.school.domain.School;
 import yerong.wedle.todo.domain.TodoList;
 
@@ -62,9 +61,6 @@ public class Member extends BaseTimeEntity {
     private Role role;
 
     private boolean isExistingMember;
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Notification> notifications;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TodoList> todoLists;
