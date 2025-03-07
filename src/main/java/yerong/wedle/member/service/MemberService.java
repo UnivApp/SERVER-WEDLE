@@ -1,13 +1,17 @@
 package yerong.wedle.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import yerong.wedle.common.s3.S3Service;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.dto.GradeAndClassRegistrationRequest;
 import yerong.wedle.member.dto.NicknameDuplicateResponse;
 import yerong.wedle.member.dto.NicknameRequest;
 import yerong.wedle.member.dto.NicknameResponse;
+import yerong.wedle.member.dto.ProfileImageResponse;
 import yerong.wedle.member.exception.ExistingNicknameException;
 import yerong.wedle.member.exception.InvalidNicknameException;
 import yerong.wedle.member.exception.MemberNicknameDuplicateException;
@@ -19,6 +23,9 @@ import yerong.wedle.member.repository.MemberRepository;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final S3Service s3Service;
+    @Value("${cloud.aws.s3.defaultImage}")
+    String defaultImageUrl;
 
     private boolean isNicknameDuplicate(String nickname) {
         return memberRepository.existsByNickname(nickname);
@@ -95,6 +102,32 @@ public class MemberService {
                 gradeAndClassRegistrationRequest.getClassName());
         memberRepository.save(member);
     }
+
+    public ProfileImageResponse setProfileImage(MultipartFile profileImageRequest) {
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId)
+                .orElseThrow(MemberNotFoundException::new);
+        if (member.getProfileImageUrl() != null && !member.getProfileImageUrl().equals(defaultImageUrl)) {
+            s3Service.deleteFile(member.getProfileImageUrl());
+        }
+
+        String imageUrl = s3Service.uploadProfileImage(profileImageRequest);
+        member.setProfileImageUrl(imageUrl);
+        memberRepository.save(member);
+        return new ProfileImageResponse(imageUrl);
+    }
+
+    public void removeProfileImage() {
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId)
+                .orElseThrow(MemberNotFoundException::new);
+        if (member.getProfileImageUrl() != null && !member.getProfileImageUrl().equals(defaultImageUrl)) {
+            s3Service.deleteFile(member.getProfileImageUrl());
+        }
+        member.setProfileImageUrl(defaultImageUrl);
+        memberRepository.save(member);
+    }
+
 
     private String getCurrentUserId() {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
