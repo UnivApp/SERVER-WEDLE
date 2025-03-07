@@ -8,16 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yerong.wedle.board.exception.BoardDuplicateException;
 import yerong.wedle.board.exception.BoardNotFoundException;
-import yerong.wedle.calendar.exception.CalendarEventNotFoundException;
-import yerong.wedle.category.expo.exception.ExpoCategoryNotFoundException;
-import yerong.wedle.category.expo.exception.ExpoNotFoundException;
-import yerong.wedle.category.news.exception.NewsNotFoundException;
-import yerong.wedle.category.questionnaire.exception.MatchingResultNotFoundException;
-import yerong.wedle.category.restaurant.exception.RestaurantNotFoundException;
 import yerong.wedle.comment.exception.CommentNotFoundException;
-import yerong.wedle.competitionRate.exception.CompetitionRateNotFoundException;
-import yerong.wedle.department.exception.DepartmentNotFoundException;
-import yerong.wedle.employmentRate.exception.EmploymentRateNotFoundException;
 import yerong.wedle.like.commentLike.exception.CommentLikeNotFoundException;
 import yerong.wedle.like.postLike.exception.PostLikeNotFoundException;
 import yerong.wedle.member.exception.ExistingNicknameException;
@@ -26,9 +17,6 @@ import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.member.exception.MemberNicknameDuplicateException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.UnauthorizedAccessException;
-import yerong.wedle.notification.exception.DuplicateNotificationException;
-import yerong.wedle.notification.exception.NotificationDateOutOfRangeException;
-import yerong.wedle.notification.exception.NotificationNotFoundException;
 import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
@@ -37,7 +25,6 @@ import yerong.wedle.post.exception.PostNotFoundException;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.schoolcalendar.exception.SchoolCalendarNotFoundException;
-import yerong.wedle.star.exception.StarNotFoundException;
 import yerong.wedle.timetable.personalTimetable.exception.PersonalScheduleAlreadyExistsException;
 import yerong.wedle.timetable.personalTimetable.exception.PersonalScheduleNotFoundException;
 import yerong.wedle.timetable.personalTimetable.exception.PersonalTimetableNotFoundException;
@@ -45,8 +32,6 @@ import yerong.wedle.timetable.schoolTimetable.exception.SchoolScheduleAlreadyExi
 import yerong.wedle.timetable.schoolTimetable.exception.SchoolScheduleNotFoundException;
 import yerong.wedle.timetable.schoolTimetable.exception.SchoolTimetableNotFoundException;
 import yerong.wedle.todo.exception.TodoNotFoundException;
-import yerong.wedle.tuitionfee.exception.TuitionFeeNotFoundException;
-import yerong.wedle.university.exception.UniversityNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -104,43 +89,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler(NotificationNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotificationNotFoundException(NotificationNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.NOTIFICATION_NOT_FOUND.getCode(),
-                ResponseCode.NOTIFICATION_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(DuplicateNotificationException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateNotificationException(DuplicateNotificationException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.DUPLICATION_NOTIFICATION.getCode(),
-                ResponseCode.DUPLICATION_NOTIFICATION.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-    }
-
     @ExceptionHandler(ExistingNicknameException.class)
     public ResponseEntity<ErrorResponse> handleExistingNicknameException(ExistingNicknameException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.EXISTING_NICKNAME.getCode(),
                 ResponseCode.EXISTING_NICKNAME.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
-
-
-    @ExceptionHandler(NotificationDateOutOfRangeException.class)
-    public ResponseEntity<ErrorResponse> handleNotificationDateOutOfRangeException(
-            NotificationDateOutOfRangeException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.NOTIFICATION_DATE_OUT_OF_RANGE.getCode(),
-                ResponseCode.NOTIFICATION_DATE_OUT_OF_RANGE.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -176,56 +129,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
-    @ExceptionHandler(ExpoCategoryNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleExpoCategoryNotFoundException(ExpoCategoryNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.EXPO_CATEGORY_NOT_FOUND.getCode(),
-                ResponseCode.EXPO_CATEGORY_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(ExpoNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleExpoNotFoundException(ExpoNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.EXPO_NOT_FOUND.getCode(),
-                ResponseCode.EXPO_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(CompetitionRateNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCompetitionRateNotFoundException(CompetitionRateNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.COMPETITION_RATE_NOT_FOUND.getCode(),
-                ResponseCode.COMPETITION_RATE_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(EmploymentRateNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleEmploymentRateNotFoundException(EmploymentRateNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.EMPLOYMENT_RATE_NOT_FOUND.getCode(),
-                ResponseCode.EMPLOYMENT_RATE_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(NewsNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNewsNotFoundException(NewsNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.NEWS_NOT_FOUND.getCode(),
-                ResponseCode.NEWS_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
     @ExceptionHandler(InvalidAuthorizationHeaderException.class)
     public ResponseEntity<ErrorResponse> handleInvalidAuthorizationHeaderException(
             InvalidAuthorizationHeaderException ex) {
@@ -235,76 +138,6 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-    }
-
-    @ExceptionHandler(CalendarEventNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCalendarEventNotFoundException(CalendarEventNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.CALENDAR_EVENT_NOT_FOUND.getCode(),
-                ResponseCode.CALENDAR_EVENT_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(UniversityNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUniversityNotFoundException(UniversityNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.UNIVERSITY_NOT_FOUND.getCode(),
-                ResponseCode.UNIVERSITY_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(RestaurantNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(RestaurantNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.RESTAURANT_NOT_FOUND.getCode(),
-                ResponseCode.RESTAURANT_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(MatchingResultNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleMatchingResultNotFoundException(MatchingResultNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.MATCHING_RESULT_NOT_FOUND.getCode(),
-                ResponseCode.MATCHING_RESULT_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(StarNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleStarNotFoundException(StarNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.STAR_NOT_FOUND.getCode(),
-                ResponseCode.STAR_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(DepartmentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleDepartmentNotFoundException(DepartmentNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.DEPARTMENT_NOT_FOUND.getCode(),
-                ResponseCode.DEPARTMENT_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-    }
-
-    @ExceptionHandler(TuitionFeeNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleTuitionFeeNotFoundException(TuitionFeeNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ResponseCode.TUITION_FEE_NOT_FOUND.getCode(),
-                ResponseCode.TUITION_FEE_NOT_FOUND.getMessage(),
-                LocalDateTime.now().format(FORMATTER)
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(SchoolNotFoundException.class)
