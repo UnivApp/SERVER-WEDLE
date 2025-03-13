@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import yerong.wedle.member.dto.SchoolRegistrationRequest;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.school.domain.School;
+import yerong.wedle.school.dto.SchoolResponse;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.neis.NeisSchoolApiClient;
 import yerong.wedle.school.neis.NeisSchoolResponse;
@@ -33,9 +35,10 @@ public class SchoolService {
     private final MealService mealService;
     private final SchoolCalendarService schoolCalendarService;
 
-    public List<NeisSchoolResponse> searchSchool(String keyword) {
+    public List<SchoolResponse> searchSchool(String keyword) {
         List<NeisSchoolResponse> neisSchools = neisSchoolApiClient.searchSchool(keyword);
-        return neisSchools;
+
+        return neisSchools.stream().map(this::convertToSchoolResponse).collect(Collectors.toList());
     }
 
     public void setSchool(SchoolRegistrationRequest schoolRegistrationRequest) {
@@ -71,6 +74,12 @@ public class SchoolService {
         member.setSchool(school);
         member.setSchoolRegisteredDate(LocalDate.now());
         memberRepository.save(member);
+    }
+
+    private SchoolResponse convertToSchoolResponse(NeisSchoolResponse neisSchoolResponse) {
+        return new SchoolResponse(neisSchoolResponse.getSchoolName(), neisSchoolResponse.getAtptCode(),
+                neisSchoolResponse.getSchoolCode(), neisSchoolResponse.getRoadAddress(),
+                neisSchoolResponse.getPhoneNumber(), neisSchoolResponse.getWebsite());
     }
 
     private String getCurrentUserId() {

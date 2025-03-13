@@ -64,6 +64,9 @@ public class SchoolTimetableService {
         SchoolTimetable schoolTimetable = schoolTimetableRepository.findByMember(member)
                 .orElseThrow(
                         SchoolTimetableNotFoundException::new);
+        if (!schoolTimetable.getMember().getSocialId().equals(socialId)) {
+            throw new UnauthorizedAccessException();
+        }
         schoolScheduleRepository.deleteInBatch(schoolTimetable.getSchedules());
     }
 

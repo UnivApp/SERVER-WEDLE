@@ -107,6 +107,7 @@ public class MemberService {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
+
         if (member.getProfileImageUrl() != null && !member.getProfileImageUrl().equals(defaultImageUrl)) {
             s3Service.deleteFile(member.getProfileImageUrl());
         }

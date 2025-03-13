@@ -14,6 +14,7 @@ import yerong.wedle.board.exception.BoardDuplicateException;
 import yerong.wedle.board.exception.BoardNotFoundException;
 import yerong.wedle.board.repository.BoardRepository;
 import yerong.wedle.community.domain.Community;
+import yerong.wedle.community.exception.CommunityNotFoundException;
 import yerong.wedle.community.repository.CommunityRepository;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
@@ -33,7 +34,7 @@ public class BoardService {
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
         Community community = communityRepository.findById(member.getSchool().getCommunity().getId()).orElseThrow(
-                BoardNotFoundException::new);
+                CommunityNotFoundException::new);
 
         if (boardRepository.existsByTitleAndCommunity(boardRequest.getTitle(), community)) {
             throw new BoardDuplicateException();
@@ -60,7 +61,7 @@ public class BoardService {
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
         Community community = communityRepository.findById(member.getSchool().getCommunity().getId()).orElseThrow(
-                BoardNotFoundException::new);
+                CommunityNotFoundException::new);
 
         return boardRepository.findAllByCommunity(community).stream()
                 .map(this::convertToBoardResponse)

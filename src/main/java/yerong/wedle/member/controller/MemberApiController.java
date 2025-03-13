@@ -39,8 +39,7 @@ public class MemberApiController {
             @ApiResponse(responseCode = "400", description = "닉네임에 공백이 포함됨"),
             @ApiResponse(responseCode = "400", description = "기존 닉네임과 동일함"),
             @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
-            @ApiResponse(responseCode = "409", description = "중복된 닉네임이 있음")
-
+            @ApiResponse(responseCode = "409", description = "중복된 닉네임이 있음"),
     })
     @PostMapping("/nickname")
     public ResponseEntity<NicknameResponse> createNickname(NicknameRequest nickNameRequest) {
@@ -49,10 +48,11 @@ public class MemberApiController {
 
     @Operation(summary = "닉네임 변경", description = "회원의 닉네임을 변경합니다")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "닉네임 변경 성공"),
-            @ApiResponse(responseCode = "400", description = "변경하려는 닉네임이 기존 닉네임과 같음"),
+            @ApiResponse(responseCode = "200", description = "닉네임 등록 성공"),
+            @ApiResponse(responseCode = "400", description = "닉네임에 공백이 포함됨"),
+            @ApiResponse(responseCode = "400", description = "기존 닉네임과 동일함"),
             @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
-            @ApiResponse(responseCode = "409", description = "중복된 닉네임이 있음")
+            @ApiResponse(responseCode = "409", description = "중복된 닉네임이 있음"),
     })
     @PutMapping("/nickname")
     public ResponseEntity<NicknameResponse> updateNickname(@RequestBody NicknameRequest nicknameRequest) {
@@ -61,7 +61,8 @@ public class MemberApiController {
 
     @Operation(summary = "닉네임 중복 체크", description = "닉네임의 중복 여부를 확인합니다")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "닉네임 중복 확인 성공")
+            @ApiResponse(responseCode = "200", description = "닉네임 중복 확인 성공"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없습니다.")
     })
     @GetMapping("/nickname/check")
     public ResponseEntity<NicknameDuplicateResponse> checkNicknameDuplicate(@RequestParam String nickname) {
@@ -69,6 +70,11 @@ public class MemberApiController {
         return ResponseEntity.ok(nicknameDuplicateResponse);
     }
 
+    @Operation(summary = "닉네임 조회", description = "닉네임을 조회합니다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "닉네임 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없습니다.")
+    })
     @GetMapping("/nickname")
     public ResponseEntity<NicknameResponse> getNickname() {
         return ResponseEntity.ok(memberService.getNickname());
@@ -77,9 +83,7 @@ public class MemberApiController {
     @Operation(summary = "학교 등록", description = "회원의 학교를 등록합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "학교 등록 성공"),
-            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
-            @ApiResponse(responseCode = "404", description = "학교를 찾을 수 없음"),
-            @ApiResponse(responseCode = "409", description = "학교가 이미 등록되어 있음")
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
     })
     @PostMapping("/school")
     public ResponseEntity<Void> registerSchool(@RequestBody SchoolRegistrationRequest schoolRegistrationRequest) {
@@ -91,8 +95,6 @@ public class MemberApiController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "학년/반 등록 성공"),
             @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
-            @ApiResponse(responseCode = "404", description = "학교를 찾을 수 없음"),
-            @ApiResponse(responseCode = "409", description = "학교가 이미 등록되어 있음")
     })
     @PostMapping("/grade-class")
     public ResponseEntity<Void> registerGradeAndClass(@RequestBody
@@ -101,10 +103,23 @@ public class MemberApiController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "학년/반 변경", description = "회원의 학년/반을 변경합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "학년/반 변경 성공"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+    })
+    @PutMapping("/update-grade-class")
+    public ResponseEntity<Void> updateGradeAndClass(@RequestBody
+                                                    GradeAndClassRegistrationRequest gradeAndClassRegistrationRequest) {
+        memberService.setGradeAndClass(gradeAndClassRegistrationRequest);
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(summary = "프로필 사진 제거", description = "프로필 사진을 제거하고 기본 이미지로 설정합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로필 사진 제거 성공"),
-            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+            @ApiResponse(responseCode = "409", description = "권한이 없음")
     })
     @PutMapping("/profile-image/remove")
     public ResponseEntity<Void> removeProfileImage() {
@@ -114,8 +129,9 @@ public class MemberApiController {
 
     @Operation(summary = "프로필 사진 변경", description = "프로필 사진을 변경합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "프로필 사진 변경 성공"),
-            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음")
+            @ApiResponse(responseCode = "200", description = "프로필 사진 제거 성공"),
+            @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+            @ApiResponse(responseCode = "409", description = "권한이 없음")
     })
     @PutMapping("/profile-image/update")
     public ResponseEntity<ProfileImageResponse> updateProfileImage(

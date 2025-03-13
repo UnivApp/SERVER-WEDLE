@@ -47,9 +47,6 @@ public class TodoService {
             todoList = todoListOptional.get();
         }
         Todo todo = new Todo(todoRequest.getDate(), todoRequest.getTask(), todoList, Visibility.PRIVATE);
-        System.out.println("name : " + todoRequest.getTask());
-
-        System.out.println("date : " + todoRequest.getDate());
         todo.addTodoList(todoList);
         todoList.addTask(todo);
 

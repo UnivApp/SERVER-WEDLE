@@ -14,6 +14,7 @@ import yerong.wedle.comment.repository.CommentRepository;
 import yerong.wedle.like.commentLike.repository.CommentLikeRepository;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
+import yerong.wedle.member.exception.UnauthorizedAccessException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.post.domain.Post;
 import yerong.wedle.post.exception.PostNotFoundException;
@@ -63,6 +64,17 @@ public class CommentService {
 
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+
+        String socialId = getCurrentUserId();
+        if (!comment.getMember().getSocialId().equals(socialId)) {
+            throw new UnauthorizedAccessException();
+        }
+
+        if (comment.getParentComment() == null) {
+            for (Comment reply : comment.getReplies()) {
+                commentRepository.delete(reply);
+            }
+        }
         commentRepository.delete(comment);
     }
 

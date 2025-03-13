@@ -2,6 +2,7 @@ package yerong.wedle.schoolcalendar.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,11 @@ public class SchoolCalendarApiController {
 
     @Operation(
             summary = "학사 일정 조회 (단일 날짜)",
-            description = "지정한 날짜의 학사 일정을 반환합니다."
+            description = "지정한 날짜의 학사 일정을 반환합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공적으로 학사 일정 반환하였습니다."),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+            }
     )
     @GetMapping("/list/date")
     public ResponseEntity<TotalSchoolCalendarResponse> getSchoolCalendarByDate(SchoolCalendarByDateRequest request) {
@@ -33,7 +38,11 @@ public class SchoolCalendarApiController {
 
     @Operation(
             summary = "학사 일정 조회 (기간)",
-            description = "지정한 기간의 학사 일정을 반환합니다."
+            description = "지정한 기간의 학사 일정을 반환합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공적으로 학사 일정 반환"),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+            }
     )
     @GetMapping("/list/dates")
     public ResponseEntity<TotalSchoolCalendarResponse> getScheduleBetween(

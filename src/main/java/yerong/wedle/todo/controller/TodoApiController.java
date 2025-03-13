@@ -2,7 +2,6 @@ package yerong.wedle.todo.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -32,19 +31,26 @@ public class TodoApiController {
 
     @Operation(
             summary = "할일 추가",
-            description = "할일을 추가합니다"
+            description = "할일을 추가합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "할일 생성 성공"),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+            }
     )
     @PostMapping("/todo")
     public ResponseEntity<TodoResponse> addTodo(@RequestBody TodoRequest todoRequest) {
-        System.out.println("name = " + todoRequest.getTask());
-        System.out.println("date = " + todoRequest.getDate());
         TodoResponse todoResponse = todoService.addTodo(todoRequest);
         return ResponseEntity.ok(todoResponse);
     }
 
     @Operation(
             summary = "할일 이름 수정",
-            description = "할일의 이름을 수정합니다"
+            description = "할일의 이름을 수정합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "할일 이름 수정 성공"),
+                    @ApiResponse(responseCode = "403", description = "권한이 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "할일을 찾을 수 없습니다."),
+            }
     )
     @PutMapping("/todo/update-task")
     public ResponseEntity<TodoResponse> updateTodoTask(@RequestBody UpdateTodoTaskRequest todoRenameRequest) {
@@ -54,7 +60,12 @@ public class TodoApiController {
 
     @Operation(
             summary = "할일 날짜 수정",
-            description = "할일 날짜를 수정합니다"
+            description = "할일 날짜를 수정합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "할일 날짜 수정 성공"),
+                    @ApiResponse(responseCode = "403", description = "권한이 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "할일을 찾을 수 없습니다."),
+            }
     )
     @PutMapping("/todo/update-date")
     public ResponseEntity<TodoResponse> updateTodoDate(@RequestBody UpdateTodoDateRequest updateTodoDateRequest) {
@@ -64,7 +75,12 @@ public class TodoApiController {
 
     @Operation(
             summary = "할일 성공 여부 수정",
-            description = "할일 성공 여부를 수정합니다"
+            description = "할일 성공 여부를 수정합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "할일 성공 여부 수정 성공"),
+                    @ApiResponse(responseCode = "403", description = "권한이 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "할일을 찾을 수 없습니다."),
+            }
     )
     @PutMapping("/todo/completion")
     public ResponseEntity<TodoResponse> updateTodoCompletion(
@@ -73,25 +89,30 @@ public class TodoApiController {
         return ResponseEntity.ok(todoResponse);
     }
 
-    @Operation(summary = "할일 삭제", description = "할일을 삭제합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "할일이 성공적으로 삭제되었습니다."),
-            @ApiResponse(responseCode = "404", description = "할일을 찾을 수 없음")
-    })
-    @DeleteMapping("/todd/{todoId}")
-    public ResponseEntity<String> updateTodoCompletion(@PathVariable Long todoId) {
+    @Operation(
+            summary = "할일 삭제",
+            description = "할일 삭제을 삭제합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "할일 삭제 성공"),
+                    @ApiResponse(responseCode = "403", description = "권한이 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "할일을 찾을 수 없습니다."),
+            }
+    )
+    @DeleteMapping("/todo/{todoId}")
+    public ResponseEntity<String> deleteTodoCompletion(@PathVariable Long todoId) {
         todoService.deleteTodo(todoId);
         return ResponseEntity.ok("Todo가 성공적으로 삭제되었습니다.");
     }
 
     @Operation(
             summary = "특정 날짜의 할일 목록 조회",
-            description = "특정 날짜에 해당하는 할일 목록을 조회합니다"
+            description = "특정 날짜에 해당하는 할일 목록을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "특정 날짜의 할일 목록 조회 성공"),
+                    @ApiResponse(responseCode = "404", description = "할일을 찾을 수 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없습니다."),
+            }
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "할일 목록이 성공적으로 반환되었습니다."),
-            @ApiResponse(responseCode = "404", description = "할일을 찾을 수 없음")
-    })
     @GetMapping("/todos/{date}")
     public ResponseEntity<TodoListResponse> getTodosByDate(@PathVariable LocalDate date) {
         TodoListResponse todoResponses = todoService.getTodosByDate(date);
