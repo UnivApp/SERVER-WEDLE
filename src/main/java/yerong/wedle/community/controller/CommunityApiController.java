@@ -3,6 +3,7 @@ package yerong.wedle.community.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import yerong.wedle.community.service.CommunityService;
 import yerong.wedle.school.dto.SchoolRequest;
 
+@Tag(name = "Community API", description = "커뮤니티 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")

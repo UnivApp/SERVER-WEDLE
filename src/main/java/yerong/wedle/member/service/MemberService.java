@@ -1,7 +1,10 @@
 package yerong.wedle.member.service;
 
+import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -134,5 +137,33 @@ public class MemberService {
         String socialId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return socialId;
+    }
+
+    public void banMemberForDays(long targetOwnerId, int days) {
+        Member member = memberRepository.findById(targetOwnerId).orElseThrow(MemberNotFoundException::new);
+        LocalDate banEndDate = LocalDate.now().plusDays(days);
+        member.setBanned(true);
+        member.setBanEndDate(banEndDate);
+
+        memberRepository.save(member);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void releaseBanForExpiredMembers() {
+        List<Member> bannedMembers = memberRepository.findAllBannedMembers();
+        for (Member member : bannedMembers) {
+            releaseBanIfExpired(member.getMemberId());
+        }
+    }
+
+    public void releaseBanIfExpired(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        if (member.isBanned()) {
+            if (LocalDate.now().isAfter(member.getBanEndDate())) {
+                member.setBanned(false);
+                member.setBanEndDate(null);
+                memberRepository.save(member);
+            }
+        }
     }
 }

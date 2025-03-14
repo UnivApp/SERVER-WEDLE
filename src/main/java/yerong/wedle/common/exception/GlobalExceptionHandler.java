@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import yerong.wedle.block.exception.AlreadyBlockedMemberException;
+import yerong.wedle.block.exception.BlockNotFoundException;
+import yerong.wedle.block.exception.BlockedMemberException;
 import yerong.wedle.board.exception.BoardDuplicateException;
 import yerong.wedle.board.exception.BoardNotFoundException;
 import yerong.wedle.comment.exception.CommentNotFoundException;
@@ -18,11 +21,14 @@ import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.member.exception.MemberNicknameDuplicateException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.UnauthorizedAccessException;
+import yerong.wedle.member.exception.UserBannedException;
 import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
 import yerong.wedle.oauth.exception.OAuthProcessingException;
 import yerong.wedle.post.exception.PostNotFoundException;
+import yerong.wedle.report.exception.AlreadyReportedCommentException;
+import yerong.wedle.report.exception.AlreadyReportedPostException;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.schoolcalendar.exception.SchoolCalendarNotFoundException;
@@ -324,6 +330,75 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+
+    @ExceptionHandler(AlreadyReportedPostException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyReportedPostException(AlreadyReportedPostException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.ALREADY_REPORTED_POST.getCode(),
+                ResponseCode.ALREADY_REPORTED_POST.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        System.out.println("errer : " + ex.getCode());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(AlreadyReportedCommentException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyReportedCommentException(
+            AlreadyReportedCommentException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.ALREADY_REPORTED_COMMENT.getCode(),
+                ResponseCode.ALREADY_REPORTED_COMMENT.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(UserBannedException.class)
+    public ResponseEntity<ErrorResponse> handleUserBannedException(
+            UserBannedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.USER_BANNED.getCode(),
+                ResponseCode.USER_BANNED.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+
+    @ExceptionHandler(AlreadyBlockedMemberException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyBlockedMemberException(
+            AlreadyBlockedMemberException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.ALREADY_BLOCKED_MEMBER.getCode(),
+                ResponseCode.ALREADY_BLOCKED_MEMBER.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+
+    @ExceptionHandler(BlockNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBlockNotFoundException(
+            BlockNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.BLOCK_NOT_FOUND.getCode(),
+                ResponseCode.BLOCK_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(BlockedMemberException.class)
+    public ResponseEntity<ErrorResponse> handleBlockedMemberException(
+            BlockedMemberException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.BLOCKED_MEMBER.getCode(),
+                ResponseCode.BLOCKED_MEMBER.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
