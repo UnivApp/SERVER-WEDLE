@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yerong.wedle.block.exception.BlockedMemberException;
+import yerong.wedle.block.service.BlockService;
 import yerong.wedle.comment.domain.Comment;
 import yerong.wedle.comment.dto.CommentRequest;
 import yerong.wedle.comment.dto.CommentResponse;
@@ -29,6 +31,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final CommentLikeRepository commentLikeRepository;
+    private final BlockService blockService;
 
     public CommentResponse createComment(CommentRequest commentRequest) {
         String socialId = getCurrentUserId();
@@ -37,12 +40,19 @@ public class CommentService {
             throw new UserBannedException();
         }
         Post post = postRepository.findById(commentRequest.getPostId()).orElseThrow(PostNotFoundException::new);
+
+        if (isMutuallyBlocked(member, post.getMember())) {
+            throw new BlockedMemberException();
+        }
+
         Comment parentComment = null;
         Comment comment;
         if (commentRequest.getParentCommentId() != null) {
             parentComment = commentRepository.findById(commentRequest.getParentCommentId())
                     .orElseThrow(CommentNotFoundException::new);
-
+            if (isMutuallyBlocked(member, parentComment.getMember())) {
+                throw new BlockedMemberException();
+            }
             comment = Comment.builder()
                     .content(commentRequest.getContent())
                     .post(post)
@@ -83,13 +93,25 @@ public class CommentService {
 
     public CommentResponse getComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
+        if (isMutuallyBlocked(member, comment.getMember())) {
+            throw new BlockedMemberException();
+        }
         return convertToCommentResponse(comment);
     }
 
     public List<CommentResponse> getComments(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
         List<Comment> comments = commentRepository.findAllByPost(post);
-        return comments.stream().map(this::convertToCommentResponse).collect(Collectors.toList());
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
+
+        return comments.stream()
+                .filter(comment -> !isMutuallyBlocked(member, comment.getMember()))
+                .map(this::convertToCommentResponse)
+                .collect(Collectors.toList());
+
     }
 
     public Long likeCount(Long commentId) {
@@ -133,4 +155,10 @@ public class CommentService {
         }
         commentRepository.delete(comment);
     }
+
+    private boolean isMutuallyBlocked(Member me, Member other) {
+        return blockService.isBlocked(me.getMemberId(), other.getMemberId())
+                || blockService.isBlocked(other.getMemberId(), me.getMemberId());
+    }
+
 }

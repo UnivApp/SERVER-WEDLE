@@ -6,11 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import yerong.wedle.block.exception.AlreadyBlockedMemberException;
+import yerong.wedle.block.service.BlockService;
 import yerong.wedle.board.domain.Board;
 import yerong.wedle.board.exception.BoardNotFoundException;
 import yerong.wedle.board.repository.BoardRepository;
 import yerong.wedle.community.domain.Community;
-import yerong.wedle.community.repository.CommunityRepository;
 import yerong.wedle.like.postLike.repository.PostLikeRepository;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
@@ -35,7 +36,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final PostLikeRepository postLikeRepository;
-    private final CommunityRepository communityRepository;
+    private final BlockService blockService;
 
     public PostResponse createPost(PostCreateRequest postRequest) {
         String socialId = getCurrentUserId();
@@ -100,8 +101,14 @@ public class PostService {
     public List<PostResponse> getAllPosts(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 
-        List<Post> posts = postRepository.findAllByBoardOrderByCreatedAtDesc(board);
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
 
+        List<Post> posts = postRepository.findAllByBoardOrderByCreatedAtDesc(board);
+        posts.removeIf(post ->
+                blockService.isBlocked(member.getMemberId(), post.getMember().getMemberId()) ||  // 내가 그 사람 차단했거나
+                        blockService.isBlocked(post.getMember().getMemberId(), member.getMemberId())
+        );
         return posts.stream()
                 .map(this::convertToPostResponse)
                 .collect(Collectors.toList());
@@ -114,7 +121,11 @@ public class PostService {
 
         List<Post> hotPosts = postRepository.findAllByBoard_CommunityAndIsHotBoardTrueOrderByHotBoardTimeDesc(
                 community);
-
+        hotPosts.removeIf(post ->
+                        blockService.isBlocked(member.getMemberId(), post.getMember().getMemberId()) ||  // 내가 그 사람 차단했거나
+                                blockService.isBlocked(post.getMember().getMemberId(), member.getMemberId())
+                // 그 사람이 나를 차단했으면
+        );
         return hotPosts.stream()
                 .map(this::convertToHotPostResponse)
                 .collect(Collectors.toList());
@@ -122,7 +133,14 @@ public class PostService {
 
 
     public PostResponse getPost(Long postId) {
+        String socialId = getCurrentUserId();
+        Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
+
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        if (blockService.isBlocked(member.getMemberId(), post.getMember().getMemberId()) ||
+                blockService.isBlocked(post.getMember().getMemberId(), member.getMemberId())) {
+            throw new AlreadyBlockedMemberException();
+        }
         return convertToPostResponse(post);
     }
 
@@ -175,7 +193,6 @@ public class PostService {
     }
 
     public void deletePostByReport(Long postId) {
-        System.out.println("postId : " + postId);
         postRepository.deleteById(postId);
     }
 }

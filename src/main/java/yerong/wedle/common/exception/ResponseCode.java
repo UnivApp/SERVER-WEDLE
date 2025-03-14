@@ -95,8 +95,10 @@ public enum ResponseCode {
 
     ALREADY_REPORTED_POST("409", "이미 신고한 게시물입니다."),
     ALREADY_REPORTED_COMMENT("409", "이미 신고한 댓글입니다."),
-    USER_BANNED("403", "사용자가 정지되었습니다.");
-
+    USER_BANNED("403", "사용자가 정지되었습니다."),
+    ALREADY_BLOCKED_MEMBER("409", "이미 차단된 사용자입니다."),
+    BLOCKED_MEMBER("403", "차단된 사용자입니다."),
+    BLOCK_NOT_FOUND("404", "해당 차단건을 찾을 수 없습니다.");
 
     private final String code;
     private final String message;

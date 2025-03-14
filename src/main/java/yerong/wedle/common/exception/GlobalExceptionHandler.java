@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import yerong.wedle.block.exception.AlreadyBlockedMemberException;
+import yerong.wedle.block.exception.BlockNotFoundException;
+import yerong.wedle.block.exception.BlockedMemberException;
 import yerong.wedle.board.exception.BoardDuplicateException;
 import yerong.wedle.board.exception.BoardNotFoundException;
 import yerong.wedle.comment.exception.CommentNotFoundException;
@@ -358,6 +361,41 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 ResponseCode.USER_BANNED.getCode(),
                 ResponseCode.USER_BANNED.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+
+    @ExceptionHandler(AlreadyBlockedMemberException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyBlockedMemberException(
+            AlreadyBlockedMemberException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.ALREADY_BLOCKED_MEMBER.getCode(),
+                ResponseCode.ALREADY_BLOCKED_MEMBER.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+
+    @ExceptionHandler(BlockNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBlockNotFoundException(
+            BlockNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.BLOCK_NOT_FOUND.getCode(),
+                ResponseCode.BLOCK_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(BlockedMemberException.class)
+    public ResponseEntity<ErrorResponse> handleBlockedMemberException(
+            BlockedMemberException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.BLOCKED_MEMBER.getCode(),
+                ResponseCode.BLOCKED_MEMBER.getMessage(),
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
