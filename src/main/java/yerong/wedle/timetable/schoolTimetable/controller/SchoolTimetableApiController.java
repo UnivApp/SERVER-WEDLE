@@ -1,6 +1,7 @@
 package yerong.wedle.timetable.schoolTimetable.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,12 @@ public class SchoolTimetableApiController {
 
     @Operation(
             summary = "학교 시간표 조회",
-            description = "생성한 학교 시간표를 반환합니다."
+            description = "생성한 학교 시간표를 반환합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "학교 시간표 조회 성공"),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+                    @ApiResponse(responseCode = "404", description = "학교 시간표 찾을 수 없습니다."),
+            }
     )
     @GetMapping()
     public ResponseEntity<SchoolTimetableResponse> getSchoolTimetable() {
@@ -35,7 +41,11 @@ public class SchoolTimetableApiController {
 
     @Operation(
             summary = "학교 시간표 생성",
-            description = "학교 시간표를 생성합니다."
+            description = "학교 시간표를 생성합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "학교 시간표 생성 성공"),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+            }
     )
     @PostMapping("/create")
     public ResponseEntity<String> createSchoolTimetable() {
@@ -45,7 +55,13 @@ public class SchoolTimetableApiController {
 
     @Operation(
             summary = "시간표 비우기",
-            description = "시간표 내의 모든 스케줄을 삭제합니다."
+            description = "시간표 내의 모든 스케줄을 삭제합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "학교 시간표 비우기 성공"),
+                    @ApiResponse(responseCode = "403", description = "권한이 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+                    @ApiResponse(responseCode = "404", description = "학교 시간표를 찾을 수 없습니다."),
+            }
     )
     @DeleteMapping("/clear")
     public ResponseEntity<String> clearSchoolTimetable() {
@@ -55,7 +71,13 @@ public class SchoolTimetableApiController {
 
     @Operation(
             summary = "스케줄 생성",
-            description = "시간표에 새로운 스케줄을 추가합니다."
+            description = "시간표에 새로운 스케줄을 추가합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "스케줄 생성 성공"),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+                    @ApiResponse(responseCode = "404", description = "학교 시간표를 찾을 수 없습니다."),
+                    @ApiResponse(responseCode = "409", description = "해당 교시에 스케줄이 이미 존재합니다."),
+            }
     )
     @PostMapping("/{timetableId}/schedule")
     public ResponseEntity<String> createSchedule(@RequestBody SchoolScheduleRequest request) {
@@ -65,7 +87,13 @@ public class SchoolTimetableApiController {
 
     @Operation(
             summary = "스케줄 삭제",
-            description = "주어진 ID의 스케줄을 삭제합니다."
+            description = "주어진 ID의 스케줄을 삭제합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "스케줄 삭제 성공"),
+                    @ApiResponse(responseCode = "403", description = "권한이 없습니다."),
+                    @ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음"),
+                    @ApiResponse(responseCode = "404", description = "스케줄 찾을 수 없습니다."),
+            }
     )
     @DeleteMapping("/schedule/{scheduleId}")
     public ResponseEntity<String> deleteSchedule(@PathVariable Long scheduleId) {
@@ -75,7 +103,11 @@ public class SchoolTimetableApiController {
 
     @Operation(
             summary = "스케줄 조회",
-            description = "주어진 ID의 스케줄을 조회합니다."
+            description = "주어진 ID의 스케줄을 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "스케줄 조회 성공"),
+                    @ApiResponse(responseCode = "404", description = "스케줄 찾을 수 없습니다."),
+            }
     )
     @GetMapping("/schedule/{scheduleId}")
     public ResponseEntity<SchoolScheduleResponse> getScheduleById(@PathVariable Long scheduleId) {

@@ -1,6 +1,8 @@
 package yerong.wedle.meal.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,10 @@ public class MealApiController {
 
 
     @Operation(summary = "급식 날짜 지정 검색", description = "해당 학교의 해당 날짜 급식 메뉴를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 급식 메뉴를 반환함"),
+            @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없음"),
+    })
     @GetMapping("/list/date")
     public ResponseEntity<List<MealResponse>> getMealsByDate(MealRequest mealRequest) {
         List<MealResponse> mealResponses = mealService.getMealsByDate(mealRequest);
@@ -29,6 +35,9 @@ public class MealApiController {
     }
 
     @Operation(summary = "향후 2주치 급식 날짜 반환", description = "오늘부터 2주치의 급식 날짜를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 급식 날짜를 반환함")
+    })
     @GetMapping("/upcoming-dates")
     public ResponseEntity<List<MealDateResponse>> getUpcomingMealDates() {
         List<MealDateResponse> upcomingDates = mealService.getUpcomingMealDates();

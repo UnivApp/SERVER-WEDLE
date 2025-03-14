@@ -44,11 +44,20 @@ public class MealService {
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
         School school = member.getSchool();
+        LocalDate date = mealRequest.getDate();
+
+        List<Meal> mealsFromDb = mealRepository.findBySchoolCodeAndDate(school.getSchoolCode(), date);
+        if (!mealsFromDb.isEmpty()) {
+            return mealsFromDb.stream()
+                    .map(this::convertToMealResponse)
+                    .collect(Collectors.toList());
+        }
+
         List<NeisMealResponse> mealByDate = neisMealApiClient.getMealByDate(school.getSchoolCode(),
                 mealRequest.getDate(),
                 school.getAtptCode());
 
-        return convertToMealResponse(mealByDate);
+        return convertToMealResponseByNeis(mealByDate);
     }
 
     public List<MealDateResponse> getUpcomingMealDates() {
@@ -151,7 +160,7 @@ public class MealService {
         }
     }
 
-    private List<MealResponse> convertToMealResponse(List<NeisMealResponse> mealByDate) {
+    private List<MealResponse> convertToMealResponseByNeis(List<NeisMealResponse> mealByDate) {
         return mealByDate.stream()
                 .map(neisMealResponse -> new MealResponse(
                         neisMealResponse.getSchoolName(),
@@ -161,6 +170,13 @@ public class MealService {
                         getDishNames(neisMealResponse.getDishName())
                 ))
                 .collect(Collectors.toList());
+    }
+
+    private MealResponse convertToMealResponse(Meal meal) {
+        return new MealResponse(meal.getSchoolCode(), meal.getDate(), meal.getCalories(), meal.getMealType().name(),
+                meal.getMenus().stream()
+                        .map(MealMenu::getMenuName)
+                        .collect(Collectors.toList()));
     }
 
     private List<String> getDishNames(String dishName) {

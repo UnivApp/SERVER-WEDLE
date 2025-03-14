@@ -27,7 +27,7 @@ public class CommentApiController {
     @Operation(summary = "댓글 생성", description = "댓글을 생성합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 생성되었습니다."),
-            @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음")
+            @ApiResponse(responseCode = "404", description = "게시글 또는 부모 댓글 또는 회원을 찾을 수 없음")
     })
     @PostMapping
     public ResponseEntity<CommentResponse> createComment(CommentRequest commentRequest) {
@@ -39,7 +39,8 @@ public class CommentApiController {
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 삭제되었습니다."),
-            @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음")
+            @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음"),
+            @ApiResponse(responseCode = "403", description = "권한이 없는 사용자의 접근")
     })
     @DeleteMapping("/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
@@ -49,7 +50,8 @@ public class CommentApiController {
 
     @Operation(summary = "해당 게시글의 댓글 조회", description = "해당 게시글의 댓글을 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "댓글 목록을 성공적으로 반환했습니다.")
+            @ApiResponse(responseCode = "200", description = "댓글 목록을 성공적으로 반환했습니다."),
+            @ApiResponse(responseCode = "404", description = "게시글을 찾을 수 없음")
     })
     @GetMapping("/post/{postId}")
     public ResponseEntity<List<CommentResponse>> getComments(@PathVariable Long postId) {
@@ -59,7 +61,8 @@ public class CommentApiController {
 
     @Operation(summary = "댓글 조회", description = "댓글을 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "댓글을 성공적으로 반환했습니다.")
+            @ApiResponse(responseCode = "200", description = "댓글을 성공적으로 반환했습니다."),
+            @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음")
     })
     @GetMapping("/{commentId}")
     public ResponseEntity<CommentResponse> getComment(@PathVariable Long commentId) {

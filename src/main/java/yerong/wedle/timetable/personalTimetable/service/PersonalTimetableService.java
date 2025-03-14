@@ -63,6 +63,9 @@ public class PersonalTimetableService {
         PersonalTimetable personalTimetable = personalTimetableRepository.findByMember(member)
                 .orElseThrow(
                         PersonalTimetableNotFoundException::new);
+        if (!personalTimetable.getMember().getSocialId().equals(socialId)) {
+            throw new UnauthorizedAccessException();
+        }
         personalScheduleRepository.deleteInBatch(personalTimetable.getSchedules());
     }
 

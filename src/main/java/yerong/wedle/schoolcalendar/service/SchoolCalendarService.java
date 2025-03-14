@@ -38,9 +38,16 @@ public class SchoolCalendarService {
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
         School school = member.getSchool();
+        LocalDate date = request.getDate();
+
+        List<SchoolCalendar> schoolCalendarsDB = schoolCalendarRepository.findBySchoolAndDate(school, date);
+        if (!schoolCalendarsDB.isEmpty()) {
+            return convertToSchoolCalendarResponse(schoolCalendarsDB, school.getName());
+        }
+
         List<NeisSchoolCalendarResponse> scheduleByDate = neisSchoolCalendarApiClient.getScheduleByDate(
                 school.getSchoolCode(), request.getDate(), school.getAtptCode());
-        return convertToSchoolCalendarResponse(scheduleByDate, school.getName());
+        return convertToSchoolCalendarResponseByNeis(scheduleByDate, school.getName());
     }
 
     public TotalSchoolCalendarResponse getScheduleBetween(SchoolCalendarBetweenDatesRequest request) {
@@ -49,12 +56,47 @@ public class SchoolCalendarService {
                 .orElseThrow(MemberNotFoundException::new);
         School school = member.getSchool();
 
+        LocalDate startDate = request.getStartDate();
+        LocalDate endDate = request.getEndDate();
+        List<SchoolCalendar> schoolCalendarsDB = schoolCalendarRepository.findBySchoolAndDateBetween(school, startDate,
+                endDate);
+        if (!schoolCalendarsDB.isEmpty()) {
+            return convertToSchoolCalendarResponse(schoolCalendarsDB, school.getName());
+        }
+
         List<NeisSchoolCalendarResponse> scheduleByDate = neisSchoolCalendarApiClient.getScheduleBetween(
                 school.getSchoolCode(), request.getStartDate(), request.getEndDate(), school.getAtptCode());
-        return convertToSchoolCalendarResponse(scheduleByDate, school.getName());
+        return convertToSchoolCalendarResponseByNeis(scheduleByDate, school.getName());
     }
 
     private TotalSchoolCalendarResponse convertToSchoolCalendarResponse(
+            List<SchoolCalendar> schoolCalendars, String schoolName) {
+
+        Map<LocalDate, List<EventDetailsResponse>> groupedEvents = schoolCalendars.stream()
+                .collect(Collectors.groupingBy(
+                        response -> response.getDate(),
+                        Collectors.mapping(response -> new EventDetailsResponse(
+                                response.getEventName(),
+                                response.getContent(),
+                                "Y".equals(response.isOneGradeEventYN()),
+                                "Y".equals(response.isTwoGradeEventYN()),
+                                "Y".equals(response.isThreeGradeEventYN()),
+                                "Y".equals(response.isFourGradeEventYN()),
+                                "Y".equals(response.isFiveGradeEventYN()),
+                                "Y".equals(response.isSixGradeEventYN())
+                        ), Collectors.toList())
+                ));
+        if (groupedEvents.isEmpty()) {
+            return new TotalSchoolCalendarResponse(schoolName, null);
+        }
+        List<SchoolCalendarResponse> schoolCalendarResponses = groupedEvents.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> new SchoolCalendarResponse(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+        return new TotalSchoolCalendarResponse(schoolName, schoolCalendarResponses);
+    }
+
+    private TotalSchoolCalendarResponse convertToSchoolCalendarResponseByNeis(
             List<NeisSchoolCalendarResponse> neisSchoolCalendarResponses, String schoolName) {
 
         Map<LocalDate, List<EventDetailsResponse>> groupedEvents = neisSchoolCalendarResponses.stream()
@@ -110,20 +152,20 @@ public class SchoolCalendarService {
         List<NeisSchoolCalendarResponse> previousMonthSchedules = neisSchoolCalendarApiClient.getScheduleBetween(
                 school.getSchoolCode(), previousMonth, previousMonth.plusMonths(1).minusDays(1), school.getAtptCode());
 
-        TotalSchoolCalendarResponse previousTotalSchoolCalendarResponse = convertToSchoolCalendarResponse(
+        TotalSchoolCalendarResponse previousTotalSchoolCalendarResponse = convertToSchoolCalendarResponseByNeis(
                 previousMonthSchedules, school.getName());
         saveOrUpdateSchoolCalendars(school, previousTotalSchoolCalendarResponse);
 
         List<NeisSchoolCalendarResponse> currentMonthSchedules = neisSchoolCalendarApiClient.getScheduleBetween(
                 school.getSchoolCode(), currentMonth, currentMonth.plusMonths(1).minusDays(1), school.getAtptCode());
 
-        TotalSchoolCalendarResponse currentTotalSchoolCalendarResponse = convertToSchoolCalendarResponse(
+        TotalSchoolCalendarResponse currentTotalSchoolCalendarResponse = convertToSchoolCalendarResponseByNeis(
                 currentMonthSchedules, school.getName());
         saveOrUpdateSchoolCalendars(school, currentTotalSchoolCalendarResponse);
 
         List<NeisSchoolCalendarResponse> nextMonthSchedules = neisSchoolCalendarApiClient.getScheduleBetween(
                 school.getSchoolCode(), nextMonth, nextMonth.plusMonths(1).minusDays(1), school.getAtptCode());
-        TotalSchoolCalendarResponse nextTotalSchoolCalendarResponse = convertToSchoolCalendarResponse(
+        TotalSchoolCalendarResponse nextTotalSchoolCalendarResponse = convertToSchoolCalendarResponseByNeis(
                 nextMonthSchedules, school.getName());
         saveOrUpdateSchoolCalendars(school, nextTotalSchoolCalendarResponse);
     }
@@ -138,7 +180,7 @@ public class SchoolCalendarService {
 
         List<NeisSchoolCalendarResponse> nextMonthSchedules = neisSchoolCalendarApiClient.getScheduleBetween(
                 school.getSchoolCode(), nextMonth, nextMonth.plusMonths(1).minusDays(1), school.getAtptCode());
-        TotalSchoolCalendarResponse nextTotalSchoolCalendarResponse = convertToSchoolCalendarResponse(
+        TotalSchoolCalendarResponse nextTotalSchoolCalendarResponse = convertToSchoolCalendarResponseByNeis(
                 nextMonthSchedules,
                 school.getName());
         saveOrUpdateSchoolCalendars(school, nextTotalSchoolCalendarResponse);

@@ -20,6 +20,7 @@ import yerong.wedle.post.domain.Post;
 import yerong.wedle.post.dto.HotPostResponse;
 import yerong.wedle.post.dto.PostCreateRequest;
 import yerong.wedle.post.dto.PostResponse;
+import yerong.wedle.post.dto.PostUpdateAnonymousRequest;
 import yerong.wedle.post.dto.PostUpdateRequest;
 import yerong.wedle.post.exception.PostNotFoundException;
 import yerong.wedle.post.repository.PostRepository;
@@ -41,10 +42,6 @@ public class PostService {
                 .orElseThrow(MemberNotFoundException::new);
 
         Board board = boardRepository.findById(postRequest.getBoardId()).orElseThrow(BoardNotFoundException::new);
-
-        if (!board.getCommunity().getId().equals(member.getSchool().getCommunity().getId())) {
-            throw new UnauthorizedAccessException();
-        }
         Post post = new Post(postRequest.getTitle(), postRequest.getContent(), postRequest.isAnonymous(), member,
                 board);
         board.addPost(post);
@@ -68,6 +65,22 @@ public class PostService {
         return convertToPostResponse(post);
     }
 
+    public PostResponse updateAnonymous(PostUpdateAnonymousRequest postUpdateAnonymousRequest) {
+        String socialId = getCurrentUserId();
+        Post post = postRepository.findById(postUpdateAnonymousRequest.getPostId())
+                .orElseThrow(PostNotFoundException::new);
+
+        if (!post.getMember().getSocialId().equals(socialId)) {
+            throw new UnauthorizedAccessException();
+        }
+
+        post.updateAnonymous(postUpdateAnonymousRequest.isAnonymous());
+
+        postRepository.save(post);
+
+        return convertToPostResponse(post);
+    }
+
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
         String socialId = getCurrentUserId();
@@ -79,15 +92,7 @@ public class PostService {
     }
 
     public List<PostResponse> getAllPosts(Long boardId) {
-        String socialId = getCurrentUserId();
-        Member member = memberRepository.findBySocialId(socialId)
-                .orElseThrow(MemberNotFoundException::new);
-
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-
-        if (!board.getCommunity().getId().equals(member.getSchool().getCommunity().getId())) {
-            throw new UnauthorizedAccessException();
-        }
 
         List<Post> posts = postRepository.findAllByBoardOrderByCreatedAtDesc(board);
 
@@ -112,13 +117,6 @@ public class PostService {
 
     public PostResponse getPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
-        String socialId = getCurrentUserId();
-        Member member = memberRepository.findBySocialId(socialId)
-                .orElseThrow(MemberNotFoundException::new);
-
-        if (!post.getBoard().getCommunity().getId().equals(member.getSchool().getCommunity().getId())) {
-            throw new UnauthorizedAccessException();
-        }
         return convertToPostResponse(post);
     }
 
@@ -136,16 +134,27 @@ public class PostService {
     private PostResponse convertToPostResponse(Post post) {
         Long count = likeCount(post.getId());
         boolean isLiked = isLiked(post.getId());
-
-        return new PostResponse(post.getId(), post.getTitle(), post.getContent(), post.isAnonymous(), count, isLiked);
+        String username;
+        if (post.isAnonymous()) {
+            username = null;
+        } else {
+            username = post.getMember().getUsername();
+        }
+        return new PostResponse(post.getId(), post.getTitle(), post.getContent(), post.isAnonymous(), count, isLiked,
+                username);
     }
 
     private HotPostResponse convertToHotPostResponse(Post post) {
         Long count = likeCount(post.getId());
         boolean isLiked = isLiked(post.getId());
-
+        String username;
+        if (post.isAnonymous()) {
+            username = null;
+        } else {
+            username = post.getMember().getUsername();
+        }
         return new HotPostResponse(post.getId(), post.getTitle(), post.getContent(), post.isAnonymous(), count, isLiked,
-                post.getBoard().getType().getName());
+                post.getBoard().getType().getName(), username);
     }
 
     private String getCurrentUserId() {

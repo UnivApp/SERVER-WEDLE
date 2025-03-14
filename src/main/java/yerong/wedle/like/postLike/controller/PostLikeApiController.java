@@ -28,7 +28,7 @@ public class PostLikeApiController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "좋아요 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+            @ApiResponse(responseCode = "404", description = "회원 또는 게시글을 찾을 수 없습니다."),
     })
     @PostMapping("/add")
     public ResponseEntity<Void> addStar(@RequestParam Long postId) {
@@ -47,7 +47,8 @@ public class PostLikeApiController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "좋아요 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없습니다."),
+            @ApiResponse(responseCode = "404", description = "회원 또는 게시글을 찾을 수 없습니다."),
     })
     @PostMapping("/remove")
     public ResponseEntity<Void> removeStar(@RequestParam Long postId) {

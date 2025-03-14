@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import yerong.wedle.board.exception.BoardDuplicateException;
 import yerong.wedle.board.exception.BoardNotFoundException;
 import yerong.wedle.comment.exception.CommentNotFoundException;
+import yerong.wedle.community.exception.CommunityNotFoundException;
 import yerong.wedle.like.commentLike.exception.CommentLikeNotFoundException;
 import yerong.wedle.like.postLike.exception.PostLikeNotFoundException;
 import yerong.wedle.member.exception.ExistingNicknameException;
@@ -281,6 +282,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
+
+    @ExceptionHandler(CommunityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommunityNotFoundException(
+            CommunityNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.COMMUNITY_NOT_FOUND.getCode(),
+                ResponseCode.COMMUNITY_NOT_FOUND.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
     @ExceptionHandler(PersonalScheduleNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePersonalScheduleNotFoundException(PersonalScheduleNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
@@ -318,6 +331,6 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
         return ResponseEntity.status(500).body("Error: " + e.getMessage());
     }
-    
+
 
 }

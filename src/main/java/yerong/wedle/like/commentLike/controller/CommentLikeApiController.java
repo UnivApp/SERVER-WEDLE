@@ -22,13 +22,11 @@ import yerong.wedle.like.commentLike.service.CommentLikeService;
 public class CommentLikeApiController {
     private final CommentLikeService commentLikeService;
 
-    @Operation(
-            summary = "댓글 좋아요 생성",
-            description = "댓글 좋아요를 생성합니다."
-    )
+
+    @Operation(summary = "댓글 좋아요 생성", description = "댓글 좋아요를 생성합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "좋아요 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+            @ApiResponse(responseCode = "404", description = "댓글 또는 회원을 찾을 수 없음"),
     })
     @PostMapping("/add")
     public ResponseEntity<Void> addStar(@RequestParam Long commentId) {
@@ -47,7 +45,8 @@ public class CommentLikeApiController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "좋아요 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+            @ApiResponse(responseCode = "403", description = "권한 없음"),
+            @ApiResponse(responseCode = "404", description = "댓글 또는 회원 또는 좋아요를 찾을 수 없음"),
     })
     @PostMapping("/remove")
     public ResponseEntity<Void> removeStar(@RequestParam Long commentId) {

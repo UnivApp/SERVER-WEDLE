@@ -88,4 +88,8 @@ public class Post extends BaseTimeEntity {
     public void setHotBoard(boolean hotBoard) {
         this.isHotBoard = hotBoard;
     }
+
+    public void updateAnonymous(boolean anonymous) {
+        this.isAnonymous = anonymous;
+    }
 }

@@ -28,7 +28,8 @@ public class BoardApiController {
     @Operation(summary = "게시판 생성", description = "게시판을 생성합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시판이 성공적으로 생성되었습니다."),
-            @ApiResponse(responseCode = "400", description = "게시판을 찾을 수 없습니다.")
+            @ApiResponse(responseCode = "400", description = "이미 존재하는 게시판입니다."),
+            @ApiResponse(responseCode = "404", description = "회원 또는 커뮤니티를 찾을 수 없습니다.")
     })
     @PostMapping
     public ResponseEntity<BoardResponse> createBoard(BoardRequest boardRequest) {
@@ -39,7 +40,8 @@ public class BoardApiController {
     @Operation(summary = "게시판 삭제", description = "게시판을 삭제합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시판이 성공적으로 삭제되었습니다."),
-            @ApiResponse(responseCode = "404", description = "게시판을 찾을 수 없음")
+            @ApiResponse(responseCode = "403", description = "권한이 없습니다"),
+            @ApiResponse(responseCode = "404", description = "게시판을 찾을 수 없습니다.")
     })
     @DeleteMapping("/{boardId}")
     public ResponseEntity<String> deleteBoard(@PathVariable Long boardId) {
@@ -49,7 +51,8 @@ public class BoardApiController {
 
     @Operation(summary = "전체 게시판 조회", description = "모든 게시판을 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "게시판 목록을 성공적으로 반환했습니다.")
+            @ApiResponse(responseCode = "200", description = "게시판 목록을 성공적으로 반환했습니다."),
+            @ApiResponse(responseCode = "404", description = "회원 또는 커뮤니티를 찾을 수 없습니다.")
     })
     @GetMapping
     public ResponseEntity<List<BoardResponse>> getAllBoards() {
@@ -60,7 +63,7 @@ public class BoardApiController {
     @Operation(summary = "게시판 조회", description = "특정 ID의 게시판을 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시판을 성공적으로 반환했습니다."),
-            @ApiResponse(responseCode = "404", description = "게시판을 찾을 수 없음")
+            @ApiResponse(responseCode = "404", description = "게시판을 찾을 수 없습니다.")
     })
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardResponse> getBoardById(@PathVariable Long boardId) {

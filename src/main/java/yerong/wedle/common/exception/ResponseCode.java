@@ -75,7 +75,7 @@ public enum ResponseCode {
     //Post
     POST_NOT_FOUND("404", "해당 게시글을 찾을 수 없습니다."),
     POST_LIKE_NOT_FOUND("404", "해당 게시글 좋아요를 찾을 수 없습니다."),
-    UNAUTHORIZED_ACCESS("403", "권한이 없습니다"),
+    UNAUTHORIZED_ACCESS("403", "권한이 없습니다."),
 
     //Comment
     COMMENT_NOT_FOUND("404", "해당 댓글을 찾을 수 없습니다."),
@@ -89,7 +89,7 @@ public enum ResponseCode {
 
     PERSONAL_TIMETABLE_NOT_FOUND("404", "개인 시간표를 찾을 수 없습니다."),
     PERSONAL_SCHEDULE_NOT_FOUND("404", "개인 시간표 스케줄을 찾을 수 없습니다."),
-
+    COMMUNITY_NOT_FOUND("404", "커뮤니티를 찾을 수 없습니다."),
     SCHOOL_SCHEDULE_ALREADY_EXISTS("409", "해당 요일과 교시에 이미 일정이 존재합니다."),
     PERSONAL_SCHEDULE_ALREADY_EXISTS("409", "해당 시간에 이미 일정이 존재합니다.");
 
