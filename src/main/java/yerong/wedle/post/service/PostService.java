@@ -15,6 +15,7 @@ import yerong.wedle.like.postLike.repository.PostLikeRepository;
 import yerong.wedle.member.domain.Member;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.UnauthorizedAccessException;
+import yerong.wedle.member.exception.UserBannedException;
 import yerong.wedle.member.repository.MemberRepository;
 import yerong.wedle.post.domain.Post;
 import yerong.wedle.post.dto.HotPostResponse;
@@ -41,6 +42,9 @@ public class PostService {
         Member member = memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFoundException::new);
 
+        if (member.isBanned()) {
+            throw new UserBannedException();
+        }
         Board board = boardRepository.findById(postRequest.getBoardId()).orElseThrow(BoardNotFoundException::new);
         Post post = new Post(postRequest.getTitle(), postRequest.getContent(), postRequest.isAnonymous(), member,
                 board);
@@ -88,6 +92,8 @@ public class PostService {
         if (!post.getMember().getSocialId().equals(socialId)) {
             throw new UnauthorizedAccessException();
         }
+
+        post.getComments().clear();
         postRepository.delete(post);
     }
 
@@ -162,4 +168,15 @@ public class PostService {
 
         return socialId;
     }
+
+    public long getMemberIdByPostId(Long targetId) {
+        Post post = postRepository.findById(targetId).orElseThrow(PostNotFoundException::new);
+        return post.getMember().getMemberId();
+    }
+
+    public void deletePostByReport(Long postId) {
+        System.out.println("postId : " + postId);
+        postRepository.deleteById(postId);
+    }
 }
+

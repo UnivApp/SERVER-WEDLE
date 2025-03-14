@@ -63,6 +63,9 @@ public class Member extends BaseTimeEntity {
 
     private boolean isExistingMember;
 
+    private boolean isBanned = Boolean.FALSE;
+    private LocalDate banEndDate;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TodoList> todoLists;
 
@@ -89,5 +92,13 @@ public class Member extends BaseTimeEntity {
 
     public void setProfileImageUrl(String imageUrl) {
         this.profileImageUrl = imageUrl;
+    }
+
+    public void setBanned(boolean banned) {
+        this.isBanned = banned;
+    }
+
+    public void setBanEndDate(LocalDate banEndDate) {
+        this.banEndDate = banEndDate;
     }
 }

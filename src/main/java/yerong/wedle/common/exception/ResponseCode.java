@@ -91,7 +91,11 @@ public enum ResponseCode {
     PERSONAL_SCHEDULE_NOT_FOUND("404", "개인 시간표 스케줄을 찾을 수 없습니다."),
     COMMUNITY_NOT_FOUND("404", "커뮤니티를 찾을 수 없습니다."),
     SCHOOL_SCHEDULE_ALREADY_EXISTS("409", "해당 요일과 교시에 이미 일정이 존재합니다."),
-    PERSONAL_SCHEDULE_ALREADY_EXISTS("409", "해당 시간에 이미 일정이 존재합니다.");
+    PERSONAL_SCHEDULE_ALREADY_EXISTS("409", "해당 시간에 이미 일정이 존재합니다."),
+
+    ALREADY_REPORTED_POST("409", "이미 신고한 게시물입니다."),
+    ALREADY_REPORTED_COMMENT("409", "이미 신고한 댓글입니다."),
+    USER_BANNED("403", "사용자가 정지되었습니다.");
 
 
     private final String code;

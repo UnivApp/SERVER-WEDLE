@@ -18,11 +18,14 @@ import yerong.wedle.member.exception.MemberDuplicateException;
 import yerong.wedle.member.exception.MemberNicknameDuplicateException;
 import yerong.wedle.member.exception.MemberNotFoundException;
 import yerong.wedle.member.exception.UnauthorizedAccessException;
+import yerong.wedle.member.exception.UserBannedException;
 import yerong.wedle.oauth.exception.InvalidAuthorizationHeaderException;
 import yerong.wedle.oauth.exception.InvalidRefreshTokenException;
 import yerong.wedle.oauth.exception.InvalidTokenException;
 import yerong.wedle.oauth.exception.OAuthProcessingException;
 import yerong.wedle.post.exception.PostNotFoundException;
+import yerong.wedle.report.exception.AlreadyReportedCommentException;
+import yerong.wedle.report.exception.AlreadyReportedPostException;
 import yerong.wedle.school.exception.SchoolChangeNotAllowedException;
 import yerong.wedle.school.exception.SchoolNotFoundException;
 import yerong.wedle.schoolcalendar.exception.SchoolCalendarNotFoundException;
@@ -324,6 +327,40 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().format(FORMATTER)
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+
+    @ExceptionHandler(AlreadyReportedPostException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyReportedPostException(AlreadyReportedPostException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.ALREADY_REPORTED_POST.getCode(),
+                ResponseCode.ALREADY_REPORTED_POST.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        System.out.println("errer : " + ex.getCode());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(AlreadyReportedCommentException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyReportedCommentException(
+            AlreadyReportedCommentException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.ALREADY_REPORTED_COMMENT.getCode(),
+                ResponseCode.ALREADY_REPORTED_COMMENT.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(UserBannedException.class)
+    public ResponseEntity<ErrorResponse> handleUserBannedException(
+            UserBannedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ResponseCode.USER_BANNED.getCode(),
+                ResponseCode.USER_BANNED.getMessage(),
+                LocalDateTime.now().format(FORMATTER)
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
