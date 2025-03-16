@@ -69,6 +69,9 @@
 - **근처 놀거리**를 소개하여, 친구들과 함께 즐길 수 있는 활동을 추천합니다.
 <img src="https://github.com/user-attachments/assets/d04c71bf-6982-43e9-828e-5e246e5ccacf" width="300"/>
 
+### ✔️ 입시 캘린더
+<img src="[https://github.com/user-attachments/assets/d04c71bf-6982-43e9-828e-5e246e5ccacf](https://github.com/user-attachments/assets/d9247c6e-52c5-4cdc-a7ec-e37adc428935)" width="300"/>
+
 ### ✔️ 대입 관련 기사
 - **대입 관련 최신 기사**를 제공하여 수험생들에게 유용한 정보를 제공합니다.
 <img src="https://github.com/user-attachments/assets/93c4a247-c4e6-438b-9346-898c7c22841c" width="300"/>
