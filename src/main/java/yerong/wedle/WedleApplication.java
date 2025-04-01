@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class WedleApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WedleApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WedleApplication.class, args);
+    }
 
 }

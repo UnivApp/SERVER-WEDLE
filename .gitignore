@@ -43,6 +43,7 @@ out/
 *.lock
 
 src/main/resources/application-oauth.yml
+src/main/resources/application-mongo.yml
 
 # Ignore all XML files
 *.xml

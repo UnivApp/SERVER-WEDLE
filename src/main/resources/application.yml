@@ -4,7 +4,12 @@ spring:
   session:
     store-type: jdbc
   profiles:
-    include: oauth
+    include:
+      - oauth
+      - mongo
+    active:
+      - oauth
+      - mongo
   datasource:
     hikari:
       maximum-pool-size: 20

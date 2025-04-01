@@ -63,7 +63,8 @@ public class Member extends BaseTimeEntity {
 
     private boolean isExistingMember;
 
-    private boolean isBanned = Boolean.FALSE;
+
+    private boolean isBanned;
     private LocalDate banEndDate;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
