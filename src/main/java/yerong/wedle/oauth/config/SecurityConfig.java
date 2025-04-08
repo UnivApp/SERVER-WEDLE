@@ -28,13 +28,15 @@ public class SecurityConfig {
     private final JwtBlacklistService jwtBlacklistService;
 
     @Bean
-    public SecurityFilterChain filterChain (HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headersConfigurer ->
                         headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(
+                        httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(
@@ -48,10 +50,9 @@ public class SecurityConfig {
                                         AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
                                         AntPathRequestMatcher.antMatcher("/login/apple"),
                                         AntPathRequestMatcher.antMatcher("/login/refresh"),
-                                        AntPathRequestMatcher.antMatcher("/login/status")
-
-
-                                        ).permitAll()
+                                        AntPathRequestMatcher.antMatcher("/login/status"),
+                                        AntPathRequestMatcher.antMatcher("/favicon.ico")
+                                ).permitAll()
                                 .requestMatchers(
                                         AntPathRequestMatcher.antMatcher(HttpMethod.OPTIONS)
                                 )
@@ -61,13 +62,17 @@ public class SecurityConfig {
                                         AntPathRequestMatcher.antMatcher("/api/**"),
                                         AntPathRequestMatcher.antMatcher("/member/logout"),
                                         AntPathRequestMatcher.antMatcher("/member/delete")
-                                ).authenticated().anyRequest().permitAll()
+                                ).authenticated()
+                                .requestMatchers(
+                                        AntPathRequestMatcher.antMatcher("/stomp/**")
+                                ).permitAll().anyRequest().authenticated()
                 )
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, jwtBlacklistService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, jwtBlacklistService),
+                        UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

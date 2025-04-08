@@ -16,4 +16,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m FROM Member m WHERE m.isBanned = true")
     List<Member> findAllBannedMembers();
+
+    List<Member> findByMemberIdOrMemberId(Long memberId1, Long memberId2);
 }

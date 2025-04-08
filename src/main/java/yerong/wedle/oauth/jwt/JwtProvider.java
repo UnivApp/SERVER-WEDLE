@@ -2,9 +2,20 @@ package yerong.wedle.oauth.jwt;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,13 +31,6 @@ import yerong.wedle.member.domain.Role;
 import yerong.wedle.oauth.dto.TokenResponse;
 import yerong.wedle.oauth.exception.InvalidTokenException;
 
-import java.security.Key;
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.stream.Collectors;
-
 
 @Slf4j
 @Component
@@ -40,12 +44,12 @@ public class JwtProvider {
     @Value("${jwt.refresh_token_expire_time}")
     private long refreshTokenExpireTime;
 
-    public JwtProvider(@Value("${jwt.secret_key}") String secretKey){
+    public JwtProvider(@Value("${jwt.secret_key}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenResponse generateTokenDto(String socialId){
+    public TokenResponse generateTokenDto(String socialId) {
         Date now = new Date();
         Date accessTokenExpiration = new Date(now.getTime() + accessTokenExpireTime);
         Date refreshTokenExpiration = new Date(now.getTime() + refreshTokenExpireTime);
@@ -74,10 +78,10 @@ public class JwtProvider {
                 .build();
     }
 
-    public Authentication getAuthentication(String accessToken){
+    public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
-        if(claims.get(AUTHORITIES_KEY) == null){
+        if (claims.get(AUTHORITIES_KEY) == null) {
             throw new CustomException(ResponseCode.UNAUTHORIZED);
         }
 
@@ -111,6 +115,7 @@ public class JwtProvider {
         }
         return false;
     }
+
     public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder()
@@ -122,11 +127,23 @@ public class JwtProvider {
             return e.getClaims();
         }
     }
+
     public JWT parseToken(String token) throws ParseException {
         try {
             return JWTParser.parse(token);
         } catch (ParseException e) {
             throw new InvalidTokenException();
         }
+    }
+
+    public String verify(String token) {
+        Claims claims = parseClaims(token);
+        String socialId = claims.getSubject();
+
+        if (socialId == null) {
+            throw new InvalidTokenException();
+        }
+        return socialId;
+
     }
 }
