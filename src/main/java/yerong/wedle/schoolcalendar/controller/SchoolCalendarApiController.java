@@ -22,6 +22,7 @@ public class SchoolCalendarApiController {
 
     private final SchoolCalendarService schoolCalendarService;
 
+
     @Operation(
             summary = "학사 일정 조회 (단일 날짜)",
             description = "지정한 날짜의 학사 일정을 반환합니다.",
