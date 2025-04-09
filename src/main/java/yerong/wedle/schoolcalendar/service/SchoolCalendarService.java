@@ -2,6 +2,7 @@ package yerong.wedle.schoolcalendar.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class SchoolCalendarService {
             response = convertToSchoolCalendarResponseByNeis(scheduleByDate, school.getName());
         }
 
-        redisTemplate.opsForValue().set(redisKey, objectMapper.convertValue(response, Map.class));
+        redisTemplate.opsForValue().set(redisKey, objectMapper.convertValue(response, Map.class), Duration.ofDays(1));
 
         return response;
     }
@@ -95,7 +96,7 @@ public class SchoolCalendarService {
             response = convertToSchoolCalendarResponseByNeis(scheduleByDate, school.getName());
         }
 
-        redisTemplate.opsForValue().set(redisKey, objectMapper.convertValue(response, Map.class));
+        redisTemplate.opsForValue().set(redisKey, objectMapper.convertValue(response, Map.class), Duration.ofDays(1));
 
         return response;
     }
