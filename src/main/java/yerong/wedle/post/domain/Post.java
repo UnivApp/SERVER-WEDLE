@@ -44,10 +44,7 @@ public class Post extends BaseTimeEntity {
 
     @Column(nullable = false)
     private boolean isAnonymous;
-
-    @Column(nullable = false)
-    private int likeCount = 0;
-
+    
     @ManyToOne
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
@@ -70,14 +67,6 @@ public class Post extends BaseTimeEntity {
 
     public void updateContent(String content) {
         this.content = content;
-    }
-
-    public void increaseLike() {
-        this.likeCount++;
-    }
-
-    public void decreaseLike() {
-        this.likeCount--;
     }
 
     public void setHotBoardTime() {

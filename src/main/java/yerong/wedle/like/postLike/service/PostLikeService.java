@@ -23,6 +23,7 @@ import yerong.wedle.post.repository.PostRepository;
 @RequiredArgsConstructor
 @Transactional
 public class PostLikeService {
+    private static final int HOT_BOARD_THRESHOLD = 3;
 
     private final PostLikeRepository postLikeRepository;
     private final MemberRepository memberRepository;
@@ -32,8 +33,8 @@ public class PostLikeService {
     public void addLike(Long postId) {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
-        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
-
+        Post post = postRepository.findByIdWithPessimisticLock(postId)
+                .orElseThrow(PostNotFoundException::new);
         boolean alreadyLiked = postLikeRepository.existsByMemberAndPost(member, post);
         if (!alreadyLiked) {
             PostLike postLike = PostLike.builder()
@@ -41,11 +42,12 @@ public class PostLikeService {
                     .post(post)
                     .build();
             postLikeRepository.save(postLike);
-            post.increaseLike();
-            if (post.getLikeCount() >= 3) {
+
+            long likeCount = postLikeRepository.countByPostId(postId);
+
+            if (likeCount >= HOT_BOARD_THRESHOLD && !post.isHotBoard()) {
                 moveToHotBoard(post);
             }
-            postRepository.save(post);
         }
     }
 
@@ -65,7 +67,8 @@ public class PostLikeService {
     public void removeLike(Long postId) {
         String socialId = getCurrentUserId();
         Member member = memberRepository.findBySocialId(socialId).orElseThrow(MemberNotFoundException::new);
-        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        Post post = postRepository.findByIdWithPessimisticLock(postId)
+                .orElseThrow(PostNotFoundException::new);
 
         PostLike postLike = postLikeRepository.findByMemberAndPost(member, post).orElseThrow(
                 PostNotFoundException::new);
@@ -73,15 +76,15 @@ public class PostLikeService {
         authorizeMember(postLike);
 
         postLikeRepository.delete(postLike);
+        long likeCount = postLikeRepository.countByPostId(postId);
 
-        post.decreaseLike();
-        if (post.getLikeCount() < 3) {
-            removeToHotBoard(post);
+        if (likeCount < HOT_BOARD_THRESHOLD && post.isHotBoard()) {
+            removeFromHotBoard(post);
         }
         postRepository.save(post);
     }
 
-    public void removeToHotBoard(Post post) {
+    public void removeFromHotBoard(Post post) {
         Community community = post.getBoard().getCommunity();
         Board hotboard = community.getBoards().stream()
                 .filter(board -> board.getType() == BoardType.HOT)
@@ -91,10 +94,6 @@ public class PostLikeService {
             post.setHotBoard(false);
             hotboard.removePost(post);
         }
-    }
-
-    public Long likeCount(Long postId) {
-        return postLikeRepository.countByPostId(postId);
     }
 
     private void authorizeMember(PostLike postLike) {
