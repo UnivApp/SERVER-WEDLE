@@ -72,14 +72,6 @@ public class Post extends BaseTimeEntity {
         this.content = content;
     }
 
-    public void increaseLike() {
-        this.likeCount++;
-    }
-
-    public void decreaseLike() {
-        this.likeCount--;
-    }
-
     public void setHotBoardTime() {
         this.hotBoardTime = LocalDateTime.now();
     }
